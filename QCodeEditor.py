@@ -119,24 +119,9 @@ class XMLHighlighter(QSyntaxHighlighter):
         self.highlightingRules.append((QRegExp("\/"), xmlAttributeFormat))
         self.highlightingRules.append((QRegExp("%"), xmlAttributeFormat))
         
-                #COLOR PARA OPERACIONES Logicas
-        xmlAttributeFormat = QTextCharFormat()
-        xmlAttributeFormat.setForeground(QColor("#870E62")) #morado
-        self.highlightingRules.append((QRegExp("!"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("&&"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("\|\|"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("xor"), xmlAttributeFormat))
 
 
-        #COLOR PARA OPERACIONES BIT A BIT
-        xmlAttributeFormat = QTextCharFormat()
-        xmlAttributeFormat.setForeground(QColor("#787D08")) #morado
-        self.highlightingRules.append((QRegExp("~"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("&"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("\|"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("\\^"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp(">>"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("<<"), xmlAttributeFormat))
+
 
                 #COLOR PARA OPERACIONES BIT A BIT
         xmlAttributeFormat = QTextCharFormat()
@@ -149,6 +134,23 @@ class XMLHighlighter(QSyntaxHighlighter):
         self.highlightingRules.append((QRegExp("<"), xmlAttributeFormat))
 
 
+        #COLOR PARA OPERACIONES BIT A BIT
+        xmlAttributeFormat = QTextCharFormat()
+        xmlAttributeFormat.setForeground(QColor("#787D08")) #morado
+        self.highlightingRules.append((QRegExp("~"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("&"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("\|"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("\^"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp(">>"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("<<"), xmlAttributeFormat))
+
+                        #COLOR PARA OPERACIONES Logicas
+        xmlAttributeFormat = QTextCharFormat()
+        xmlAttributeFormat.setForeground(QColor("#870E62")) #morado
+        self.highlightingRules.append((QRegExp("!"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("&&"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("\|\|"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("xor"), xmlAttributeFormat))
 
     
         self.valueFormat = QTextCharFormat()
@@ -156,9 +158,6 @@ class XMLHighlighter(QSyntaxHighlighter):
         self.valueStartExpression = QRegExp("\"")
         self.valueEndExpression = QRegExp("\"")
  
-        singleLineCommentFormat = QTextCharFormat()
-        singleLineCommentFormat.setForeground(QColor("#a0a0a4")) #grey
-        self.highlightingRules.append((QRegExp("<!--[^\n]*-->"), singleLineCommentFormat))
  
         textFormat = QTextCharFormat()
         textFormat.setForeground(QColor("#000000")) #black
