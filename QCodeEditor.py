@@ -59,19 +59,20 @@ class XMLHighlighter(QSyntaxHighlighter):
         xmlElementFormat.setForeground(QColor("#C4D916")) #morado
         self.highlightingRules.append(("\$sp", xmlElementFormat))
 
+
+        #COLOR PARA STRING
+        xmlAttributeFormat = QTextCharFormat()
+        xmlAttributeFormat.setFontItalic(True)
+        xmlAttributeFormat.setForeground(QColor("#F98D03")) #anaranjado
+        self.highlightingRules.append((QRegExp("\'.*\'"), xmlAttributeFormat))
+
+        
         #COLOR PARA CARACTER
         xmlAttributeFormat = QTextCharFormat()
         xmlAttributeFormat.setFontKerning(True)
         xmlAttributeFormat.setForeground(QColor("#F8BDC5")) #rosado
         self.highlightingRules.append((QRegExp("\'[A-Za-z0-9]\'"), xmlAttributeFormat))
 
-        #COLOR PARA STRING
-        xmlAttributeFormat = QTextCharFormat()
-        xmlAttributeFormat.setFontItalic(True)
-        xmlAttributeFormat.setForeground(QColor("#F98D03")) #anaranjado
-        self.highlightingRules.append((QRegExp("\'[A-Za-z0-9][A-Za-z0-9_\t ]+\'"), xmlAttributeFormat))
-
-        
         #COLOR PARA int, float, char
         xmlAttributeFormat = QTextCharFormat()
         xmlAttributeFormat.setForeground(QColor("#1C3784")) #azul oscuro
@@ -119,24 +120,9 @@ class XMLHighlighter(QSyntaxHighlighter):
         self.highlightingRules.append((QRegExp("\/"), xmlAttributeFormat))
         self.highlightingRules.append((QRegExp("%"), xmlAttributeFormat))
         
-                #COLOR PARA OPERACIONES Logicas
-        xmlAttributeFormat = QTextCharFormat()
-        xmlAttributeFormat.setForeground(QColor("#870E62")) #morado
-        self.highlightingRules.append((QRegExp("!"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("&&"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("\|\|"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("xor"), xmlAttributeFormat))
 
 
-        #COLOR PARA OPERACIONES BIT A BIT
-        xmlAttributeFormat = QTextCharFormat()
-        xmlAttributeFormat.setForeground(QColor("#787D08")) #morado
-        self.highlightingRules.append((QRegExp("~"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("&"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("\|"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("\\^"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp(">>"), xmlAttributeFormat))
-        self.highlightingRules.append((QRegExp("<<"), xmlAttributeFormat))
+
 
                 #COLOR PARA OPERACIONES BIT A BIT
         xmlAttributeFormat = QTextCharFormat()
@@ -149,6 +135,23 @@ class XMLHighlighter(QSyntaxHighlighter):
         self.highlightingRules.append((QRegExp("<"), xmlAttributeFormat))
 
 
+        #COLOR PARA OPERACIONES BIT A BIT
+        xmlAttributeFormat = QTextCharFormat()
+        xmlAttributeFormat.setForeground(QColor("#787D08")) #morado
+        self.highlightingRules.append((QRegExp("~"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("&"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("\|"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("\^"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp(">>"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("<<"), xmlAttributeFormat))
+
+                        #COLOR PARA OPERACIONES Logicas
+        xmlAttributeFormat = QTextCharFormat()
+        xmlAttributeFormat.setForeground(QColor("#870E62")) #morado
+        self.highlightingRules.append((QRegExp("!"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("&&"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("\|\|"), xmlAttributeFormat))
+        self.highlightingRules.append((QRegExp("xor"), xmlAttributeFormat))
 
     
         self.valueFormat = QTextCharFormat()
@@ -156,9 +159,6 @@ class XMLHighlighter(QSyntaxHighlighter):
         self.valueStartExpression = QRegExp("\"")
         self.valueEndExpression = QRegExp("\"")
  
-        singleLineCommentFormat = QTextCharFormat()
-        singleLineCommentFormat.setForeground(QColor("#a0a0a4")) #grey
-        self.highlightingRules.append((QRegExp("<!--[^\n]*-->"), singleLineCommentFormat))
  
         textFormat = QTextCharFormat()
         textFormat.setForeground(QColor("#000000")) #black
