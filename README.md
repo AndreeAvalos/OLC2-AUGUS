@@ -18,3 +18,6 @@ Contenido:
 
 Colaboradores:
 * Carlos Andree Avalos Soto       201408580
+
+Referencias
+* [Clase QCodeEditor](https://github.com/luchko/QCodeEditor)
