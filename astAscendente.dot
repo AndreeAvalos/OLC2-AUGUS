@@ -1,0 +1,30 @@
+digraph{ bgcolor = gray 
+ node[fontcolor = white, height = 0.5, color = white] 
+ [shape=box, style=filled, color=gray14] 
+ rankdir=UD 
+ edge[color=white, dir=fordware]
+24[style = "filled" ; label = "init"] 
+23[style = "filled" ; label = "instruciones"] 
+20[style = "filled" ; label = "pmain"] 
+21[style = "filled" ; label = "main"] 
+22[style = "filled" ; label = ":"] 
+19[style = "filled" ; label = "sentencias"] 
+15[style = "filled" ; label = "pvariable"] 
+16[style = "filled" ; label = "$t4"] 
+17[style = "filled" ; label = "="] 
+14[style = "filled" ; label = "operacion"] 
+13[style = "filled" ; label = "4"] 
+18[style = "filled" ; label = ";"] 
+24->23;
+23->20;
+20->21;
+20->22;
+20->19;
+19->15;
+15->16;
+15->17;
+15->14;
+14->13;
+15->18;
+
+}

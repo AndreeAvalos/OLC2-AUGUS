@@ -1,0 +1,556 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    ABS
+    AND
+    ANDBIT
+    ARRAY
+    CHAR
+    CORDER
+    CORIZQ
+    DIFERENTE
+    EXIT
+    FLOAT
+    GOTO
+    IF
+    IGUALIGUAL
+    INTEGER
+    LLAVEDER
+    LLAVEIZQ
+    MAYOR
+    MAYORIGUAL
+    MENOR
+    MENORIGUAL
+    NOT
+    NOTBIT
+    OR
+    ORBIT
+    PARDER
+    PARIZQ
+    PRINT
+    READ
+    SHIFTDER
+    SHIFTIZQ
+    UNSET
+    XOR
+    XORBIT
+
+Grammar
+
+Rule 0     S' -> init
+Rule 1     init -> instrucciones
+Rule 2     instrucciones -> instrucciones instruccion
+Rule 3     instrucciones -> instruccion
+Rule 4     instruccion -> pmain
+Rule 5     instruccion -> petiqueta
+Rule 6     pmain -> MAIN DOSPUNTOS sentencias
+Rule 7     sentencias -> sentencias sentencia
+Rule 8     sentencias -> sentencia
+Rule 9     sentencia -> pvariable
+Rule 10    pvariable -> VARIABLE IGUAL operacion PYCOMA
+Rule 11    operacion -> valor MAS valor
+Rule 12    operacion -> valor MENOS valor
+Rule 13    operacion -> valor MULTIPLICACION valor
+Rule 14    operacion -> valor DIVISION valor
+Rule 15    operacion -> valor MODULAR valor
+Rule 16    operacion -> valor
+Rule 17    valor -> ENTERO
+Rule 18    valor -> DECIMAL
+Rule 19    valor -> CADENA
+Rule 20    valor -> CARACTER
+Rule 21    valor -> VARIABLE
+Rule 22    petiqueta -> ID DOSPUNTOS sentencias
+
+Terminals, with rules where they appear
+
+ABS                  : 
+AND                  : 
+ANDBIT               : 
+ARRAY                : 
+CADENA               : 19
+CARACTER             : 20
+CHAR                 : 
+CORDER               : 
+CORIZQ               : 
+DECIMAL              : 18
+DIFERENTE            : 
+DIVISION             : 14
+DOSPUNTOS            : 6 22
+ENTERO               : 17
+EXIT                 : 
+FLOAT                : 
+GOTO                 : 
+ID                   : 22
+IF                   : 
+IGUAL                : 10
+IGUALIGUAL           : 
+INTEGER              : 
+LLAVEDER             : 
+LLAVEIZQ             : 
+MAIN                 : 6
+MAS                  : 11
+MAYOR                : 
+MAYORIGUAL           : 
+MENOR                : 
+MENORIGUAL           : 
+MENOS                : 12
+MODULAR              : 15
+MULTIPLICACION       : 13
+NOT                  : 
+NOTBIT               : 
+OR                   : 
+ORBIT                : 
+PARDER               : 
+PARIZQ               : 
+PRINT                : 
+PYCOMA               : 10
+READ                 : 
+SHIFTDER             : 
+SHIFTIZQ             : 
+UNSET                : 
+VARIABLE             : 10 21
+XOR                  : 
+XORBIT               : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+init                 : 0
+instruccion          : 2 3
+instrucciones        : 1 2
+operacion            : 10
+petiqueta            : 5
+pmain                : 4
+pvariable            : 9
+sentencia            : 7 8
+sentencias           : 6 7 22
+valor                : 11 11 12 12 13 13 14 14 15 15 16
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . init
+    (1) init -> . instrucciones
+    (2) instrucciones -> . instrucciones instruccion
+    (3) instrucciones -> . instruccion
+    (4) instruccion -> . pmain
+    (5) instruccion -> . petiqueta
+    (6) pmain -> . MAIN DOSPUNTOS sentencias
+    (22) petiqueta -> . ID DOSPUNTOS sentencias
+
+    MAIN            shift and go to state 6
+    ID              shift and go to state 7
+
+    init                           shift and go to state 1
+    instrucciones                  shift and go to state 2
+    instruccion                    shift and go to state 3
+    pmain                          shift and go to state 4
+    petiqueta                      shift and go to state 5
+
+state 1
+
+    (0) S' -> init .
+
+
+
+state 2
+
+    (1) init -> instrucciones .
+    (2) instrucciones -> instrucciones . instruccion
+    (4) instruccion -> . pmain
+    (5) instruccion -> . petiqueta
+    (6) pmain -> . MAIN DOSPUNTOS sentencias
+    (22) petiqueta -> . ID DOSPUNTOS sentencias
+
+    $end            reduce using rule 1 (init -> instrucciones .)
+    MAIN            shift and go to state 6
+    ID              shift and go to state 7
+
+    instruccion                    shift and go to state 8
+    pmain                          shift and go to state 4
+    petiqueta                      shift and go to state 5
+
+state 3
+
+    (3) instrucciones -> instruccion .
+
+    MAIN            reduce using rule 3 (instrucciones -> instruccion .)
+    ID              reduce using rule 3 (instrucciones -> instruccion .)
+    $end            reduce using rule 3 (instrucciones -> instruccion .)
+
+
+state 4
+
+    (4) instruccion -> pmain .
+
+    MAIN            reduce using rule 4 (instruccion -> pmain .)
+    ID              reduce using rule 4 (instruccion -> pmain .)
+    $end            reduce using rule 4 (instruccion -> pmain .)
+
+
+state 5
+
+    (5) instruccion -> petiqueta .
+
+    MAIN            reduce using rule 5 (instruccion -> petiqueta .)
+    ID              reduce using rule 5 (instruccion -> petiqueta .)
+    $end            reduce using rule 5 (instruccion -> petiqueta .)
+
+
+state 6
+
+    (6) pmain -> MAIN . DOSPUNTOS sentencias
+
+    DOSPUNTOS       shift and go to state 9
+
+
+state 7
+
+    (22) petiqueta -> ID . DOSPUNTOS sentencias
+
+    DOSPUNTOS       shift and go to state 10
+
+
+state 8
+
+    (2) instrucciones -> instrucciones instruccion .
+
+    MAIN            reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    ID              reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    $end            reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+
+
+state 9
+
+    (6) pmain -> MAIN DOSPUNTOS . sentencias
+    (7) sentencias -> . sentencias sentencia
+    (8) sentencias -> . sentencia
+    (9) sentencia -> . pvariable
+    (10) pvariable -> . VARIABLE IGUAL operacion PYCOMA
+
+    VARIABLE        shift and go to state 14
+
+    sentencias                     shift and go to state 11
+    sentencia                      shift and go to state 12
+    pvariable                      shift and go to state 13
+
+state 10
+
+    (22) petiqueta -> ID DOSPUNTOS . sentencias
+    (7) sentencias -> . sentencias sentencia
+    (8) sentencias -> . sentencia
+    (9) sentencia -> . pvariable
+    (10) pvariable -> . VARIABLE IGUAL operacion PYCOMA
+
+    VARIABLE        shift and go to state 14
+
+    sentencias                     shift and go to state 15
+    sentencia                      shift and go to state 12
+    pvariable                      shift and go to state 13
+
+state 11
+
+    (6) pmain -> MAIN DOSPUNTOS sentencias .
+    (7) sentencias -> sentencias . sentencia
+    (9) sentencia -> . pvariable
+    (10) pvariable -> . VARIABLE IGUAL operacion PYCOMA
+
+    MAIN            reduce using rule 6 (pmain -> MAIN DOSPUNTOS sentencias .)
+    ID              reduce using rule 6 (pmain -> MAIN DOSPUNTOS sentencias .)
+    $end            reduce using rule 6 (pmain -> MAIN DOSPUNTOS sentencias .)
+    VARIABLE        shift and go to state 14
+
+    sentencia                      shift and go to state 16
+    pvariable                      shift and go to state 13
+
+state 12
+
+    (8) sentencias -> sentencia .
+
+    VARIABLE        reduce using rule 8 (sentencias -> sentencia .)
+    MAIN            reduce using rule 8 (sentencias -> sentencia .)
+    ID              reduce using rule 8 (sentencias -> sentencia .)
+    $end            reduce using rule 8 (sentencias -> sentencia .)
+
+
+state 13
+
+    (9) sentencia -> pvariable .
+
+    VARIABLE        reduce using rule 9 (sentencia -> pvariable .)
+    MAIN            reduce using rule 9 (sentencia -> pvariable .)
+    ID              reduce using rule 9 (sentencia -> pvariable .)
+    $end            reduce using rule 9 (sentencia -> pvariable .)
+
+
+state 14
+
+    (10) pvariable -> VARIABLE . IGUAL operacion PYCOMA
+
+    IGUAL           shift and go to state 17
+
+
+state 15
+
+    (22) petiqueta -> ID DOSPUNTOS sentencias .
+    (7) sentencias -> sentencias . sentencia
+    (9) sentencia -> . pvariable
+    (10) pvariable -> . VARIABLE IGUAL operacion PYCOMA
+
+    MAIN            reduce using rule 22 (petiqueta -> ID DOSPUNTOS sentencias .)
+    ID              reduce using rule 22 (petiqueta -> ID DOSPUNTOS sentencias .)
+    $end            reduce using rule 22 (petiqueta -> ID DOSPUNTOS sentencias .)
+    VARIABLE        shift and go to state 14
+
+    sentencia                      shift and go to state 16
+    pvariable                      shift and go to state 13
+
+state 16
+
+    (7) sentencias -> sentencias sentencia .
+
+    VARIABLE        reduce using rule 7 (sentencias -> sentencias sentencia .)
+    MAIN            reduce using rule 7 (sentencias -> sentencias sentencia .)
+    ID              reduce using rule 7 (sentencias -> sentencias sentencia .)
+    $end            reduce using rule 7 (sentencias -> sentencias sentencia .)
+
+
+state 17
+
+    (10) pvariable -> VARIABLE IGUAL . operacion PYCOMA
+    (11) operacion -> . valor MAS valor
+    (12) operacion -> . valor MENOS valor
+    (13) operacion -> . valor MULTIPLICACION valor
+    (14) operacion -> . valor DIVISION valor
+    (15) operacion -> . valor MODULAR valor
+    (16) operacion -> . valor
+    (17) valor -> . ENTERO
+    (18) valor -> . DECIMAL
+    (19) valor -> . CADENA
+    (20) valor -> . CARACTER
+    (21) valor -> . VARIABLE
+
+    ENTERO          shift and go to state 21
+    DECIMAL         shift and go to state 22
+    CADENA          shift and go to state 23
+    CARACTER        shift and go to state 24
+    VARIABLE        shift and go to state 18
+
+    operacion                      shift and go to state 19
+    valor                          shift and go to state 20
+
+state 18
+
+    (21) valor -> VARIABLE .
+
+    MAS             reduce using rule 21 (valor -> VARIABLE .)
+    MENOS           reduce using rule 21 (valor -> VARIABLE .)
+    MULTIPLICACION  reduce using rule 21 (valor -> VARIABLE .)
+    DIVISION        reduce using rule 21 (valor -> VARIABLE .)
+    MODULAR         reduce using rule 21 (valor -> VARIABLE .)
+    PYCOMA          reduce using rule 21 (valor -> VARIABLE .)
+
+
+state 19
+
+    (10) pvariable -> VARIABLE IGUAL operacion . PYCOMA
+
+    PYCOMA          shift and go to state 25
+
+
+state 20
+
+    (11) operacion -> valor . MAS valor
+    (12) operacion -> valor . MENOS valor
+    (13) operacion -> valor . MULTIPLICACION valor
+    (14) operacion -> valor . DIVISION valor
+    (15) operacion -> valor . MODULAR valor
+    (16) operacion -> valor .
+
+    MAS             shift and go to state 26
+    MENOS           shift and go to state 27
+    MULTIPLICACION  shift and go to state 28
+    DIVISION        shift and go to state 29
+    MODULAR         shift and go to state 30
+    PYCOMA          reduce using rule 16 (operacion -> valor .)
+
+
+state 21
+
+    (17) valor -> ENTERO .
+
+    MAS             reduce using rule 17 (valor -> ENTERO .)
+    MENOS           reduce using rule 17 (valor -> ENTERO .)
+    MULTIPLICACION  reduce using rule 17 (valor -> ENTERO .)
+    DIVISION        reduce using rule 17 (valor -> ENTERO .)
+    MODULAR         reduce using rule 17 (valor -> ENTERO .)
+    PYCOMA          reduce using rule 17 (valor -> ENTERO .)
+
+
+state 22
+
+    (18) valor -> DECIMAL .
+
+    MAS             reduce using rule 18 (valor -> DECIMAL .)
+    MENOS           reduce using rule 18 (valor -> DECIMAL .)
+    MULTIPLICACION  reduce using rule 18 (valor -> DECIMAL .)
+    DIVISION        reduce using rule 18 (valor -> DECIMAL .)
+    MODULAR         reduce using rule 18 (valor -> DECIMAL .)
+    PYCOMA          reduce using rule 18 (valor -> DECIMAL .)
+
+
+state 23
+
+    (19) valor -> CADENA .
+
+    MAS             reduce using rule 19 (valor -> CADENA .)
+    MENOS           reduce using rule 19 (valor -> CADENA .)
+    MULTIPLICACION  reduce using rule 19 (valor -> CADENA .)
+    DIVISION        reduce using rule 19 (valor -> CADENA .)
+    MODULAR         reduce using rule 19 (valor -> CADENA .)
+    PYCOMA          reduce using rule 19 (valor -> CADENA .)
+
+
+state 24
+
+    (20) valor -> CARACTER .
+
+    MAS             reduce using rule 20 (valor -> CARACTER .)
+    MENOS           reduce using rule 20 (valor -> CARACTER .)
+    MULTIPLICACION  reduce using rule 20 (valor -> CARACTER .)
+    DIVISION        reduce using rule 20 (valor -> CARACTER .)
+    MODULAR         reduce using rule 20 (valor -> CARACTER .)
+    PYCOMA          reduce using rule 20 (valor -> CARACTER .)
+
+
+state 25
+
+    (10) pvariable -> VARIABLE IGUAL operacion PYCOMA .
+
+    VARIABLE        reduce using rule 10 (pvariable -> VARIABLE IGUAL operacion PYCOMA .)
+    MAIN            reduce using rule 10 (pvariable -> VARIABLE IGUAL operacion PYCOMA .)
+    ID              reduce using rule 10 (pvariable -> VARIABLE IGUAL operacion PYCOMA .)
+    $end            reduce using rule 10 (pvariable -> VARIABLE IGUAL operacion PYCOMA .)
+
+
+state 26
+
+    (11) operacion -> valor MAS . valor
+    (17) valor -> . ENTERO
+    (18) valor -> . DECIMAL
+    (19) valor -> . CADENA
+    (20) valor -> . CARACTER
+    (21) valor -> . VARIABLE
+
+    ENTERO          shift and go to state 21
+    DECIMAL         shift and go to state 22
+    CADENA          shift and go to state 23
+    CARACTER        shift and go to state 24
+    VARIABLE        shift and go to state 18
+
+    valor                          shift and go to state 31
+
+state 27
+
+    (12) operacion -> valor MENOS . valor
+    (17) valor -> . ENTERO
+    (18) valor -> . DECIMAL
+    (19) valor -> . CADENA
+    (20) valor -> . CARACTER
+    (21) valor -> . VARIABLE
+
+    ENTERO          shift and go to state 21
+    DECIMAL         shift and go to state 22
+    CADENA          shift and go to state 23
+    CARACTER        shift and go to state 24
+    VARIABLE        shift and go to state 18
+
+    valor                          shift and go to state 32
+
+state 28
+
+    (13) operacion -> valor MULTIPLICACION . valor
+    (17) valor -> . ENTERO
+    (18) valor -> . DECIMAL
+    (19) valor -> . CADENA
+    (20) valor -> . CARACTER
+    (21) valor -> . VARIABLE
+
+    ENTERO          shift and go to state 21
+    DECIMAL         shift and go to state 22
+    CADENA          shift and go to state 23
+    CARACTER        shift and go to state 24
+    VARIABLE        shift and go to state 18
+
+    valor                          shift and go to state 33
+
+state 29
+
+    (14) operacion -> valor DIVISION . valor
+    (17) valor -> . ENTERO
+    (18) valor -> . DECIMAL
+    (19) valor -> . CADENA
+    (20) valor -> . CARACTER
+    (21) valor -> . VARIABLE
+
+    ENTERO          shift and go to state 21
+    DECIMAL         shift and go to state 22
+    CADENA          shift and go to state 23
+    CARACTER        shift and go to state 24
+    VARIABLE        shift and go to state 18
+
+    valor                          shift and go to state 34
+
+state 30
+
+    (15) operacion -> valor MODULAR . valor
+    (17) valor -> . ENTERO
+    (18) valor -> . DECIMAL
+    (19) valor -> . CADENA
+    (20) valor -> . CARACTER
+    (21) valor -> . VARIABLE
+
+    ENTERO          shift and go to state 21
+    DECIMAL         shift and go to state 22
+    CADENA          shift and go to state 23
+    CARACTER        shift and go to state 24
+    VARIABLE        shift and go to state 18
+
+    valor                          shift and go to state 35
+
+state 31
+
+    (11) operacion -> valor MAS valor .
+
+    PYCOMA          reduce using rule 11 (operacion -> valor MAS valor .)
+
+
+state 32
+
+    (12) operacion -> valor MENOS valor .
+
+    PYCOMA          reduce using rule 12 (operacion -> valor MENOS valor .)
+
+
+state 33
+
+    (13) operacion -> valor MULTIPLICACION valor .
+
+    PYCOMA          reduce using rule 13 (operacion -> valor MULTIPLICACION valor .)
+
+
+state 34
+
+    (14) operacion -> valor DIVISION valor .
+
+    PYCOMA          reduce using rule 14 (operacion -> valor DIVISION valor .)
+
+
+state 35
+
+    (15) operacion -> valor MODULAR valor .
+
+    PYCOMA          reduce using rule 15 (operacion -> valor MODULAR valor .)
+

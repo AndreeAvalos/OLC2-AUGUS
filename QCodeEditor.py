@@ -59,19 +59,20 @@ class XMLHighlighter(QSyntaxHighlighter):
         xmlElementFormat.setForeground(QColor("#C4D916")) #morado
         self.highlightingRules.append(("\$sp", xmlElementFormat))
 
+
+        #COLOR PARA STRING
+        xmlAttributeFormat = QTextCharFormat()
+        xmlAttributeFormat.setFontItalic(True)
+        xmlAttributeFormat.setForeground(QColor("#F98D03")) #anaranjado
+        self.highlightingRules.append((QRegExp("\'.*\'"), xmlAttributeFormat))
+
+        
         #COLOR PARA CARACTER
         xmlAttributeFormat = QTextCharFormat()
         xmlAttributeFormat.setFontKerning(True)
         xmlAttributeFormat.setForeground(QColor("#F8BDC5")) #rosado
         self.highlightingRules.append((QRegExp("\'[A-Za-z0-9]\'"), xmlAttributeFormat))
 
-        #COLOR PARA STRING
-        xmlAttributeFormat = QTextCharFormat()
-        xmlAttributeFormat.setFontItalic(True)
-        xmlAttributeFormat.setForeground(QColor("#F98D03")) #anaranjado
-        self.highlightingRules.append((QRegExp("\'[A-Za-z0-9][A-Za-z0-9_\t ]+\'"), xmlAttributeFormat))
-
-        
         #COLOR PARA int, float, char
         xmlAttributeFormat = QTextCharFormat()
         xmlAttributeFormat.setForeground(QColor("#1C3784")) #azul oscuro

@@ -1,6 +1,7 @@
 from QCodeEditor import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QInputDialog, QLineEdit
+import Gramatica as gramatica 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -169,7 +170,10 @@ class Ui_MainWindow(object):
         print("Archivo a analizar: "+indextab)
         tab = self.editores.widget(self.editores.currentIndex())
         items = self.tab.children()
-        print(items[0].toPlainText())
+        codigo = items[0].toPlainText()
+        #print(codigo)
+        ast = gramatica.parse(codigo)
+        astgraficar = gramatica.construirAST(ast.nodo)
 
     def agregar_tab(self):
         text, okPressed = QInputDialog.getText(self.centralwidget, "Nuevo archivo","Nombre:", QLineEdit.Normal, "")
@@ -207,7 +211,7 @@ class Ui_MainWindow(object):
         self.color.setText(_translate("MainWindow", "Color"))
         self.lineas.setText(_translate("MainWindow", "Lineas"))
         self.ayuda.setText(_translate("MainWindow", "(?)"))
-        self.editores.setTabText(self.editores.indexOf(self.tab), _translate("MainWindow", "main.agus"))
+        self.editores.setTabText(self.editores.indexOf(self.tab), _translate("MainWindow", "main.ags"))
         self.consola.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
