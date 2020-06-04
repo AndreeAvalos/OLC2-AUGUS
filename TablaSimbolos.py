@@ -1,4 +1,5 @@
 from enum import Enum
+import subprocess
 
 class Tipo(Enum):
     ENTERO = 1
@@ -36,13 +37,16 @@ class ref:
         return self.val
 
 class Simbolo:
-    def _init_(self, tipo_etiqueta, *args):
-        if tipo_etiqueta == Tipo_Etiqueta.VARIABLE:
-            self.id = args[0]
-            self.valor = ref(args[1])
-            self.tipo = args[2]
-            self.ambiente = args[3]
-            self.etiqueta = Tipo_Etiqueta.VARIABLE
+    def __init__(self, *args):
+        self.id = args[0]
+        self.sentencias = args[1]
+        self.valor = ref(args[2])
+        self.tipo = args[3]
+        self.ambiente = args[4]
+        self.etiqueta = args[5]
+        self.line = args[6]
+        self.column = args[7]
+
 
 '''
 Clase Tabla de Simbolo donde se almacenaran los  simbolos pertenecientes a recoleccion de datos de la primera pasada
@@ -67,5 +71,48 @@ class TablaSimbolos:
     #Metodo para referenciar una variable
     def referenciar(self, id, valor):
         self.simbolos[id].valor.set(valor)
-    
-    
+    #Metodo para graficar simbolos
+    def graficarSimbolos(self):
+        try:
+            file = open("tablasimbolos.dot", "w")
+            file.write("digraph tabla{\n")
+            file.write("graph [ratio=fill];node [label=\"\\N\", fontsize=15, shape=plaintext];\n")
+            file.write("graph [bb=\"0,0,352,154\"];\n")
+            file.write("arset [label=<")
+            file.write("<TABLE ALIGN=\"LEFT\">\n")
+            file.write("<TR><TD>IDENTIFICADOR</TD><TD>VALOR</TD><TD>TIPO</TD><TD>AMBIENTE</TD><TD>ETIQUETA</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>\n")
+            for id in self.simbolos:
+                file.write("<TR>")
+                file.write("<TD>")
+                file.write(self.simbolos[id].id)
+                file.write("</TD>")
+                file.write("<TD>")
+                file.write(str(self.simbolos[id].valor.get()))
+                file.write("</TD>")
+                file.write("<TD>")
+                file.write(str(self.simbolos[id].tipo))
+                file.write("</TD>")
+                file.write("<TD>")
+                file.write(self.simbolos[id].ambiente)
+                file.write("</TD>")
+                file.write("<TD>")
+                file.write(str(self.simbolos[id].etiqueta))
+                file.write("</TD>")
+                file.write("<TD>")
+                file.write(str(self.simbolos[id].line))
+                file.write("</TD>")
+                file.write("<TD>")
+                file.write(str(self.simbolos[id].column))
+                file.write("</TD>")
+                file.write("</TR>\n")
+            file.write("</TABLE>")
+            file.write("\n>, ];\n")
+            file.write("}")
+        except:
+            print("ERROR AL ESCRIBIR TABLA")
+        finally:
+            file.close()
+            self.cmd("dot -Tpng tablasimbolos.dot -o tablasimbolos.png")
+
+    def cmd(self,commando):
+        subprocess.run(commando, shell=True)

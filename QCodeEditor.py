@@ -18,12 +18,7 @@ class XMLHighlighter(QSyntaxHighlighter):
         
         self.highlightingRules = []
 
-        #COLOR PARA ID
-        xmlAttributeFormat = QTextCharFormat()
-        xmlAttributeFormat.setFontItalic(True)
-        xmlAttributeFormat.setForeground(QColor("#A854EE")) #anaranjado
-        self.highlightingRules.append((QRegExp("[A-Za-z0-9][A-Za-z0-9_]+"), xmlAttributeFormat))
-                #COLOR PARA NUMEROS
+        #COLOR PARA NUMEROS
         xmlAttributeFormat = QTextCharFormat()
         xmlAttributeFormat.setForeground(QColor("#262C83")) #anaranjado
         self.highlightingRules.append((QRegExp("[0-9]+"), xmlAttributeFormat))
@@ -32,6 +27,12 @@ class XMLHighlighter(QSyntaxHighlighter):
         xmlAttributeFormat = QTextCharFormat()
         xmlAttributeFormat.setForeground(QColor("#44487B")) #anaranjado
         self.highlightingRules.append((QRegExp("[0-9]+\.[0-9]+"), xmlAttributeFormat))
+
+        #COLOR PARA ID
+        xmlAttributeFormat = QTextCharFormat()
+        xmlAttributeFormat.setFontItalic(True)
+        xmlAttributeFormat.setForeground(QColor("#A854EE")) #anaranjado
+        self.highlightingRules.append((QRegExp("[A-Za-z0-9][A-Za-z0-9_]+"), xmlAttributeFormat))
 
 
         #COLOR DE TEMPORALES
