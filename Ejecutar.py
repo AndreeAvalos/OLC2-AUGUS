@@ -73,7 +73,7 @@ class Ejecutor:
                 return True
         
         return False
-        
+
     def procesar_etiqueta(self, etiqueta):
         self.ambiente = etiqueta.id
         exit = False
@@ -93,7 +93,8 @@ class Ejecutor:
                     new_simbol = Simbolo(sentencia.id, None, result, sentencia.tipo,self.ambiente, sentencia.etiqueta,sentencia.line,sentencia.column)
                     self.ts.add(new_simbol)
                 else:
-                    new_simbol = Simbolo(sentencia.id, None, result, sentencia.tipo,self.ambiente, sentencia.etiqueta,sentencia.line,sentencia.column)
+                    old_simbol = self.ts.get(sentencia.id)
+                    new_simbol = Simbolo(sentencia.id, None, result, sentencia.tipo,old_simbol.ambiente, sentencia.etiqueta,old_simbol.line,old_simbol.column)
                     self.ts.actualizar(new_simbol)
         else:
 
