@@ -7,7 +7,7 @@ class Main(Instruccion):
     def __init__(self, instrucciones, line, column):
         self.etiqueta = Tipo_Etiqueta.MAIN
         self.id = "main"
-        self.instrucciones = instrucciones
+        self.sentencias = instrucciones
         self.tipo = Tipo_Simbolo.MAIN
         self.line = line
         self.column = column
@@ -17,7 +17,7 @@ class Etiqueta(Instruccion):
     def __init__(self, id, instrucciones, line, column):
         self.etiqueta = Tipo_Etiqueta.CONTROL
         self.id = id
-        self.instrucciones = instrucciones
+        self.sentencias = instrucciones
         self.tipo = Tipo_Simbolo.ETIQUETA
         self.line = line
         self.column = column
@@ -47,7 +47,7 @@ class Asignacion(Instruccion):
         elif match3:            
             self.tipo = Tipo_Simbolo.RETORNO
             self.id = match3.group()
-        elif match3:            
+        elif match4:            
             self.tipo = Tipo_Simbolo.PILA
             self.id = match4.group()
         elif id == "$ra":
@@ -58,7 +58,7 @@ class Asignacion(Instruccion):
             self.id = "$sp"
         else:
             self.tipo = Tipo_Simbolo.INVALIDO
-
+            self.id = id
         self.valor = valor
         self.line = line
         self.column = column

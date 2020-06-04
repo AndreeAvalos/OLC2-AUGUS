@@ -2,10 +2,15 @@ from QCodeEditor import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QInputDialog, QLineEdit
 import Gramatica as gramatica 
+from Recolectar import Recolectar
+from TablaSimbolos import TablaSimbolos
+from Ejecutar import Ejecutor
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(735, 600)
+        self.lineas = True
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.nuevo = QtWidgets.QPushButton(self.centralwidget)
@@ -69,6 +74,7 @@ class Ui_MainWindow(object):
         self.color.setObjectName("color")
         self.lineas = QtWidgets.QPushButton(self.centralwidget)
         self.lineas.setGeometry(QtCore.QRect(580, 0, 51, 41))
+        self.lineas.clicked.connect(self.cambiarLineas)
         icon = QtGui.QIcon.fromTheme("new")
         self.lineas.setIcon(icon)
         self.lineas.setObjectName("lineas")
@@ -167,13 +173,36 @@ class Ui_MainWindow(object):
     def ejecutar_analisis(self):
         self.consola.setText("****** Preparando Analisis ******")
         indextab = self.editores.tabText(self.editores.currentIndex())
-        print("Archivo a analizar: "+indextab)
+        self.consola.setText("Archivo a analizar: "+indextab)
         tab = self.editores.widget(self.editores.currentIndex())
         items = self.tab.children()
         codigo = items[0].toPlainText()
         #print(codigo)
+        print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
         ast = gramatica.parse(codigo)
-        astgraficar = gramatica.construirAST(ast.nodo)
+        gramatica.construirAST(ast.nodo)
+        print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
+        ts = TablaSimbolos()
+        lst = []
+        ejecutor = Ejecutor(ast.instruccion,ts,lst) 
+        try:
+            recolector = Recolectar(ast.instruccion,ts, lst)
+            print("******FIN CONSTRUCTOR**********")
+            recolector.procesar()
+            recolector.getErrores()
+            print("******FIN RECOLECCION*******")
+            print("********** FIN DE CONSTRUCTOR ********")
+            ejecutor.procesar()
+        except:
+            self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
+            self.consola.append("REVISAR REPORTE DE ERRORES")
+        finally:
+            ejecutor.graficarErrores()
+            ts.graficarSimbolos()
+        print("__________________________FIN______________________________")
+        
+        
+        
 
     def agregar_tab(self):
         text, okPressed = QInputDialog.getText(self.centralwidget, "Nuevo archivo","Nombre:", QLineEdit.Normal, "")
@@ -189,8 +218,29 @@ class Ui_MainWindow(object):
             area.setObjectName("area")
             area.setParent(tab)
             self.editores.addTab(tab, text+".ags")
+    
+    
 
-        
+    def cambiarLineas(self):
+        if self.lineas: self.lineas =False
+        else: self.lineas = True
+
+        indextab = self.editores.tabText(self.editores.currentIndex())
+        tab = self.editores.widget(self.editores.currentIndex())
+        items = tab.children()
+        tab = QtWidgets.QWidget()
+        area = items[0]
+        cod = items[0].toPlainText()
+        area = QCodeEditor(DISPLAY_LINE_NUMBERS=self.lineas, 
+                             HIGHLIGHT_CURRENT_LINE=True,
+                             SyntaxHighlighter=XMLHighlighter)
+        area.setGeometry(QtCore.QRect(0, 0, 471, 291))
+        area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        area.setPlainText(cod)
+        area.setObjectName("area")
+        area.setParent(tab)
+        self.editores.removeTab(self.editores.currentIndex())
+        self.editores.addTab(tab, indextab)
 
     def closeTab(self, index):
         tab = self.editores.widget(index)

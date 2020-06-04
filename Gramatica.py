@@ -4,6 +4,8 @@ from Instruccion import *
 from Operacion import *
 import subprocess
 
+index =0 
+
 def cmd(commando):
     subprocess.run(commando, shell=True)
 
@@ -21,18 +23,20 @@ class NodoG:
     def add(self, child):
         self.childs.append(child)
 
-index =0 
-
 
 
 def construirAST(nodo):
-    file = open("astAscendente.dot", "w")
-    file.write("digraph{ bgcolor = gray \n node[fontcolor = white, height = 0.5, color = white] \n [shape=box, style=filled, color=gray14] \n rankdir=UD \n edge[color=white, dir=fordware]\n")
-    imprimirNodos(nodo,file)
-    graficar(nodo,file)
-    file.write("\n}")
-    file.close()
-    cmd("dot -Tpng astAscendente.dot -o grafica1.png")
+    try:
+        file = open("ASPAscendente.dot", "w")
+        file.write("digraph{ bgcolor = gray \n node[fontcolor = white, height = 0.5, color = white] \n [shape=box, style=filled, color=gray14] \n rankdir=UD \n edge[color=white, dir=fordware]\n")
+        imprimirNodos(nodo,file)
+        graficar(nodo,file)
+        file.write("\n}")
+    except:
+        print("ERROR")
+    finally:
+        file.close()
+        cmd("dot -Tpng ASPAscendente.dot -o ASPAscendente.png")
 
 def imprimirNodos(nodo,file):
     file.write(str(nodo.index)+"[style = \"filled\" ; label = \""+nodo.nombre+"\"] \n")
@@ -176,7 +180,8 @@ def t_CARACTER(t):
 
 def t_COMENTARIO(t):
     r'\#.*\n'
-    pass
+    t.lexer.lineno += 1
+
 
 
 def t_nuevalinea(t):
@@ -209,19 +214,23 @@ def getIndex():
 def p_init(p):
     'init : instrucciones'
     print('init : instrucciones; init = instruccion')
-    p[0] = Nodo(p[1].instruccion, NodoG(getIndex(),"init", [p[1].nodo]))
+    nodo2 = NodoG(getIndex(),"init", [])
+    for item in p[1].nodo:
+        nodo2.add(item)
+    p[0] = Nodo(p[1].instruccion, nodo2)
 
 def p_instrucciones(p):
     ''' instrucciones : instrucciones instruccion '''
     p[1].instruccion.append(p[2].instruccion)
-    p[1].nodo.add(p[2].nodo)
-    p[0] = Nodo(p[1].instruccion,p[1].nodo)
+    p[1].nodo.append(p[2].nodo)
+    nodo = NodoG(getIndex(),"instrucciones",p[1].nodo)
+    p[0] = Nodo(p[1].instruccion,[nodo])
     print("instrucciones : instrucciones instruccion; {instrucciones2.append(instruccion); instrucciones = instrucciones2}")
 
         
 def p_instrucciones2(p):
     ' instrucciones : instruccion '
-    p[0]= Nodo([p[1].instruccion],NodoG(getIndex(),"instruciones",[p[1].nodo]))
+    p[0]= Nodo([p[1].instruccion],[NodoG(getIndex(),"instruccion",[p[1].nodo])])
     print("instrucciones : instruccion; instrucciones = new lista; instrucciones.append(instruccion)")
 
 
@@ -235,8 +244,8 @@ def p_pmain(p):
     nodo2 = NodoG(getIndex(),"pmain",[])
     nodo2.add(NodoG(getIndex(),"main", None))
     nodo2.add(NodoG(getIndex(),":", None))
-    nodo2.add(p[3].nodo)
-    print("Linea: %d Columna: %d",p.lineno(1),find_column(p.slice[1]))
+    for item in p[3].nodo:
+        nodo2.add(item)
     p[0] = Nodo(Main(p[3].instruccion,p.lineno(1),find_column(p.slice[1])),nodo2) 
     print("pmain : MAIN DOSPUNTOS sentencias; acciones ")
     print("instruccion : pmain; instruccion = pmain")
@@ -245,15 +254,16 @@ def p_pmain(p):
 def p_sentencias(p):
     'sentencias    :   sentencias sentencia'
     p[1].instruccion.append(p[2].instruccion)
-    p[1].nodo.add(p[2].nodo)
-    p[0] = Nodo(p[1].instruccion,p[1].nodo)
+    p[1].nodo.append(p[2].nodo)
+    nodo = NodoG(getIndex(),"sentencias",p[1].nodo)
+    p[0] = Nodo(p[1].instruccion,[nodo])
     print("sentencias : sentencias sentencia; sentencias2.append(sentencia); sentencias = sentencias2")
 
 def p_sentencias2(p):
     'sentencias    :   sentencia'
     arreglo = []
     arreglo.append(p[1].instruccion)
-    p[0]= Nodo(arreglo,NodoG(getIndex(),"sentencias",[p[1].nodo]))
+    p[0]= Nodo(arreglo,[NodoG(getIndex(),"sentencia",[p[1].nodo])])
     print("sentencias : sentencia; sentencias2 = new lista; sentencias2.append(sentencia)")
 
 def p_sentencia(p):
@@ -284,20 +294,17 @@ def p_operaciones(p):
     nodo.add(NodoG(getIndex(),p[2], None))
     nodo.add(p[3].nodo)
 
-    if p[2] == '+': p[0] = Nodo(OperacionBinaria(p[1],p[3],OPERACION_NUMERICA.SUMA,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '-': p[0] = Nodo(OperacionBinaria(p[1],p[3],OPERACION_NUMERICA.RESTA,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '*': p[0] = Nodo(OperacionBinaria(p[1],p[3],OPERACION_NUMERICA.MULTIPLICACION,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '/': p[0] = Nodo(OperacionBinaria(p[1],p[3],OPERACION_NUMERICA.DIVISION,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '%': p[0] = Nodo(OperacionBinaria(p[1],p[3],OPERACION_NUMERICA.MODULAR,p.lineno(2),find_column(p.slice[2])),nodo)
+    if p[2] == '+': p[0] = Nodo(OperacionBinaria(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.SUMA,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '-': p[0] = Nodo(OperacionBinaria(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.RESTA,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '*': p[0] = Nodo(OperacionBinaria(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.MULTIPLICACION,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '/': p[0] = Nodo(OperacionBinaria(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.DIVISION,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '%': p[0] = Nodo(OperacionBinaria(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.MODULAR,p.lineno(2),find_column(p.slice[2])),nodo)
 
 def p_operacion(p):
     ' operacion     :   valor '
     nodo = NodoG(getIndex(),"operacion",[p[1].nodo])
     
     p[0]=Nodo(p[1].instruccion,nodo)
-
-
-
 
 def p_valor(p):
     '''valor    :   ENTERO
@@ -321,7 +328,8 @@ def p_petiqueta(p):
     nodo2 = NodoG(getIndex(),"petiqueta",[])
     nodo2.add(NodoG(getIndex(),p[1], None))
     nodo2.add(NodoG(getIndex(),":", None))
-    nodo2.add(p[3].nodo)
+    for item in p[3].nodo:
+        nodo2.add(item)
     p[0] = Nodo(Etiqueta(p[1],p[3].instruccion,p.lineno(1),find_column(p.slice[1])),nodo2)
     print("petiqueta : "+p[1]+" DOSPUNTOS sentencias; acciones ")
     print("instruccion : petiqueta; instruccion = petiqueta")

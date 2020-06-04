@@ -1,0 +1,8 @@
+digraph tablaErrores{
+graph [ratio=fill];node [label="\N", fontsize=15, shape=plaintext];
+graph [bb="0,0,352,154"];
+arset [label=<<TABLE ALIGN="LEFT">
+<TR><TD>TIPO</TD><TD>DESCRIPCION</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>
+</TABLE>
+>, ];
+}
