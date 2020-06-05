@@ -178,27 +178,38 @@ class Ui_MainWindow(object):
         items = self.tab.children()
         codigo = items[0].toPlainText()
         #print(codigo)
+        ast = None
+        analisis_semantico = False
         print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
-        ast = gramatica.parse(codigo)
-        gramatica.construirAST(ast.nodo)
-        print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
-        ts = TablaSimbolos()
-        lst = []
-        ejecutor = Ejecutor(ast.instruccion,ts,lst) 
         try:
-            recolector = Recolectar(ast.instruccion,ts, lst)
-            print("******FIN CONSTRUCTOR**********")
-            recolector.procesar()
-            recolector.getErrores()
-            print("******FIN RECOLECCION*******")
-            print("********** FIN DE CONSTRUCTOR ********")
-            ejecutor.procesar()
+            gramatica.lst_errores=[]
+            ast = gramatica.parse(codigo)
+            gramatica.construirAST(ast.nodo)
         except:
-            self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
+            self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
             self.consola.append("REVISAR REPORTE DE ERRORES")
         finally:
-            ejecutor.graficarErrores()
-            ts.graficarSimbolos()
+            gramatica.graficarErrores()
+        ts = TablaSimbolos()
+        lst = []
+        ejecutor = Ejecutor(ast.instruccion if (ast!=None) else ast,ts,lst)
+        if ast!=None:
+            print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
+            try:
+                recolector = Recolectar(ast.instruccion,ts, lst)
+                print("******FIN CONSTRUCTOR**********")
+                recolector.procesar()
+                recolector.getErrores()
+                print("******FIN RECOLECCION*******")
+                print("********** FIN DE CONSTRUCTOR ********")
+                ejecutor.procesar()
+            except:
+                self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
+                self.consola.append("REVISAR REPORTE DE ERRORES")
+        ejecutor.lst_errores = ejecutor.lst_errores+ gramatica.lst_errores
+        ejecutor.graficarErrores()
+        ts.graficarSimbolos()
+                
         print("__________________________FIN______________________________")
         
         

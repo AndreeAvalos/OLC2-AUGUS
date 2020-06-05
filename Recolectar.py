@@ -3,8 +3,8 @@ from Operacion import *
 from TablaSimbolos import Simbolo, TablaSimbolos
 
 class TokenError:
-    def __init__(self,descripcion, line, column):
-        self.tipo = "Semantico"
+    def __init__(self,tipo, descripcion, line, column):
+        self.tipo = tipo
         self.descripcion = descripcion
         self.line = line 
         self.column = column
@@ -19,7 +19,7 @@ class Recolectar:
         return self.lst_errores
 
     def agregarError(self,descripcion,line,column):
-        new_error = TokenError(descripcion,line,column)
+        new_error = TokenError("Semantico",descripcion,line,column)
         self.lst_errores.append(new_error)
 
     def procesar(self):
