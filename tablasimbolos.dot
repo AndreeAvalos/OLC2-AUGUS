@@ -15,15 +15,6 @@ arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>$t8</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>9</TD><TD>2</TD></TR>
 <TR><TD>$t9</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>10</TD><TD>2</TD></TR>
 <TR><TD>$t16</TD><TD>10</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main2</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>22</TD><TD>2</TD></TR>
-<TR><TD>$t10</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>12</TD><TD>2</TD></TR>
-<TR><TD>$t11</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>13</TD><TD>2</TD></TR>
-<TR><TD>$t12</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>14</TD><TD>2</TD></TR>
-<TR><TD>$t13</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>15</TD><TD>2</TD></TR>
-<TR><TD>$a0</TD><TD>25</TD><TD>Tipo_Simbolo.PARAMETRO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>16</TD><TD>2</TD></TR>
-<TR><TD>$v5</TD><TD>5</TD><TD>Tipo_Simbolo.RETORNO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>17</TD><TD>2</TD></TR>
-<TR><TD>$s0</TD><TD>7</TD><TD>Tipo_Simbolo.PILA</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>18</TD><TD>2</TD></TR>
-<TR><TD>$ra</TD><TD>12</TD><TD>Tipo_Simbolo.SIMULADOR</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>19</TD><TD>2</TD></TR>
-<TR><TD>$sp</TD><TD>7</TD><TD>Tipo_Simbolo.PUNTERO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>20</TD><TD>2</TD></TR>
 </TABLE>
 >, ];
 }

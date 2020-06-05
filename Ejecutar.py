@@ -102,6 +102,7 @@ class Ejecutor(threading.Thread):
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
+            elif isinstance(sentencia, Exit): return True
             self.ts.graficarSimbolos()
             if exit:
                 return True
@@ -121,6 +122,7 @@ class Ejecutor(threading.Thread):
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
+            elif isinstance(sentencia, Exit): return True
             self.ts.graficarSimbolos()
             
             if exit:
