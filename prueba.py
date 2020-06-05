@@ -1,4 +1,4 @@
-class ref:
+'''class ref:
        def __init__(self, obj): self.obj = obj
        def get(self):    return self.obj
        def set(self, obj):      self.obj = obj
@@ -14,7 +14,6 @@ print (a.get())  # => 4
 print (b.get())  # => 4
 print (c.get())  # => [1, 2]
 
-'''
 import re
 
 pattern = r'(\$t[0-9]+)'
@@ -60,3 +59,53 @@ numero4 = numero(5)
 
 operacion = procesar(retornarsuma(numero1, numero4))
 print(operacion)'''
+
+'''import sys
+from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5 import QtCore
+from PyQt5 import Qt
+
+class Principal(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
+
+
+    def keyPressEvent(self,event):
+        if event.key() == QtCore.Qt.Key_Return:
+            print("pressed")
+        event.accept()
+
+
+
+app = QApplication([])
+p = Principal()
+p.show()
+app.exec_()'''
+
+'''import time
+contador = 0
+while contador <= 100:
+       time.sleep(1)
+       contador+=1
+       print(contador)
+print("TIEMPO EXCEDIDO DE LECTURA")'''
+
+
+from PyQt5 import QtCore, QtWidgets
+
+class PlainTextEdit(QtWidgets.QPlainTextEdit):
+       def keyPressEvent(self, event):
+              if event.key() == QtCore.Qt.Key_Return:
+                     salida = self.toPlainText()
+                     lineas = salida.split("\n")
+                     print (lineas[len(lineas)-1])
+              if event.key() == QtCore.Qt.Key_Backspace:
+                     print("Backspace pressed")
+              super(PlainTextEdit, self).keyPressEvent(event)
+
+if __name__ == '__main__':
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    w = PlainTextEdit()
+    w.show()
+    sys.exit(app.exec_())
