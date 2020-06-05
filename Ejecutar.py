@@ -103,6 +103,7 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
             elif isinstance(sentencia, Exit): return True
+            elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
             self.ts.graficarSimbolos()
             if exit:
                 return True
@@ -144,6 +145,15 @@ class Ejecutor(threading.Thread):
             self.agregarError("{0} no esta declarad".format(sentencia.id),sentencia.line,sentencia.column)
 
         return False
+    
+    def procesar_unset(self, sentencia):
+        try:
+            if self.ts.existe(sentencia.id):
+                self.ts.delete(sentencia.id)
+            else:
+                self.agregarError("{0} no esta declarad".format(sentencia.id),sentencia.line,sentencia.column)     
+        except:
+            self.agregarError("Error al eliminar",sentencia.line,sentencia.column)
 
 
     def procesar_asignacion(self, sentencia):

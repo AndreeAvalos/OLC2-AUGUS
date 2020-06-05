@@ -312,6 +312,7 @@ def p_sentencia(p):
                     | preferencia
                     | pgoto
                     | pexit
+                    | punset
     '''
     p[0] = p[1]
 
@@ -353,6 +354,16 @@ def p_psalir(p):
     p[0] = Nodo(Exit(p.lineno(1),find_column(p.slice[1])), nodo)
     print('sentencia: pexit; { sentencia = pexit}')
     
+def p_punset(p):
+    'punset  :   UNSET PARIZQ VARIABLE PARDER PYCOMA'
+    nodo = NodoG(getIndex(),"punset",[])
+    nodo.add(NodoG(getIndex(),"unset", None))
+    nodo.add(NodoG(getIndex(),"(", None))
+    nodo.add(NodoG(getIndex(),p[3], None))
+    nodo.add(NodoG(getIndex(),")", None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(UnSet(p[3],p.lineno(1),find_column(p.slice[1])), nodo)
+    print('sentencia: punset; { sentencia = punset}')
     
 
 def p_operaciones(p):

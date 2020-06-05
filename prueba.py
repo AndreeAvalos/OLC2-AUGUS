@@ -90,22 +90,7 @@ while contador <= 100:
        print(contador)
 print("TIEMPO EXCEDIDO DE LECTURA")'''
 
-
-from PyQt5 import QtCore, QtWidgets
-
-class PlainTextEdit(QtWidgets.QPlainTextEdit):
-       def keyPressEvent(self, event):
-              if event.key() == QtCore.Qt.Key_Return:
-                     salida = self.toPlainText()
-                     lineas = salida.split("\n")
-                     print (lineas[len(lineas)-1])
-              if event.key() == QtCore.Qt.Key_Backspace:
-                     print("Backspace pressed")
-              super(PlainTextEdit, self).keyPressEvent(event)
-
-if __name__ == '__main__':
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    w = PlainTextEdit()
-    w.show()
-    sys.exit(app.exec_())
+lst = {'1':3,'11':2,'12':4}
+print(lst)
+del lst['1']
+print(lst)

@@ -114,6 +114,10 @@ class Exit(Instruccion):
         self.line = line
         self.column = column
 
-
+class UnSet(Instruccion):
+    def __init__(self, id,line, column):
+        self.id = id
+        self.line = line
+        self.column = column
 
 
