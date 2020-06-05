@@ -92,15 +92,16 @@ class Ejecutor(threading.Thread):
     def procesar_main(self,main):
         self.ambiente = "main"
         exit = False
-        #cursor = self.area.textCursor()
-        #cursor.setPosition(0)
+        cursor = self.area.textCursor()
+        cursor.setPosition(0)
         for sentencia in main.sentencias:
-            #time.sleep(0.5)
-            #cursor.setPosition(0)
-            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-            #self.area.setTextCursor(cursor)
+            time.sleep(0.5)
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            self.area.setTextCursor(cursor)
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
+            elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
             self.ts.graficarSimbolos()
             if exit:
                 return True
@@ -110,13 +111,38 @@ class Ejecutor(threading.Thread):
     def procesar_etiqueta(self, etiqueta):
         self.ambiente = etiqueta.id
         exit = False
+        cursor = self.area.textCursor()
+        cursor.setPosition(0)
         for sentencia in etiqueta.sentencias:
+            time.sleep(0.5)
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            self.area.setTextCursor(cursor)
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
+            elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
+            elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
+            self.ts.graficarSimbolos()
             
             if exit:
                 return True
         
         return False
+    
+    def procesar_goto(self,sentencia):
+        if self.ts.existe(sentencia.id):
+            simbol = self.ts.get(sentencia.id)
+            if simbol.tipo == Tipo_Simbolo.ETIQUETA:
+                ambiente_ant = self.ambiente
+                existe = self.procesar_etiqueta(simbol)
+                self.ambiente = ambiente_ant
+                return existe
+            else:
+                self.agregarError("{0} no es una etiqueta".format(sentencia.id),sentencia.line, sentencia.column)
+        else:
+            self.agregarError("{0} no esta declarad".format(sentencia.id),sentencia.line,sentencia.column)
+
+        return False
+
 
     def procesar_asignacion(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:

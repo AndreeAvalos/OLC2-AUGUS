@@ -4,7 +4,7 @@ graph [bb="0,0,352,154"];
 arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>IDENTIFICADOR</TD><TD>VALOR</TD><TD>TIPO</TD><TD>AMBIENTE</TD><TD>ETIQUETA</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>
 <TR><TD>main</TD><TD>None</TD><TD>Tipo_Simbolo.MAIN</TD><TD>global</TD><TD>Tipo_Etiqueta.MAIN</TD><TD>1</TD><TD>1</TD></TR>
-<TR><TD>main2</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.CONTROL</TD><TD>20</TD><TD>1</TD></TR>
+<TR><TD>main2</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.CONTROL</TD><TD>21</TD><TD>1</TD></TR>
 <TR><TD>$t1</TD><TD>5</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>2</TD><TD>2</TD></TR>
 <TR><TD>$t2</TD><TD>12</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>3</TD><TD>2</TD></TR>
 <TR><TD>$t3</TD><TD>36</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>4</TD><TD>2</TD></TR>
@@ -14,16 +14,16 @@ arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>$t7</TD><TD>-5</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>8</TD><TD>2</TD></TR>
 <TR><TD>$t8</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>9</TD><TD>2</TD></TR>
 <TR><TD>$t9</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>10</TD><TD>2</TD></TR>
-<TR><TD>$t10</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>11</TD><TD>2</TD></TR>
-<TR><TD>$t11</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>12</TD><TD>2</TD></TR>
-<TR><TD>$t12</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>13</TD><TD>2</TD></TR>
-<TR><TD>$t13</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>14</TD><TD>2</TD></TR>
-<TR><TD>$a0</TD><TD>25</TD><TD>Tipo_Simbolo.PARAMETRO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>15</TD><TD>2</TD></TR>
-<TR><TD>$v5</TD><TD>5</TD><TD>Tipo_Simbolo.RETORNO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>16</TD><TD>2</TD></TR>
-<TR><TD>$s0</TD><TD>7</TD><TD>Tipo_Simbolo.PILA</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>17</TD><TD>2</TD></TR>
-<TR><TD>$ra</TD><TD>12</TD><TD>Tipo_Simbolo.SIMULADOR</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>18</TD><TD>2</TD></TR>
-<TR><TD>$sp</TD><TD>7</TD><TD>Tipo_Simbolo.PUNTERO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>19</TD><TD>2</TD></TR>
-<TR><TD>$t16</TD><TD>10</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main2</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>21</TD><TD>2</TD></TR>
+<TR><TD>$t16</TD><TD>10</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main2</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>22</TD><TD>2</TD></TR>
+<TR><TD>$t10</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>12</TD><TD>2</TD></TR>
+<TR><TD>$t11</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>13</TD><TD>2</TD></TR>
+<TR><TD>$t12</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>14</TD><TD>2</TD></TR>
+<TR><TD>$t13</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>15</TD><TD>2</TD></TR>
+<TR><TD>$a0</TD><TD>25</TD><TD>Tipo_Simbolo.PARAMETRO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>16</TD><TD>2</TD></TR>
+<TR><TD>$v5</TD><TD>5</TD><TD>Tipo_Simbolo.RETORNO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>17</TD><TD>2</TD></TR>
+<TR><TD>$s0</TD><TD>7</TD><TD>Tipo_Simbolo.PILA</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>18</TD><TD>2</TD></TR>
+<TR><TD>$ra</TD><TD>12</TD><TD>Tipo_Simbolo.SIMULADOR</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>19</TD><TD>2</TD></TR>
+<TR><TD>$sp</TD><TD>7</TD><TD>Tipo_Simbolo.PUNTERO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>20</TD><TD>2</TD></TR>
 </TABLE>
 >, ];
 }
