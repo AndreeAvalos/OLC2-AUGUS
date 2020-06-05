@@ -311,7 +311,6 @@ def p_sentencia(p):
     '''sentencia    : pvariable
                     | preferencia
                     | pgoto
-                    | pexit
     '''
     p[0] = p[1]
 
@@ -337,14 +336,13 @@ def p_prefencia(p):
     p[0] = Nodo(Referencia(p[1],OperacionVariable(p[4],p.lineno(4),find_column(p.slice[4])),Tipo_Etiqueta.VARIABLE,p.lineno(1),find_column(p.slice[1])),nodo)
     print('sentencia: preferencia; { sentencia = preferencia}')
 
-def p_pgoto(p):
+def p_ptgoto(p):
     'pgoto  :   GOTO ID PYCOMA'
     nodo = NodoG(getIndex(),"pgoto",[])
     nodo.add(NodoG(getIndex(),p[2], None))
     p[0] = Nodo(Goto(p[2],p.lineno(1),find_column(p.slice[1])), nodo)
     print('sentencia: goto; { sentencia = goto}')
-
-
+    
 
 def p_operaciones(p):
     ''' operacion   :   valor MAS valor
