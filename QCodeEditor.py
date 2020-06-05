@@ -204,7 +204,7 @@ class XMLHighlighter(QSyntaxHighlighter):
             else:
                 commentLength = endIndex - startIndex + self.valueEndExpression.matchedLength() 
             self.setFormat(startIndex, commentLength, self.valueFormat) 
-            startIndex = self.valueStartExpression.indexIn(text, startIndex + commentLength);
+            startIndex = self.valueStartExpression.indexIn(text, startIndex + commentLength)
 
  
 class QCodeEditor(QPlainTextEdit):

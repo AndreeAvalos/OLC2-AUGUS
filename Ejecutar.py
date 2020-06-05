@@ -2,15 +2,40 @@ from Instruccion import *
 from Operacion import *
 from TablaSimbolos import Simbolo, TablaSimbolos
 from Recolectar import TokenError, Recolectar 
-
-
-class Ejecutor:
-    def __init__(self, instrucciones, ts, lst):
-        self.instrucciones = instrucciones
-        self.ts = ts
+import threading
+import time
+from QCodeEditor import *
+class Ejecutor(threading.Thread):
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs=None, *, daemon=None):
+        super().__init__(group=group, target=target, name=name,
+                         daemon=daemon)
+        self.instrucciones = args[0]
+        self.ts = args[1]
         self.ambiente ="global"
-        self.lst_errores = lst
+        self.lst_errores = args[2]
+        self.entrada = args[3]
+        self.leido = False
+        self.area = args[4]
 
+
+    def run(self):
+        temp =  self.area.currentLineColor
+        try:      
+            self.area.currentLineColor = QColor("#FF0000")
+            self.procesar()
+        except:
+            print("ERROR DE EJECUCION")
+            self.graficarErrores()
+        finally:
+            print("__________________________FIN______________________________")
+            self.ts.graficarSimbolos()
+            self.area.currentLineColor = temp
+
+    def setText(self,in_):
+        self.entrada= in_
+    def setState(self, state):
+        self.leido= state
 
     def agregarError(self,descripcion,line,column):
         new_error = TokenError("Semantico",descripcion,line,column)
@@ -49,6 +74,7 @@ class Ejecutor:
             file.close()
             self.ts.cmd("dot -Tpng ESemanticos.dot -o ESemanticos.png")
 
+
     def procesar(self):
         encontro = False
         exit = False
@@ -66,10 +92,19 @@ class Ejecutor:
     def procesar_main(self,main):
         self.ambiente = "main"
         exit = False
+        cursor = self.area.textCursor()
+        cursor.setPosition(0)
         for sentencia in main.sentencias:
+            time.sleep(0.5)
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            self.area.setTextCursor(cursor)
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
-            if isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
-            
+            elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
+            elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
+            elif isinstance(sentencia, Exit): return True
+            elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
+            self.ts.graficarSimbolos()
             if exit:
                 return True
         
@@ -78,13 +113,48 @@ class Ejecutor:
     def procesar_etiqueta(self, etiqueta):
         self.ambiente = etiqueta.id
         exit = False
+        cursor = self.area.textCursor()
+        cursor.setPosition(0)
         for sentencia in etiqueta.sentencias:
+            time.sleep(0.5)
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            self.area.setTextCursor(cursor)
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
+            elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
+            elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
+            elif isinstance(sentencia, Exit): return True
+            self.ts.graficarSimbolos()
             
             if exit:
                 return True
         
         return False
+    
+    def procesar_goto(self,sentencia):
+        if self.ts.existe(sentencia.id):
+            simbol = self.ts.get(sentencia.id)
+            if simbol.tipo == Tipo_Simbolo.ETIQUETA:
+                ambiente_ant = self.ambiente
+                existe = self.procesar_etiqueta(simbol)
+                self.ambiente = ambiente_ant
+                return existe
+            else:
+                self.agregarError("{0} no es una etiqueta".format(sentencia.id),sentencia.line, sentencia.column)
+        else:
+            self.agregarError("{0} no esta declarad".format(sentencia.id),sentencia.line,sentencia.column)
+
+        return False
+    
+    def procesar_unset(self, sentencia):
+        try:
+            if self.ts.existe(sentencia.id):
+                self.ts.delete(sentencia.id)
+            else:
+                self.agregarError("{0} no esta declarad".format(sentencia.id),sentencia.line,sentencia.column)     
+        except:
+            self.agregarError("Error al eliminar",sentencia.line,sentencia.column)
+
 
     def procesar_asignacion(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
@@ -102,7 +172,6 @@ class Ejecutor:
             self.agregarError("La variable {0} invalida".format(sentencia.id),sentencia.line, sentencia.column)
 
     def procesar_referencia(self, sentencia):
-        print("ENTRO")
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
             result = self.procesar_valor(sentencia.valor)
             if result != None:
@@ -200,5 +269,6 @@ class Ejecutor:
             else:
                 self.agregarError("No existe variable {0}".format(expresion.id),expresion.line,expresion.column)
                 return None
-
+    def stop(self):
+        self.stopped = True
 

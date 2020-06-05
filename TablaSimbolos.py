@@ -67,6 +67,8 @@ class TablaSimbolos:
         self.simbolos[simbolo.id].valor.set(simbolo.valor.get())  
     def copy(self,id,simbolo):
         self.simbolos[id] = simbolo
+    def delete(self,id):
+        del self.simbolos[id]
     #Metodo que indica si existe variable en la tabla de simbolos
     def existe(self, id):
         return id in self.simbolos

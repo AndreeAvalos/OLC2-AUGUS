@@ -1,16 +1,40 @@
 from QCodeEditor import *
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QInputDialog, QLineEdit
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QInputDialog, QLineEdit,QMainWindow
 import Gramatica as gramatica 
 from Recolectar import Recolectar
 from TablaSimbolos import TablaSimbolos
 from Ejecutar import Ejecutor
+#variable global donde se almacerana la instancia, ya se de ejecucion o debug para paserlos los valores de read
+in_console = None
+
+class PlainTextEdit(QtWidgets.QTextEdit):
+    
+
+    def keyPressEvent(self, event):
+        global in_console
+
+        if event.key() == QtCore.Qt.Key_Return:
+            salida = self.toPlainText()
+            lineas = salida.split("\n")
+            #print (lineas[len(lineas)-1])
+            in_console.setText(lineas[len(lineas)-1])
+            in_console.setState(True)
+
+        super(PlainTextEdit, self).keyPressEvent(event)
+
+        
 
 class Ui_MainWindow(object):
+        
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(735, 600)
         self.lineas = True
+        self.metodo =None
+        self.cambio = False
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.nuevo = QtWidgets.QPushButton(self.centralwidget)
@@ -42,7 +66,6 @@ class Ui_MainWindow(object):
         self.ejecutar.setObjectName("ejecutar")
 
         self.ejecutar.clicked.connect(self.ejecutar_analisis)
-
 
         self.depurar = QtWidgets.QPushButton(self.centralwidget)
         self.depurar.setGeometry(QtCore.QRect(300, 0, 51, 41))
@@ -83,15 +106,16 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("new")
         self.ayuda.setIcon(icon)
         self.ayuda.setObjectName("ayuda")
+
         self.editores = QtWidgets.QTabWidget(self.centralwidget)
         self.editores.setGeometry(QtCore.QRect(10, 60, 481, 321))
         self.editores.setObjectName("editores")
         self.editores.setTabsClosable(True)
         self.editores.tabCloseRequested.connect(self.closeTab)
-        
+        #DECLARA TABS
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
-        
+        #DECLARA AREA
         self.area = QCodeEditor(DISPLAY_LINE_NUMBERS=True, 
                              HIGHLIGHT_CURRENT_LINE=True,
                              SyntaxHighlighter=XMLHighlighter)
@@ -101,8 +125,12 @@ class Ui_MainWindow(object):
         self.area.setObjectName("area")
         self.area.setParent(self.tab)
         self.editores.addTab(self.tab, "")
-        self.consola = QtWidgets.QTextEdit(self.centralwidget)
+        #EDITAR EN CONSOLA EXTERNA
+        #BOTON INTERNO PARA CAMBIAR DE MODO
+        self.consola = PlainTextEdit(self.centralwidget)
         self.consola.setGeometry(QtCore.QRect(10, 390, 481, 151))
+
+
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 255, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -171,6 +199,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def ejecutar_analisis(self):
+
         self.consola.setText("****** Preparando Analisis ******")
         indextab = self.editores.tabText(self.editores.currentIndex())
         self.consola.setText("Archivo a analizar: "+indextab)
@@ -192,7 +221,9 @@ class Ui_MainWindow(object):
             gramatica.graficarErrores()
         ts = TablaSimbolos()
         lst = []
-        ejecutor = Ejecutor(ast.instruccion if (ast!=None) else ast,ts,lst)
+        global in_console
+        
+        in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0]),daemon=False)
         if ast!=None:
             print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
             try:
@@ -202,15 +233,16 @@ class Ui_MainWindow(object):
                 recolector.getErrores()
                 print("******FIN RECOLECCION*******")
                 print("********** FIN DE CONSTRUCTOR ********")
-                ejecutor.procesar()
+                in_console.start()
             except:
                 self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
                 self.consola.append("REVISAR REPORTE DE ERRORES")
-        ejecutor.lst_errores = ejecutor.lst_errores+ gramatica.lst_errores
-        ejecutor.graficarErrores()
+        #in_console.lst_errores = in_console.lst_errores+ gramatica.lst_errores
+        #in_console.graficarErrores()
         ts.graficarSimbolos()
+        #in_console.stop()
                 
-        print("__________________________FIN______________________________")
+        
         
         
         

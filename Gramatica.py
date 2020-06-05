@@ -310,6 +310,9 @@ def p_sentencias2(p):
 def p_sentencia(p):
     '''sentencia    : pvariable
                     | preferencia
+                    | pgoto
+                    | pexit
+                    | punset
     '''
     p[0] = p[1]
 
@@ -334,6 +337,34 @@ def p_prefencia(p):
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(Referencia(p[1],OperacionVariable(p[4],p.lineno(4),find_column(p.slice[4])),Tipo_Etiqueta.VARIABLE,p.lineno(1),find_column(p.slice[1])),nodo)
     print('sentencia: preferencia; { sentencia = preferencia}')
+
+def p_pgoto(p):
+    'pgoto  :   GOTO ID PYCOMA'
+    nodo = NodoG(getIndex(),"pgoto",[])
+    nodo.add(NodoG(getIndex(),p[2], None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(Goto(p[2],p.lineno(1),find_column(p.slice[1])), nodo)
+    print('sentencia: pgoto; { sentencia = pgoto}')
+
+def p_psalir(p):
+    'pexit  :   EXIT PYCOMA'
+    nodo = NodoG(getIndex(),"pexit",[])
+    nodo.add(NodoG(getIndex(),p[2], None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(Exit(p.lineno(1),find_column(p.slice[1])), nodo)
+    print('sentencia: pexit; { sentencia = pexit}')
+    
+def p_punset(p):
+    'punset  :   UNSET PARIZQ VARIABLE PARDER PYCOMA'
+    nodo = NodoG(getIndex(),"punset",[])
+    nodo.add(NodoG(getIndex(),"unset", None))
+    nodo.add(NodoG(getIndex(),"(", None))
+    nodo.add(NodoG(getIndex(),p[3], None))
+    nodo.add(NodoG(getIndex(),")", None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(UnSet(p[3],p.lineno(1),find_column(p.slice[1])), nodo)
+    print('sentencia: punset; { sentencia = punset}')
+    
 
 def p_operaciones(p):
     ''' operacion   :   valor MAS valor
