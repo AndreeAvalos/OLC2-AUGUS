@@ -13,7 +13,7 @@ class Ejecutor:
 
 
     def agregarError(self,descripcion,line,column):
-        new_error = TokenError(descripcion,line,column)
+        new_error = TokenError("Semantico",descripcion,line,column)
         self.lst_errores.append(new_error)
 
     def graficarErrores(self):
@@ -103,15 +103,57 @@ class Ejecutor:
     
 
     def procesar_operacion(self,operacion):
-        if isinstance(operacion,OperacionBinaria): return self.procesar_operacionBinaria(operacion)
+        if isinstance(operacion,OperacionNumerica): return self.procesar_operacionNumerica(operacion)
         elif isinstance(operacion, OperacionNumero): return self.procesar_valor(operacion)
+        elif isinstance(operacion, OperacionLogica): return self.procesar_operacionLogica(operacion)
+        elif isinstance(operacion, OperacionUnaria): return self.procesar_operacionUnaria(operacion)
 
-    def procesar_operacionBinaria(self, operacion):
-        if operacion.operacion == OPERACION_NUMERICA.SUMA: return self.procesar_valor(operacion.operadorIzq) + self.procesar_valor(operacion.operadorDer)
-        elif operacion.operacion == OPERACION_NUMERICA.RESTA: return self.procesar_valor(operacion.operadorIzq) - self.procesar_valor(operacion.operadorDer)
-        elif operacion.operacion == OPERACION_NUMERICA.MULTIPLICACION: return self.procesar_valor(operacion.operadorIzq) * self.procesar_valor(operacion.operadorDer)
-        elif operacion.operacion == OPERACION_NUMERICA.DIVISION: return self.procesar_valor(operacion.operadorIzq) / self.procesar_valor(operacion.operadorDer)
-        elif operacion.operacion == OPERACION_NUMERICA.MODULAR: return self.procesar_valor(operacion.operadorIzq) % self.procesar_valor(operacion.operadorDer)
+    def procesar_operacionNumerica(self, operacion):
+        try:
+            if operacion.operacion == OPERACION_NUMERICA.SUMA: return self.procesar_valor(operacion.operadorIzq) + self.procesar_valor(operacion.operadorDer)
+            elif operacion.operacion == OPERACION_NUMERICA.RESTA: return self.procesar_valor(operacion.operadorIzq) - self.procesar_valor(operacion.operadorDer)
+            elif operacion.operacion == OPERACION_NUMERICA.MULTIPLICACION: return self.procesar_valor(operacion.operadorIzq) * self.procesar_valor(operacion.operadorDer)
+            elif operacion.operacion == OPERACION_NUMERICA.DIVISION: return self.procesar_valor(operacion.operadorIzq) / self.procesar_valor(operacion.operadorDer)
+            elif operacion.operacion == OPERACION_NUMERICA.MODULAR: return self.procesar_valor(operacion.operadorIzq) % self.procesar_valor(operacion.operadorDer)
+        except:
+            self.agregarError("No es posible operar",operacion.line,operacion.column)
+
+    def procesar_operacionLogica(self, operacion):
+        if operacion.operacion == OPERACION_LOGICA.AND: 
+            if self.procesar_valor(operacion.operadorIzq) and self.procesar_valor(operacion.operadorDer): return 1  
+            else: return 0
+        elif operacion.operacion == OPERACION_LOGICA.OR: 
+            if self.procesar_valor(operacion.operadorIzq) or self.procesar_valor(operacion.operadorDer): return 1  
+            else: return 0
+        elif operacion.operacion == OPERACION_LOGICA.XOR:
+            op1 = self.procesar_valor(operacion.operadorIzq) 
+            op2 = self.procesar_valor(operacion.operadorDer)
+            r_notand = not( op1 and op2)
+            r_or =   op1 or op2
+            r_xor = r_notand and r_or
+            if r_xor: return 1
+            else: return 0
+
+    def procesar_operacionUnaria(self,operacion):
+        op1 = self.procesar_valor(operacion.operadorIzq) 
+        if operacion.operacion == OPERACION_BIT.NOT:
+            return 0
+        elif operacion.operacion == OPERACION_LOGICA.NOT:
+            if op1==1:
+                return 0
+            elif op1 == 0:
+                return 1
+            else:
+                self.agregarError("El Numero {0} no puede ser negado".format(op1),operacion.line, operacion.column)
+                return 0
+        elif operacion.operacion == OPERACION_NUMERICA.RESTA:
+            if isinstance(op1, int) or isinstance(op1,float):
+                return -1*op1
+            else:
+                self.agregarError("{0} no es un valor numerico".format(op1),operacion.line,operacion.column)
+                return op1
+
+
 
     def procesar_valor(self,expresion):
         if isinstance(expresion,OperacionNumero):

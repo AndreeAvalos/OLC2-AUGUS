@@ -5,6 +5,7 @@ class OPERACION_LOGICA(Enum):
     AND = 1
     OR = 2
     NOT = 3
+    XOR = 4 
 
 
 class OPERACION_RELACIONAL(Enum):
@@ -22,10 +23,29 @@ class OPERACION_NUMERICA(Enum):
     DIVISION = 4
     MODULAR = 5
 
-class OperacionBinaria(Instruccion):
+class OPERACION_BIT(Enum):
+    NOT = 1
+    AND = 2
+    OR = 3
+    XOR = 4
+    SHIFTIZQ = 5
+    SHIFTDER = 6
+
+class OperacionNumerica(Instruccion):
     def __init__(self, op1, op2, operacion, line, column):
         self.operadorIzq = op1
         self.operadorDer = op2
+        self.operacion = operacion
+
+class OperacionLogica(Instruccion):
+    def __init__(self, op1, op2, operacion, line, column):
+        self.operadorIzq = op1
+        self.operadorDer = op2
+        self.operacion = operacion
+
+class OperacionUnaria(Instruccion):
+    def __init__(self, op1, operacion, line, column):
+        self.operadorIzq = op1
         self.operacion = operacion
 
 class OperacionNumero(Instruccion):
