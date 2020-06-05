@@ -308,7 +308,8 @@ def p_sentencias2(p):
     print("sentencias : sentencia; sentencias2 = new lista; sentencias2.append(sentencia)")
 
 def p_sentencia(p):
-    '''sentencia : pvariable
+    '''sentencia    : pvariable
+                    | preferencia
     '''
     p[0] = p[1]
 
@@ -323,10 +324,16 @@ def p_pvariable(p):
     
     print('sentencia: pvariable; { sentencia = pvariable}')
 
-def p_pvariable_error(p):
-    'pvariable : VARIABLE IGUAL error PYCOMA'
-    p[0] = Nodo(Asignacion(p[1],None,Tipo_Etiqueta.VARIABLE,p.lineno(1),find_column(p.slice[1])),None)
-
+def p_prefencia(p):
+    'preferencia    :  VARIABLE IGUAL ANDBIT VARIABLE PYCOMA '''
+    nodo = NodoG(getIndex(),"preferencia",[])
+    nodo.add(NodoG(getIndex(),p[1], None))
+    nodo.add(NodoG(getIndex(),"=", None))
+    nodo.add(NodoG(getIndex(),"&", None))
+    nodo.add(NodoG(getIndex(),p[4], None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(Referencia(p[1],OperacionVariable(p[4],p.lineno(4),find_column(p.slice[4])),Tipo_Etiqueta.VARIABLE,p.lineno(1),find_column(p.slice[1])),nodo)
+    print('sentencia: preferencia; { sentencia = preferencia}')
 
 def p_operaciones(p):
     ''' operacion   :   valor MAS valor
@@ -358,6 +365,7 @@ def p_operaciones2(p):
     if p[1] == '!': p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_LOGICA.NOT,p.lineno(1),find_column(p.slice[1])),nodo)
     elif p[1] == '~': p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_BIT.NOT,p.lineno(1),find_column(p.slice[1])),nodo)
     elif p[1] == '-': p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_NUMERICA.RESTA,p.lineno(1),find_column(p.slice[1])),nodo)
+    elif p[1] == '&': p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_BIT.APUNTAR,p.lineno(1),find_column(p.slice[1])),nodo)
 
 
 def p_operaciones3(p):
@@ -373,6 +381,29 @@ def p_operaciones3(p):
     if p[2] == '&&': p[0] = Nodo(OperacionLogica(p[1].instruccion,p[3].instruccion,OPERACION_LOGICA.AND,p.lineno(2),find_column(p.slice[2])),nodo)
     elif p[2] == '||': p[0] = Nodo(OperacionLogica(p[1].instruccion,p[3].instruccion,OPERACION_LOGICA.OR,p.lineno(2),find_column(p.slice[2])),nodo)
     elif p[2] == 'xor': p[0] = Nodo(OperacionLogica(p[1].instruccion,p[3].instruccion,OPERACION_LOGICA.XOR,p.lineno(2),find_column(p.slice[2])),nodo)
+
+def p_operaciones4(p):
+    ''' operacion   :   valor IGUALIGUAL valor
+                    |   valor DIFERENTE valor
+                    |   valor MAYOR valor
+                    |   valor MENOR valor
+                    |   valor MAYORIGUAL valor
+                    |   valor MENORIGUAL valor
+    '''
+    nodo = NodoG(getIndex(),"operacion",[])
+    nodo.add(p[1].nodo)
+    nodo.add(NodoG(getIndex(),p[2], None))
+    nodo.add(p[3].nodo)
+
+    if p[2] == '==': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.IGUAL,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '!=': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.DIFERENTE,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '>=': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MAYORQUE,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '<=': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MENOR,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '>': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MAYOR,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '<': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MENOR,p.lineno(2),find_column(p.slice[2])),nodo)
+
+
+
 
 def p_operacion(p):
     ' operacion     :   valor '
@@ -395,7 +426,7 @@ def p_valor2(p):
 def p_valor3(p):
     '''valor    :   VARIABLE
     '''
-    p[0] = Nodo(OperacionNumero(p[1],p.lineno(1),find_column(p.slice[1])),p[1])
+    p[0] = Nodo(OperacionCopiaVariable(p[1],p.lineno(1),find_column(p.slice[1])),NodoG(getIndex(),str(p[1]), None))
 
 def p_petiqueta(p):
     'petiqueta : ID DOSPUNTOS sentencias'

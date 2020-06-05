@@ -68,6 +68,7 @@ class Ejecutor:
         exit = False
         for sentencia in main.sentencias:
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
+            if isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             
             if exit:
                 return True
@@ -100,13 +101,29 @@ class Ejecutor:
 
             self.agregarError("La variable {0} invalida".format(sentencia.id),sentencia.line, sentencia.column)
 
-    
+    def procesar_referencia(self, sentencia):
+        print("ENTRO")
+        if sentencia.tipo != Tipo_Simbolo.INVALIDO:
+            result = self.procesar_valor(sentencia.valor)
+            if result != None:
+                if not self.ts.existe(sentencia.id):
+                    new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambiente, sentencia.etiqueta,sentencia.line,sentencia.column)
+                    self.ts.add(new_simbol)
+                    self.ts.referenciar(sentencia.id, result.valor)
+                else:
+                    self.ts.referenciar(sentencia.id, result.valor)
+        else:
+
+            self.agregarError("La variable {0} invalida".format(sentencia.id),sentencia.line, sentencia.column)       
+
 
     def procesar_operacion(self,operacion):
         if isinstance(operacion,OperacionNumerica): return self.procesar_operacionNumerica(operacion)
         elif isinstance(operacion, OperacionNumero): return self.procesar_valor(operacion)
+        elif isinstance(operacion, OperacionCopiaVariable): return self.procesar_valor(operacion)
         elif isinstance(operacion, OperacionLogica): return self.procesar_operacionLogica(operacion)
         elif isinstance(operacion, OperacionUnaria): return self.procesar_operacionUnaria(operacion)
+        elif isinstance(operacion,OperacionRelacional): return self.procesar_operacionRelacional(operacion)
 
     def procesar_operacionNumerica(self, operacion):
         try:
@@ -134,6 +151,17 @@ class Ejecutor:
             if r_xor: return 1
             else: return 0
 
+    def procesar_operacionRelacional(self, operacion):
+        try:
+            if operacion.operacion == OPERACION_RELACIONAL.IGUAL: return 1 if(self.procesar_valor(operacion.operadorIzq) == self.procesar_valor(operacion.operadorDer)) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.DIFERENTE: return 1 if(self.procesar_valor(operacion.operadorIzq) != self.procesar_valor(operacion.operadorDer)) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.MAYORQUE: return 1 if(self.procesar_valor(operacion.operadorIzq) >= self.procesar_valor(operacion.operadorDer)) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.MENORQUE: return 1 if(self.procesar_valor(operacion.operadorIzq) <= self.procesar_valor(operacion.operadorDer)) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.MAYOR: return 1 if(self.procesar_valor(operacion.operadorIzq) > self.procesar_valor(operacion.operadorDer)) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.MENOR: return 1 if(self.procesar_valor(operacion.operadorIzq) < self.procesar_valor(operacion.operadorDer)) else 0
+        except:
+            self.agregarError("No es posible operar",operacion.line,operacion.column)
+
     def procesar_operacionUnaria(self,operacion):
         op1 = self.procesar_valor(operacion.operadorIzq) 
         if operacion.operacion == OPERACION_BIT.NOT:
@@ -153,8 +181,6 @@ class Ejecutor:
                 self.agregarError("{0} no es un valor numerico".format(op1),operacion.line,operacion.column)
                 return op1
 
-
-
     def procesar_valor(self,expresion):
         if isinstance(expresion,OperacionNumero):
             if isinstance(expresion.val,int): return int(expresion.val)
@@ -162,6 +188,17 @@ class Ejecutor:
             else: 
                 self.agregarError("No existe tipo",expresion.line,expresion.column)
                 return None
-            
+        elif isinstance(expresion, OperacionVariable):
+            if self.ts.existe(expresion.id):
+                return self.ts.get(expresion.id)
+            else:
+                self.agregarError("No existe variable {0}".format(expresion.id),expresion.line,expresion.column)
+                return None
+        elif isinstance(expresion, OperacionCopiaVariable):
+            if self.ts.existe(expresion.id):
+                return self.ts.get(expresion.id).valor.get()
+            else:
+                self.agregarError("No existe variable {0}".format(expresion.id),expresion.line,expresion.column)
+                return None
 
 

@@ -30,24 +30,53 @@ class OPERACION_BIT(Enum):
     XOR = 4
     SHIFTIZQ = 5
     SHIFTDER = 6
+    APUNTAR = 7
 
 class OperacionNumerica(Instruccion):
     def __init__(self, op1, op2, operacion, line, column):
         self.operadorIzq = op1
         self.operadorDer = op2
         self.operacion = operacion
+        self.line =line
+        self.column = column
 
 class OperacionLogica(Instruccion):
     def __init__(self, op1, op2, operacion, line, column):
         self.operadorIzq = op1
         self.operadorDer = op2
         self.operacion = operacion
+        self.line =line
+        self.column = column
+
+class OperacionRelacional(Instruccion):
+    def __init__(self, op1, op2, operacion, line, column):
+        self.operadorIzq = op1
+        self.operadorDer = op2
+        self.operacion = operacion
+        self.line =line
+        self.column = column
 
 class OperacionUnaria(Instruccion):
     def __init__(self, op1, operacion, line, column):
         self.operadorIzq = op1
         self.operacion = operacion
+        self.line =line
+        self.column = column
 
 class OperacionNumero(Instruccion):
     def __init__(self,num, line, column):
         self.val = num
+        self.line = line
+        self.column = column
+
+class OperacionVariable(Instruccion):
+    def __init__(self,id, line, column):
+        self.id = id
+        self.line =line
+        self.column = column
+class OperacionCopiaVariable(Instruccion):
+    def __init__(self,id, line, column):
+        self.id = id
+        self.line =line
+        self.column = column
+

@@ -1,4 +1,4 @@
-'''class ref:
+class ref:
        def __init__(self, obj): self.obj = obj
        def get(self):    return self.obj
        def set(self, obj):      self.obj = obj
@@ -10,11 +10,11 @@ print (a.get())  # => [1, 2]
 print (b.get())  # => [1, 2]
 print (c.get())  # => [1, 2]
 a.set(4)
-print (a.get())  # => 2
-print (b.get())  # => 2
+print (a.get())  # => 4
+print (b.get())  # => 4
 print (c.get())  # => [1, 2]
 
-
+'''
 import re
 
 pattern = r'(\$t[0-9]+)'
@@ -38,7 +38,7 @@ otro()
 print(index)
 '''
 
-class retornarsuma:
+'''class retornarsuma:
        def __init__(self,operador1, operador2):
               self.op1 = operador1
               self.op2 = operador2
@@ -59,4 +59,4 @@ numero1 = numero(3)
 numero4 = numero(5)
 
 operacion = procesar(retornarsuma(numero1, numero4))
-print(operacion)
+print(operacion)'''

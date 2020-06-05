@@ -64,13 +64,15 @@ class TablaSimbolos:
         return self.simbolos[id]
     #Metodo para actualizar un simbolo
     def actualizar(self,simbolo):
-        self.simbolos[simbolo.id] = simbolo
+        self.simbolos[simbolo.id].valor.set(simbolo.valor.get())  
+    def copy(self,id,simbolo):
+        self.simbolos[id] = simbolo
     #Metodo que indica si existe variable en la tabla de simbolos
     def existe(self, id):
         return id in self.simbolos
     #Metodo para referenciar una variable
     def referenciar(self, id, valor):
-        self.simbolos[id].valor.set(valor)
+        self.simbolos[id].valor = valor
     #Metodo para graficar simbolos
     def graficarSimbolos(self):
         try:
