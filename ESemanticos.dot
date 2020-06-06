@@ -3,8 +3,7 @@ graph [ratio=fill];node [label="\N", fontsize=15, shape=plaintext];
 graph [bb="0,0,352,154"];
 arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>TIPO</TD><TD>DESCRIPCION</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>
-<TR><TD>Semantico</TD><TD>No existe tipo</TD><TD>2</TD><TD>13</TD></TR>
-<TR><TD>Semantico</TD><TD>None invalido para operacion logica</TD><TD>2</TD><TD>10</TD></TR>
+<TR><TD>Semantico</TD><TD>main3 no esta declarad</TD><TD>12</TD><TD>2</TD></TR>
 </TABLE>
 >, ];
 }

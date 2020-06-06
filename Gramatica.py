@@ -313,6 +313,7 @@ def p_sentencia(p):
                     | pgoto
                     | pexit
                     | punset
+                    | pif
     '''
     p[0] = p[1]
 
@@ -364,6 +365,20 @@ def p_punset(p):
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(UnSet(p[3],p.lineno(1),find_column(p.slice[1])), nodo)
     print('sentencia: punset; { sentencia = punset}')
+    
+def p_pif(p):
+    'pif    :   IF PARIZQ operacion PARDER GOTO ID PYCOMA '
+    nodo = NodoG(getIndex(),"pif",[])
+    nodo.add(NodoG(getIndex(),"if", None))
+    nodo.add(NodoG(getIndex(),"(", None))
+    nodo.add(p[3].nodo)
+    nodo.add(NodoG(getIndex(),")", None))
+    nodo.add(NodoG(getIndex(),"got", None))
+    nodo.add(NodoG(getIndex(),p[6], None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(If_(p[3].instruccion,Goto(p[6],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
+    print('sentencia: pif; { sentencia = pif}')
+
     
 
 def p_operaciones(p):

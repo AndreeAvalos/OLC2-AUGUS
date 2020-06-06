@@ -120,4 +120,9 @@ class UnSet(Instruccion):
         self.line = line
         self.column = column
 
-
+class If_(Instruccion):
+    def __init__(self,valor, goto,line, column):
+        self.operacion = valor
+        self.goto = goto
+        self.line = line
+        self.column = column    
