@@ -90,7 +90,4 @@ while contador <= 100:
        print(contador)
 print("TIEMPO EXCEDIDO DE LECTURA")'''
 
-lst = {'1':3,'11':2,'12':4}
-print(lst)
-del lst['1']
-print(lst)
+print(1 and 0)

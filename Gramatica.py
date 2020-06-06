@@ -349,7 +349,7 @@ def p_pgoto(p):
 def p_psalir(p):
     'pexit  :   EXIT PYCOMA'
     nodo = NodoG(getIndex(),"pexit",[])
-    nodo.add(NodoG(getIndex(),p[2], None))
+    nodo.add(NodoG(getIndex(),p[1], None))
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(Exit(p.lineno(1),find_column(p.slice[1])), nodo)
     print('sentencia: pexit; { sentencia = pexit}')

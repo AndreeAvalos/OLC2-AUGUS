@@ -26,10 +26,10 @@ class Ejecutor(threading.Thread):
             self.procesar()
         except:
             print("ERROR DE EJECUCION")
-            self.graficarErrores()
         finally:
             print("__________________________FIN______________________________")
             self.ts.graficarSimbolos()
+            self.graficarErrores()
             self.area.currentLineColor = temp
 
     def setText(self,in_):
@@ -92,19 +92,19 @@ class Ejecutor(threading.Thread):
     def procesar_main(self,main):
         self.ambiente = "main"
         exit = False
-        cursor = self.area.textCursor()
-        cursor.setPosition(0)
+        #cursor = self.area.textCursor()
+        #cursor.setPosition(0)
         for sentencia in main.sentencias:
-            time.sleep(0.5)
-            cursor.setPosition(0)
-            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-            self.area.setTextCursor(cursor)
+            #time.sleep(0.5)
+            #cursor.setPosition(0)
+            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            #self.area.setTextCursor(cursor)
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
             elif isinstance(sentencia, Exit): return True
             elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
-            self.ts.graficarSimbolos()
+            #self.ts.graficarSimbolos()
             if exit:
                 return True
         
@@ -205,20 +205,37 @@ class Ejecutor(threading.Thread):
             self.agregarError("No es posible operar",operacion.line,operacion.column)
 
     def procesar_operacionLogica(self, operacion):
+        op1 = self.procesar_valor(operacion.operadorIzq)
+        op2 = self.procesar_valor(operacion.operadorDer)
+        izq = False
+        der = False
+        if op1 == 1: 
+            izq = True
+        elif op1 ==0:
+            izq = False
+        else:
+            self.agregarError("{0} invalido para operacion logica".format(op1),operacion.line, operacion.column)
+            return 0
+
+        if op2 == 1: 
+            der = True
+        elif op2 == 0:
+            der = False
+        else:
+            self.agregarError("{0} invalido para operacion logica".format(op2),operacion.line, operacion.column)
+            return 0
+
         if operacion.operacion == OPERACION_LOGICA.AND: 
-            if self.procesar_valor(operacion.operadorIzq) and self.procesar_valor(operacion.operadorDer): return 1  
-            else: return 0
+            return 1 if(izq and der) else 0
         elif operacion.operacion == OPERACION_LOGICA.OR: 
-            if self.procesar_valor(operacion.operadorIzq) or self.procesar_valor(operacion.operadorDer): return 1  
-            else: return 0
+            return 1 if(izq or der) else 0
         elif operacion.operacion == OPERACION_LOGICA.XOR:
-            op1 = self.procesar_valor(operacion.operadorIzq) 
-            op2 = self.procesar_valor(operacion.operadorDer)
+            op1 = izq
+            op2 = der
             r_notand = not( op1 and op2)
             r_or =   op1 or op2
             r_xor = r_notand and r_or
-            if r_xor: return 1
-            else: return 0
+            return 1 if(r_xor) else 0
 
     def procesar_operacionRelacional(self, operacion):
         try:
