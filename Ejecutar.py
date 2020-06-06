@@ -205,26 +205,22 @@ class Ejecutor(threading.Thread):
         return False
     def procesar_read(self,sentencia2):
         sentencia = sentencia2.sentencia
-        print("ENTRO A READ")
         self.consola.append("Escriba el valor")
         self.consola.append("")
         new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambiente, sentencia.etiqueta,sentencia.line,sentencia.column)
         self.ts.add(new_simbol)
         id = sentencia.id
-        print(self.ts.existe(id))
-        entero = r'[0-9]+'
-        decimal = r'[0-9]+\.[0-9]+'
+        entero = r'-?[0-9]+'
+        decimal = r'-?[0-9]+\.[0-9]+'
         string = r'[a-zA-z0-9]+'
 
         if self.ts.existe(id):
-            print("INICIO DE LEIDA")
             contador = 0 #contador para contar los segundos de tiempo de lida maxima
             self.leido = False
             while contador <100:
                 time.sleep(1)
                 if self.leido:
                     if re.match(entero,self.entrada):
-                        print(self.entrada)
                         self.ts.set(id,self.entrada)
                     elif re.match(decimal,self.entrada):
                         self.ts.set(id,self.entrada)
