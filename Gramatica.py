@@ -390,14 +390,17 @@ def p_pprint(p):
     nodo = NodoG(getIndex(),"pprint",[])
     nodo.add(NodoG(getIndex(),"print", None))
     nodo.add(NodoG(getIndex(),"(", None))
-    nodo.add(NodoG(getIndex(),")", None))
-    nodo.add(NodoG(getIndex(),";", None))
+
     print(p[3])
     if p[3] !='\"\\n\"':
         nodo.add(NodoG(getIndex(),p[3], None))
+        nodo.add(NodoG(getIndex(),")", None))
+        nodo.add(NodoG(getIndex(),";", None))
         p[0] = Nodo(Print_(OperacionCopiaVariable(p[3],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
     else:
-        nodo.add(NodoG(getIndex(),"\\n", None))
+        nodo.add(NodoG(getIndex(),'SALTOL', None))
+        nodo.add(NodoG(getIndex(),")", None))
+        nodo.add(NodoG(getIndex(),";", None))
         p[0] = Nodo(Print_("-",p.lineno(1),find_column(p.slice[1])), nodo)
     print('sentencia: pprint; { sentencia = pprint}')
 
