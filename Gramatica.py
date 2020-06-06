@@ -66,15 +66,15 @@ def graficarErrores():
         cmd("dot -Tpng ELS.dot -o ELS.png")
 
 def construirAST(nodo):
-    try:
+    #try:
         file = open("ASPAscendente.dot", "w")
         file.write("digraph{ bgcolor = gray \n node[fontcolor = white, height = 0.5, color = white] \n [shape=box, style=filled, color=gray14] \n rankdir=UD \n edge[color=white, dir=fordware]\n")
         imprimirNodos(nodo,file)
         graficar(nodo,file)
         file.write("\n}")
-    except:
-        print("ERROR")
-    finally:
+    #except:
+        #print("ERROR")
+    #finally:
         file.close()
         cmd("dot -Tpng ASPAscendente.dot -o ASPAscendente.png")
 
@@ -143,7 +143,8 @@ tokens = [
     'SHIFTIZQ',
     'SHIFTDER',
     'DOSPUNTOS',
-    'VARIABLE'
+    'VARIABLE',
+    'ESCAPE'
 ] + list(reservadas.values())
 
 t_PYCOMA = r';'
@@ -175,6 +176,7 @@ t_ORBIT = r'\|'
 t_XORBIT = r'\^'
 t_SHIFTIZQ = r'<<'
 t_SHIFTDER = r'>>'
+t_ESCAPE =r'\"\\n\"'
 
 t_ignore = " \t"
 
@@ -314,6 +316,7 @@ def p_sentencia(p):
                     | pexit
                     | punset
                     | pif
+                    | pprint
     '''
     p[0] = p[1]
 
@@ -379,7 +382,22 @@ def p_pif(p):
     p[0] = Nodo(If_(p[3].instruccion,Goto(p[6],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
     print('sentencia: pif; { sentencia = pif}')
 
-    
+def p_pprint(p):
+    '''pprint   :   PRINT PARIZQ VARIABLE PARDER PYCOMA
+                |   PRINT PARIZQ ESCAPE PARDER PYCOMA
+    '''
+    nodo = NodoG(getIndex(),"pprint",[])
+    nodo.add(NodoG(getIndex(),"print", None))
+    nodo.add(NodoG(getIndex(),"(", None))
+    nodo.add(NodoG(getIndex(),p[3], None))
+    print(p[3])
+    if p[3] !='\"\\n\"':
+        nodo.add(NodoG(getIndex(),")", None))
+        p[0] = Nodo(Print_(OperacionCopiaVariable(p[3],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
+    else:
+        nodo.add(NodoG(getIndex(),")", None))
+        p[0] = Nodo(Print_("-",p.lineno(1),find_column(p.slice[1])), nodo)
+    print('sentencia: pprint; { sentencia = pprint}')
 
 def p_operaciones(p):
     ''' operacion   :   valor MAS valor

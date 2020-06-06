@@ -125,4 +125,10 @@ class If_(Instruccion):
         self.operacion = valor
         self.goto = goto
         self.line = line
-        self.column = column    
+        self.column = column  
+
+class Print_(Instruccion):
+    def __init__(self, texto, line, column):
+        self.val = texto
+        self.line = line
+        self.column = column

@@ -17,6 +17,7 @@ class Ejecutor(threading.Thread):
         self.entrada = args[3]
         self.leido = False
         self.area = args[4]
+        self.consola = args[5]
 
 
     def run(self):
@@ -105,6 +106,7 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, Exit): return True
             elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
+            elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             #self.ts.graficarSimbolos()
             if exit:
                 return True
@@ -126,6 +128,7 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
             elif isinstance(sentencia, Exit): return True
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
+            elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             #self.ts.graficarSimbolos()
             
             if exit:
@@ -189,8 +192,15 @@ class Ejecutor(threading.Thread):
             self.agregarError("Operacion no valida",sentencia.line,sentencia.column)
         return False
 
-
-
+    def procesar_print(self, sentencia):
+        print("ENTRO A PRINT")
+        if isinstance(sentencia.val, OperacionCopiaVariable):
+            print("ENTRO A VAR")
+            result = self.procesar_valor(sentencia.val)
+            self.consola.append(str(result))
+        else:
+            self.consola.append("")
+        return False
 
     def procesar_asignacion(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:

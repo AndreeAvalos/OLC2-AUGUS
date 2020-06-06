@@ -223,7 +223,7 @@ class Ui_MainWindow(object):
         lst = []
         global in_console
         
-        in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0]),daemon=False)
+        in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola),daemon=False)
         if ast!=None:
             print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
             try:
