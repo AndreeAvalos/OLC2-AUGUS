@@ -89,5 +89,3 @@ while contador <= 100:
        contador+=1
        print(contador)
 print("TIEMPO EXCEDIDO DE LECTURA")'''
-
-print(1 and 0)

@@ -62,6 +62,8 @@ class TablaSimbolos:
     #Metodo para obtener un simbolo teniendo su id
     def get(self, id):
         return self.simbolos[id]
+    def set(self,id,valor):
+        self.simbolos[id].valor.set(valor)
     #Metodo para actualizar un simbolo
     def actualizar(self,simbolo):
         self.simbolos[simbolo.id].valor.set(simbolo.valor.get())  

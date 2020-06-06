@@ -120,4 +120,21 @@ class UnSet(Instruccion):
         self.line = line
         self.column = column
 
+class If_(Instruccion):
+    def __init__(self,valor, goto,line, column):
+        self.operacion = valor
+        self.goto = goto
+        self.line = line
+        self.column = column  
 
+class Print_(Instruccion):
+    def __init__(self, texto, line, column):
+        self.val = texto
+        self.line = line
+        self.column = column
+
+class Read(Instruccion):
+    def __init__(self, id,line, column):
+        self.sentencia = id
+        self.line = line
+        self.column = column

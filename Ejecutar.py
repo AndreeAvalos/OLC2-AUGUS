@@ -5,6 +5,7 @@ from Recolectar import TokenError, Recolectar
 import threading
 import time
 from QCodeEditor import *
+import re 
 class Ejecutor(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, *, daemon=None):
@@ -17,12 +18,13 @@ class Ejecutor(threading.Thread):
         self.entrada = args[3]
         self.leido = False
         self.area = args[4]
+        self.consola = args[5]
 
 
     def run(self):
         temp =  self.area.currentLineColor
         try:      
-            self.area.currentLineColor = QColor("#FF0000")
+            #self.area.currentLineColor = QColor("#FF0000")
             self.procesar()
         except:
             print("ERROR DE EJECUCION")
@@ -34,6 +36,7 @@ class Ejecutor(threading.Thread):
 
     def setText(self,in_):
         self.entrada= in_
+    
     def setState(self, state):
         self.leido= state
 
@@ -104,6 +107,9 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
             elif isinstance(sentencia, Exit): return True
             elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
+            elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
+            elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
+            elif isinstance(sentencia, Read): self.procesar_read(sentencia)
             #self.ts.graficarSimbolos()
             if exit:
                 return True
@@ -113,18 +119,21 @@ class Ejecutor(threading.Thread):
     def procesar_etiqueta(self, etiqueta):
         self.ambiente = etiqueta.id
         exit = False
-        cursor = self.area.textCursor()
-        cursor.setPosition(0)
+        #cursor = self.area.textCursor()
+        #cursor.setPosition(0)
         for sentencia in etiqueta.sentencias:
-            time.sleep(0.5)
-            cursor.setPosition(0)
-            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-            self.area.setTextCursor(cursor)
+            #time.sleep(0.5)
+            #cursor.setPosition(0)
+            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            #self.area.setTextCursor(cursor)
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
             elif isinstance(sentencia, Exit): return True
-            self.ts.graficarSimbolos()
+            elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
+            elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
+            elif isinstance(sentencia, Read): self.procesar_read(sentencia)
+            #self.ts.graficarSimbolos()
             
             if exit:
                 return True
@@ -151,10 +160,83 @@ class Ejecutor(threading.Thread):
             if self.ts.existe(sentencia.id):
                 self.ts.delete(sentencia.id)
             else:
-                self.agregarError("{0} no esta declarad".format(sentencia.id),sentencia.line,sentencia.column)     
+                self.agregarError("{0} no esta declarado".format(sentencia.id),sentencia.line,sentencia.column)     
         except:
             self.agregarError("Error al eliminar",sentencia.line,sentencia.column)
 
+    def procesar_if(self, sentencia):
+        operacion = sentencia.operacion
+        if isinstance(operacion,OperacionRelacional) or isinstance(operacion,OperacionLogica) or isinstance(operacion, OperacionNumero) or isinstance(operacion,OperacionVariable) or isinstance(operacion,OperacionCopiaVariable):
+            result = self.procesar_operacion(operacion)
+            operando = False
+            
+            if result == 1:
+                operando = True
+            elif result == 0:
+                operando = False
+            else:
+                self.agregarError("{0} valor invalido".format(result))
+                return False
+            if operando:
+                return self.procesar_goto(sentencia.goto)
+        elif isinstance(operacion, OperacionUnaria):
+            result = self.procesar_operacion(operacion)
+            if sentencia.operacion.operacion == OPERACION_LOGICA.NOT:
+                operando = False
+                if result == 1:
+                    operando = True
+                elif result == 0:
+                    operando = False
+                else:
+                    self.agregarError("{0} valor invalido".format(result))
+                    return False
+                if operando:
+                    return self.procesar_goto(sentencia.goto)
+        else:
+            self.agregarError("Operacion no valida",sentencia.line,sentencia.column)
+        return False
+
+    def procesar_print(self, sentencia):
+        if isinstance(sentencia.val, OperacionCopiaVariable):
+            result = self.procesar_valor(sentencia.val)
+            self.consola.append(str(result))
+        else:
+            self.consola.append("")
+        return False
+    def procesar_read(self,sentencia2):
+        sentencia = sentencia2.sentencia
+        print("ENTRO A READ")
+        self.consola.append("Escriba el valor")
+        self.consola.append("")
+        new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambiente, sentencia.etiqueta,sentencia.line,sentencia.column)
+        self.ts.add(new_simbol)
+        id = sentencia.id
+        print(self.ts.existe(id))
+        entero = r'[0-9]+'
+        decimal = r'[0-9]+\.[0-9]+'
+        string = r'[a-zA-z0-9]+'
+
+        if self.ts.existe(id):
+            print("INICIO DE LEIDA")
+            contador = 0 #contador para contar los segundos de tiempo de lida maxima
+            self.leido = False
+            while contador <100:
+                time.sleep(1)
+                if self.leido:
+                    if re.match(entero,self.entrada):
+                        print(self.entrada)
+                        self.ts.set(id,self.entrada)
+                    elif re.match(decimal,self.entrada):
+                        self.ts.set(id,self.entrada)
+                    elif re.match(string,self.entrada):
+                        'ARREGLAR PARA CONVERTIR EN ARREGLO'
+                        print("Es un arreglo")
+                    else:
+                        self.agregarError("{0} dato no aceptado".format(self.entrada),sentencia.line, sentencia.column)
+                    return
+                contador = contador + 1
+            self.agregarError("Tiempo de ejecucion agotado",sentencia.line,sentencia.column)
+            
 
     def procesar_asignacion(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
@@ -286,6 +368,7 @@ class Ejecutor(threading.Thread):
             else:
                 self.agregarError("No existe variable {0}".format(expresion.id),expresion.line,expresion.column)
                 return None
+        return None
     def stop(self):
         self.stopped = True
 
