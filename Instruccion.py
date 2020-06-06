@@ -132,3 +132,9 @@ class Print_(Instruccion):
         self.val = texto
         self.line = line
         self.column = column
+
+class Read(Instruccion):
+    def __init__(self, id,line, column):
+        self.sentencia = id
+        self.line = line
+        self.column = column

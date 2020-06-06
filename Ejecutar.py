@@ -5,6 +5,7 @@ from Recolectar import TokenError, Recolectar
 import threading
 import time
 from QCodeEditor import *
+import re 
 class Ejecutor(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, *, daemon=None):
@@ -35,6 +36,7 @@ class Ejecutor(threading.Thread):
 
     def setText(self,in_):
         self.entrada= in_
+    
     def setState(self, state):
         self.leido= state
 
@@ -107,6 +109,7 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
+            elif isinstance(sentencia, Read): self.procesar_read(sentencia)
             #self.ts.graficarSimbolos()
             if exit:
                 return True
@@ -129,6 +132,7 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, Exit): return True
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
+            elif isinstance(sentencia, Read): self.procesar_read(sentencia)
             #self.ts.graficarSimbolos()
             
             if exit:
@@ -193,14 +197,46 @@ class Ejecutor(threading.Thread):
         return False
 
     def procesar_print(self, sentencia):
-        print("ENTRO A PRINT")
         if isinstance(sentencia.val, OperacionCopiaVariable):
-            print("ENTRO A VAR")
             result = self.procesar_valor(sentencia.val)
             self.consola.append(str(result))
         else:
             self.consola.append("")
         return False
+    def procesar_read(self,sentencia2):
+        sentencia = sentencia2.sentencia
+        print("ENTRO A READ")
+        self.consola.append("Escriba el valor")
+        self.consola.append("")
+        new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambiente, sentencia.etiqueta,sentencia.line,sentencia.column)
+        self.ts.add(new_simbol)
+        id = sentencia.id
+        print(self.ts.existe(id))
+        entero = r'[0-9]+'
+        decimal = r'[0-9]+\.[0-9]+'
+        string = r'[a-zA-z0-9]+'
+
+        if self.ts.existe(id):
+            print("INICIO DE LEIDA")
+            contador = 0 #contador para contar los segundos de tiempo de lida maxima
+            self.leido = False
+            while contador <100:
+                time.sleep(1)
+                if self.leido:
+                    if re.match(entero,self.entrada):
+                        print(self.entrada)
+                        self.ts.set(id,self.entrada)
+                    elif re.match(decimal,self.entrada):
+                        self.ts.set(id,self.entrada)
+                    elif re.match(string,self.entrada):
+                        'ARREGLAR PARA CONVERTIR EN ARREGLO'
+                        print("Es un arreglo")
+                    else:
+                        self.agregarError("{0} dato no aceptado".format(self.entrada),sentencia.line, sentencia.column)
+                    return
+                contador = contador + 1
+            self.agregarError("Tiempo de ejecucion agotado",sentencia.line,sentencia.column)
+            
 
     def procesar_asignacion(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
@@ -332,6 +368,7 @@ class Ejecutor(threading.Thread):
             else:
                 self.agregarError("No existe variable {0}".format(expresion.id),expresion.line,expresion.column)
                 return None
+        return None
     def stop(self):
         self.stopped = True
 

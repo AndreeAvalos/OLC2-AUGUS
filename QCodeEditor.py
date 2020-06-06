@@ -275,7 +275,7 @@ class QCodeEditor(QPlainTextEdit):
             width = self.getWidth() + 5
             if self.width() != width:
                 self.setFixedWidth(width)
-                self.editor.setViewportMargins(width, 0, 0, 0);
+                self.editor.setViewportMargins(width, 0, 0, 0)
  
         def updateContents(self, rect, scroll):
             if scroll:
