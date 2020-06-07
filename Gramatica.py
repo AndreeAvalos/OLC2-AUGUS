@@ -484,8 +484,26 @@ def p_operaciones4(p):
     elif p[2] == '>': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MAYOR,p.lineno(2),find_column(p.slice[2])),nodo)
     elif p[2] == '<': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MENOR,p.lineno(2),find_column(p.slice[2])),nodo)
 
+def p_operaciones5(p):
+    'operacion  :   ABS PARIZQ valor PARDER PYCOMA'
+    nodo = NodoG(getIndex(),"operacion",[])
+    nodo.add(NodoG(getIndex(),"abs", None))
+    nodo.add(NodoG(getIndex(),"(", None))
+    nodo.add(p[3].nodo)
+    nodo.add(NodoG(getIndex(),")", None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(OperacionUnaria(p[3].instruccion,OPERACION_NUMERICA.ABSOLUTO,p.lineno(1),find_column(p.slice[1])),nodo)
 
-
+def p_operaciones6(p):
+    'operacion  :   ABS PARIZQ MENOS valor PARDER PYCOMA'
+    nodo = NodoG(getIndex(),"operacion",[])
+    nodo.add(NodoG(getIndex(),"abs", None))
+    nodo.add(NodoG(getIndex(),"(", None))
+    nodo.add(NodoG(getIndex(),"-", None))
+    nodo.add(p[4].nodo)
+    nodo.add(NodoG(getIndex(),")", None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(OperacionUnaria(p[4].instruccion,OPERACION_NUMERICA.ABSOLUTO,p.lineno(1),find_column(p.slice[1])),nodo)
 
 def p_operacion(p):
     ' operacion     :   valor '

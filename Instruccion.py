@@ -15,7 +15,7 @@ class Main(Instruccion):
 
 class Etiqueta(Instruccion):
     def __init__(self, id, instrucciones, line, column):
-        self.etiqueta = Tipo_Etiqueta.CONTROL
+        self.etiqueta = Tipo_Etiqueta.ETIQUETA
         self.id = id
         self.sentencias = instrucciones
         self.tipo = Tipo_Simbolo.ETIQUETA

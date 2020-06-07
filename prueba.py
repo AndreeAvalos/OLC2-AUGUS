@@ -89,3 +89,6 @@ while contador <= 100:
        contador+=1
        print(contador)
 print("TIEMPO EXCEDIDO DE LECTURA")'''
+lst = [1,2,3,4]
+lst.append(5)
+print( 5 in lst)

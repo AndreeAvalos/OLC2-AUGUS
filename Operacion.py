@@ -22,6 +22,7 @@ class OPERACION_NUMERICA(Enum):
     MULTIPLICACION = 3
     DIVISION = 4
     MODULAR = 5
+    ABSOLUTO = 6
 
 class OPERACION_BIT(Enum):
     NOT = 1

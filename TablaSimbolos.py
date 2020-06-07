@@ -26,6 +26,12 @@ class  Tipo_Etiqueta(Enum):
     CONTROL = 3
     MAIN = 4
     VARIABLE = 5
+    ETIQUETA = 6
+
+class Tipo_Salida(Enum):
+    EXIT=1
+    DESCARTAR = 2
+    SEGUIR = 3
 
 #clase para simular un apuntador
 class ref:

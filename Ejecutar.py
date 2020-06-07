@@ -1,6 +1,6 @@
 from Instruccion import *
 from Operacion import *
-from TablaSimbolos import Simbolo, TablaSimbolos
+from TablaSimbolos import Simbolo, TablaSimbolos, Tipo_Salida 
 from Recolectar import TokenError, Recolectar 
 import threading
 import time
@@ -19,6 +19,8 @@ class Ejecutor(threading.Thread):
         self.leido = False
         self.area = args[4]
         self.consola = args[5]
+        self.last = ""
+        self.encontro_if = False
 
 
     def run(self):
@@ -81,16 +83,25 @@ class Ejecutor(threading.Thread):
     def procesar(self):
         encontro = False
         exit = False
+        last_instruccion =False
+        self.encontro_if = False
+        continuar = False
         for instruccion in self.instrucciones:
             if isinstance(instruccion, Main): encontro = True
+            if instruccion.id == self.last: 
+                last_instruccion = True
+                continue
             if encontro:
                 if isinstance(instruccion,Main): 
                     exit = self.procesar_main(instruccion)
-                elif isinstance(instruccion, Etiqueta):
+                if self.encontro_if == True:
+                    if isinstance(instruccion, Etiqueta) and last_instruccion ==True:
+                        exit = self.procesar_etiqueta(instruccion)
+                else:
                     exit = self.procesar_etiqueta(instruccion)
 
-                if exit:
-                    return
+                if exit == Tipo_Salida.EXIT:
+                    return exit
 
     def procesar_main(self,main):
         self.ambiente = "main"
@@ -98,7 +109,8 @@ class Ejecutor(threading.Thread):
         #cursor = self.area.textCursor()
         #cursor.setPosition(0)
         for sentencia in main.sentencias:
-            #time.sleep(0.5)
+            exit = Tipo_Salida.SEGUIR
+            #time.sleep(0.2)
             #cursor.setPosition(0)
             #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
             #self.area.setTextCursor(cursor)
@@ -111,10 +123,12 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             elif isinstance(sentencia, Read): self.procesar_read(sentencia)
             #self.ts.graficarSimbolos()
-            if exit:
-                return True
+            if exit == Tipo_Salida.EXIT:
+                return exit
+            if exit == Tipo_Salida.DESCARTAR:
+                break
         
-        return False
+        return Tipo_Salida.SEGUIR
 
     def procesar_etiqueta(self, etiqueta):
         self.ambiente = etiqueta.id
@@ -122,23 +136,25 @@ class Ejecutor(threading.Thread):
         #cursor = self.area.textCursor()
         #cursor.setPosition(0)
         for sentencia in etiqueta.sentencias:
-            #time.sleep(0.5)
+            #time.sleep(0.2)
             #cursor.setPosition(0)
             #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
             #self.area.setTextCursor(cursor)
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
-            elif isinstance(sentencia, Exit): return True
+            elif isinstance(sentencia, Exit): return Tipo_Salida.EXIT
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             elif isinstance(sentencia, Read): self.procesar_read(sentencia)
             #self.ts.graficarSimbolos()
             
-            if exit:
-                return True
+            if exit == Tipo_Salida.EXIT:
+                return exit
+            if exit == Tipo_Salida.DESCARTAR:
+                break
         
-        return False
+        return Tipo_Salida.SEGUIR
     
     def procesar_goto(self,sentencia):
         if self.ts.existe(sentencia.id):
@@ -176,9 +192,15 @@ class Ejecutor(threading.Thread):
                 operando = False
             else:
                 self.agregarError("{0} valor invalido".format(result))
-                return False
+                return Tipo_Salida.SEGUIR
             if operando:
-                return self.procesar_goto(sentencia.goto)
+                self.encontro_if = True
+                self.last = sentencia.goto.id
+                salida = self.procesar_goto(sentencia.goto)
+                if salida == Tipo_Salida.EXIT:
+                    return Tipo_Salida.EXIT
+                else:
+                    return Tipo_Salida.DESCARTAR
         elif isinstance(operacion, OperacionUnaria):
             result = self.procesar_operacion(operacion)
             if sentencia.operacion.operacion == OPERACION_LOGICA.NOT:
@@ -189,12 +211,18 @@ class Ejecutor(threading.Thread):
                     operando = False
                 else:
                     self.agregarError("{0} valor invalido".format(result))
-                    return False
+                    return Tipo_Salida.SEGUIR
                 if operando:
-                    return self.procesar_goto(sentencia.goto)
+                    self.encontro_if = True
+                    self.last = sentencia.goto.id
+                salida = self.procesar_goto(sentencia.goto)
+                if salida == Tipo_Salida.EXIT:
+                    return Tipo_Salida.EXIT
+                else:
+                    return Tipo_Salida.DESCARTAR
         else:
             self.agregarError("Operacion no valida",sentencia.line,sentencia.column)
-        return False
+        return Tipo_Salida.SEGUIR
 
     def procesar_print(self, sentencia):
         if isinstance(sentencia.val, OperacionCopiaVariable):
@@ -202,7 +230,7 @@ class Ejecutor(threading.Thread):
             self.consola.append(str(result))
         else:
             self.consola.append("")
-        return False
+        return Tipo_Salida.SEGUIR
     def procesar_read(self,sentencia2):
         sentencia = sentencia2.sentencia
         self.consola.append("Escriba el valor")
@@ -229,10 +257,10 @@ class Ejecutor(threading.Thread):
                         print("Es un arreglo")
                     else:
                         self.agregarError("{0} dato no aceptado".format(self.entrada),sentencia.line, sentencia.column)
-                    return
+                    return Tipo_Salida.SEGUIR
                 contador = contador + 1
             self.agregarError("Tiempo de ejecucion agotado",sentencia.line,sentencia.column)
-            
+        return Tipo_Salida.SEGUIR
 
     def procesar_asignacion(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
@@ -248,6 +276,7 @@ class Ejecutor(threading.Thread):
         else:
 
             self.agregarError("La variable {0} invalida".format(sentencia.id),sentencia.line, sentencia.column)
+
 
     def procesar_referencia(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
@@ -341,6 +370,12 @@ class Ejecutor(threading.Thread):
         elif operacion.operacion == OPERACION_NUMERICA.RESTA:
             if isinstance(op1, int) or isinstance(op1,float):
                 return -1*op1
+            else:
+                self.agregarError("{0} no es un valor numerico".format(op1),operacion.line,operacion.column)
+                return op1
+        elif operacion.operacion == OPERACION_NUMERICA.ABSOLUTO:
+            if isinstance(op1, int) or isinstance(op1,float):
+                return abs(op1)
             else:
                 self.agregarError("{0} no es un valor numerico".format(op1),operacion.line,operacion.column)
                 return op1
