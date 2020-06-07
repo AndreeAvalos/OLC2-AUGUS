@@ -87,6 +87,7 @@ class Ejecutor(threading.Thread):
         self.encontro_if = False
         continuar = False
         for instruccion in self.instrucciones:
+            print("ESTA EN LA INSTRUCCION: {0}".format(instruccion.id))
             if isinstance(instruccion, Main): encontro = True
             if instruccion.id == self.last: 
                 last_instruccion = True
@@ -96,10 +97,11 @@ class Ejecutor(threading.Thread):
                     exit = self.procesar_main(instruccion)
                     if exit == Tipo_Salida.EXIT:
                         return exit
+                        
                 if self.encontro_if == True:
                     if isinstance(instruccion, Etiqueta) and last_instruccion ==True:
                         exit = self.procesar_etiqueta(instruccion)
-                else:
+                elif isinstance(instruccion, Etiqueta):
                     exit = self.procesar_etiqueta(instruccion)
 
                 if exit == Tipo_Salida.EXIT:
@@ -108,14 +110,15 @@ class Ejecutor(threading.Thread):
     def procesar_main(self,main):
         self.ambiente = "main"
         exit = False
-        #cursor = self.area.textCursor()
-        #cursor.setPosition(0)
+        cursor = self.area.textCursor()
+        cursor.setPosition(0)
         for sentencia in main.sentencias:
             exit = Tipo_Salida.SEGUIR
-            #time.sleep(0.2)
-            #cursor.setPosition(0)
-            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-            #self.area.setTextCursor(cursor)
+            time.sleep(0.2)
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            self.area.setTextCursor(cursor)
+
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
@@ -135,13 +138,13 @@ class Ejecutor(threading.Thread):
     def procesar_etiqueta(self, etiqueta):
         self.ambiente = etiqueta.id
         exit = False
-        #cursor = self.area.textCursor()
-        #cursor.setPosition(0)
+        cursor = self.area.textCursor()
+        cursor.setPosition(0)
         for sentencia in etiqueta.sentencias:
-            #time.sleep(0.2)
-            #cursor.setPosition(0)
-            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-            #self.area.setTextCursor(cursor)
+            time.sleep(0.2)
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            self.area.setTextCursor(cursor)
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
@@ -199,6 +202,7 @@ class Ejecutor(threading.Thread):
                 self.encontro_if = True
                 self.last = sentencia.goto.id
                 salida = self.procesar_goto(sentencia.goto)
+                print(salida)
                 if salida == Tipo_Salida.EXIT:
                     return Tipo_Salida.EXIT
                 else:
@@ -217,11 +221,12 @@ class Ejecutor(threading.Thread):
                 if operando:
                     self.encontro_if = True
                     self.last = sentencia.goto.id
-                salida = self.procesar_goto(sentencia.goto)
-                if salida == Tipo_Salida.EXIT:
-                    return Tipo_Salida.EXIT
-                else:
-                    return Tipo_Salida.DESCARTAR
+                    salida = self.procesar_goto(sentencia.goto)
+                    print 
+                    if salida == Tipo_Salida.EXIT:
+                        return Tipo_Salida.EXIT
+                    else:
+                        return Tipo_Salida.DESCARTAR
         else:
             self.agregarError("Operacion no valida",sentencia.line,sentencia.column)
         return Tipo_Salida.SEGUIR
