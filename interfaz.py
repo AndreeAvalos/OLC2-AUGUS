@@ -201,12 +201,12 @@ class Ui_MainWindow(object):
     def ejecutar_analisis(self):
 
         self.consola.setText("****** Preparando Analisis ******")
+        
         indextab = self.editores.tabText(self.editores.currentIndex())
         self.consola.setText("Archivo a analizar: "+indextab)
         tab = self.editores.widget(self.editores.currentIndex())
-        items = self.tab.children()
+        items = tab.children()
         codigo = items[0].toPlainText()
-        #print(codigo)
         ast = None
         analisis_semantico = False
         print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")

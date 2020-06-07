@@ -4,13 +4,11 @@ graph [bb="0,0,352,154"];
 arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>IDENTIFICADOR</TD><TD>VALOR</TD><TD>TIPO</TD><TD>AMBIENTE</TD><TD>ETIQUETA</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>
 <TR><TD>main</TD><TD>None</TD><TD>Tipo_Simbolo.MAIN</TD><TD>global</TD><TD>Tipo_Etiqueta.MAIN</TD><TD>1</TD><TD>1</TD></TR>
-<TR><TD>ret0</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.ETIQUETA</TD><TD>5</TD><TD>1</TD></TR>
-<TR><TD>fact</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.ETIQUETA</TD><TD>8</TD><TD>1</TD></TR>
-<TR><TD>sino</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.ETIQUETA</TD><TD>14</TD><TD>1</TD></TR>
-<TR><TD>ret1</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.ETIQUETA</TD><TD>18</TD><TD>1</TD></TR>
-<TR><TD>$a0</TD><TD>3</TD><TD>Tipo_Simbolo.PARAMETRO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>2</TD><TD>2</TD></TR>
-<TR><TD>$ra</TD><TD>0</TD><TD>Tipo_Simbolo.SIMULADOR</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>3</TD><TD>2</TD></TR>
-<TR><TD>$v0</TD><TD>6</TD><TD>Tipo_Simbolo.RETORNO</TD><TD>fact</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>10</TD><TD>2</TD></TR>
+<TR><TD>while</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.ETIQUETA</TD><TD>4</TD><TD>1</TD></TR>
+<TR><TD>end</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.ETIQUETA</TD><TD>9</TD><TD>1</TD></TR>
+<TR><TD>end2</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.ETIQUETA</TD><TD>11</TD><TD>1</TD></TR>
+<TR><TD>$t1</TD><TD>4</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>2</TD><TD>2</TD></TR>
+<TR><TD>$t2</TD><TD>6</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>3</TD><TD>2</TD></TR>
 </TABLE>
 >, ];
 }

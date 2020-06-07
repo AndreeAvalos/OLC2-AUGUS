@@ -94,6 +94,8 @@ class Ejecutor(threading.Thread):
             if encontro:
                 if isinstance(instruccion,Main): 
                     exit = self.procesar_main(instruccion)
+                    if exit == Tipo_Salida.EXIT:
+                        return exit
                 if self.encontro_if == True:
                     if isinstance(instruccion, Etiqueta) and last_instruccion ==True:
                         exit = self.procesar_etiqueta(instruccion)
@@ -117,16 +119,16 @@ class Ejecutor(threading.Thread):
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
-            elif isinstance(sentencia, Exit): return True
+            elif isinstance(sentencia, Exit): return Tipo_Salida.EXIT
             elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             elif isinstance(sentencia, Read): self.procesar_read(sentencia)
-            #self.ts.graficarSimbolos()
+            self.ts.graficarSimbolos()
             if exit == Tipo_Salida.EXIT:
                 return exit
             if exit == Tipo_Salida.DESCARTAR:
-                break
+                return exit
         
         return Tipo_Salida.SEGUIR
 
@@ -147,12 +149,12 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             elif isinstance(sentencia, Read): self.procesar_read(sentencia)
-            #self.ts.graficarSimbolos()
+            self.ts.graficarSimbolos()
             
             if exit == Tipo_Salida.EXIT:
                 return exit
             if exit == Tipo_Salida.DESCARTAR:
-                break
+                return exit
         
         return Tipo_Salida.SEGUIR
     
@@ -169,7 +171,7 @@ class Ejecutor(threading.Thread):
         else:
             self.agregarError("{0} no esta declarad".format(sentencia.id),sentencia.line,sentencia.column)
 
-        return False
+        return Tipo_Salida.EXIT
     
     def procesar_unset(self, sentencia):
         try:
