@@ -6,6 +6,7 @@ import threading
 import time
 from QCodeEditor import *
 import re 
+from ArbolCaracteres import ArbolCaracteres
 class Ejecutor(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, *, daemon=None):
@@ -13,7 +14,7 @@ class Ejecutor(threading.Thread):
                          daemon=daemon)
         self.instrucciones = args[0]
         self.ts = args[1]
-        self.ambiente ="global"
+        self.ambito ="global"
         self.lst_errores = args[2]
         self.entrada = args[3]
         self.leido = False
@@ -87,7 +88,6 @@ class Ejecutor(threading.Thread):
         self.encontro_if = False
         continuar = False
         for instruccion in self.instrucciones:
-            print("ESTA EN LA INSTRUCCION: {0}".format(instruccion.id))
             if isinstance(instruccion, Main): encontro = True
             if instruccion.id == self.last: 
                 last_instruccion = True
@@ -108,16 +108,16 @@ class Ejecutor(threading.Thread):
                     return exit
 
     def procesar_main(self,main):
-        self.ambiente = "main"
+        self.ambito = "main"
         exit = False
-        cursor = self.area.textCursor()
-        cursor.setPosition(0)
+        #cursor = self.area.textCursor()
+        #cursor.setPosition(0)
         for sentencia in main.sentencias:
             exit = Tipo_Salida.SEGUIR
-            time.sleep(0.2)
-            cursor.setPosition(0)
-            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-            self.area.setTextCursor(cursor)
+            #time.sleep(0.2)
+            #cursor.setPosition(0)
+            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            #self.area.setTextCursor(cursor)
 
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
@@ -127,7 +127,7 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             elif isinstance(sentencia, Read): self.procesar_read(sentencia)
-            self.ts.graficarSimbolos()
+            #self.ts.graficarSimbolos()
             if exit == Tipo_Salida.EXIT:
                 return exit
             if exit == Tipo_Salida.DESCARTAR:
@@ -136,23 +136,25 @@ class Ejecutor(threading.Thread):
         return Tipo_Salida.SEGUIR
 
     def procesar_etiqueta(self, etiqueta):
-        self.ambiente = etiqueta.id
+        self.ambito = etiqueta.id
         exit = False
-        cursor = self.area.textCursor()
-        cursor.setPosition(0)
+        #cursor = self.area.textCursor()
+        #cursor.setPosition(0)
         for sentencia in etiqueta.sentencias:
-            time.sleep(0.2)
-            cursor.setPosition(0)
-            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-            self.area.setTextCursor(cursor)
+            exit = Tipo_Salida.SEGUIR
+            #time.sleep(0.2)
+            #cursor.setPosition(0)
+            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+            #self.area.setTextCursor(cursor)
             if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
             elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
             elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
             elif isinstance(sentencia, Exit): return Tipo_Salida.EXIT
+            elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             elif isinstance(sentencia, Read): self.procesar_read(sentencia)
-            self.ts.graficarSimbolos()
+            #self.ts.graficarSimbolos()
             
             if exit == Tipo_Salida.EXIT:
                 return exit
@@ -165,9 +167,9 @@ class Ejecutor(threading.Thread):
         if self.ts.existe(sentencia.id):
             simbol = self.ts.get(sentencia.id)
             if simbol.tipo == Tipo_Simbolo.ETIQUETA:
-                ambiente_ant = self.ambiente
+                ambiente_ant = self.ambito
                 existe = self.procesar_etiqueta(simbol)
-                self.ambiente = ambiente_ant
+                self.ambito = ambiente_ant
                 return existe
             else:
                 self.agregarError("{0} no es una etiqueta".format(sentencia.id),sentencia.line, sentencia.column)
@@ -202,7 +204,6 @@ class Ejecutor(threading.Thread):
                 self.encontro_if = True
                 self.last = sentencia.goto.id
                 salida = self.procesar_goto(sentencia.goto)
-                print(salida)
                 if salida == Tipo_Salida.EXIT:
                     return Tipo_Salida.EXIT
                 else:
@@ -222,7 +223,6 @@ class Ejecutor(threading.Thread):
                     self.encontro_if = True
                     self.last = sentencia.goto.id
                     salida = self.procesar_goto(sentencia.goto)
-                    print 
                     if salida == Tipo_Salida.EXIT:
                         return Tipo_Salida.EXIT
                     else:
@@ -234,7 +234,10 @@ class Ejecutor(threading.Thread):
     def procesar_print(self, sentencia):
         if isinstance(sentencia.val, OperacionCopiaVariable):
             result = self.procesar_valor(sentencia.val)
-            self.consola.append(str(result))
+            if isinstance(result, ArbolCaracteres):
+                self.consola.append(str(result.getText()))
+            else:
+                self.consola.append(str(result))
         else:
             self.consola.append("")
         return Tipo_Salida.SEGUIR
@@ -242,12 +245,12 @@ class Ejecutor(threading.Thread):
         sentencia = sentencia2.sentencia
         self.consola.append("Escriba el valor")
         self.consola.append("")
-        new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambiente, sentencia.etiqueta,sentencia.line,sentencia.column)
+        new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambito, sentencia.etiqueta,sentencia.line,sentencia.column)
         self.ts.add(new_simbol)
         id = sentencia.id
         entero = r'-?[0-9]+'
         decimal = r'-?[0-9]+\.[0-9]+'
-        string = r'[a-zA-z0-9]+'
+        string = r'.*'
 
         if self.ts.existe(id):
             contador = 0 #contador para contar los segundos de tiempo de lida maxima
@@ -261,7 +264,8 @@ class Ejecutor(threading.Thread):
                         self.ts.set(id,self.entrada)
                     elif re.match(string,self.entrada):
                         'ARREGLAR PARA CONVERTIR EN ARREGLO'
-                        print("Es un arreglo")
+                        arbol = ArbolCaracteres(self.entrada)
+                        self.ts.set(id,arbol)
                     else:
                         self.agregarError("{0} dato no aceptado".format(self.entrada),sentencia.line, sentencia.column)
                     return Tipo_Salida.SEGUIR
@@ -274,7 +278,7 @@ class Ejecutor(threading.Thread):
             result = self.procesar_operacion(sentencia.valor)
             if result != None:
                 if not self.ts.existe(sentencia.id):
-                    new_simbol = Simbolo(sentencia.id, None, result, sentencia.tipo,self.ambiente, sentencia.etiqueta,sentencia.line,sentencia.column)
+                    new_simbol = Simbolo(sentencia.id, None, result, sentencia.tipo,self.ambito, sentencia.etiqueta,sentencia.line,sentencia.column)
                     self.ts.add(new_simbol)
                 else:
                     old_simbol = self.ts.get(sentencia.id)
@@ -290,7 +294,7 @@ class Ejecutor(threading.Thread):
             result = self.procesar_valor(sentencia.valor)
             if result != None:
                 if not self.ts.existe(sentencia.id):
-                    new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambiente, sentencia.etiqueta,sentencia.line,sentencia.column)
+                    new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambito, sentencia.etiqueta,sentencia.line,sentencia.column)
                     self.ts.add(new_simbol)
                     self.ts.referenciar(sentencia.id, result.valor)
                 else:
@@ -303,6 +307,7 @@ class Ejecutor(threading.Thread):
     def procesar_operacion(self,operacion):
         if isinstance(operacion,OperacionNumerica): return self.procesar_operacionNumerica(operacion)
         elif isinstance(operacion, OperacionNumero): return self.procesar_valor(operacion)
+        elif isinstance(operacion, OperacionCadena): return self.procesar_cadena(operacion)
         elif isinstance(operacion, OperacionCopiaVariable): return self.procesar_valor(operacion)
         elif isinstance(operacion, OperacionLogica): return self.procesar_operacionLogica(operacion)
         elif isinstance(operacion, OperacionUnaria): return self.procesar_operacionUnaria(operacion)
@@ -406,7 +411,15 @@ class Ejecutor(threading.Thread):
             else:
                 self.agregarError("No existe variable {0}".format(expresion.id),expresion.line,expresion.column)
                 return None
+            
         return None
+
+    def procesar_cadena(self, expresion):
+        if isinstance(expresion, OperacionCadena):
+            return ArbolCaracteres(expresion.val)
+            
+ 
+
     def stop(self):
         self.stopped = True
 

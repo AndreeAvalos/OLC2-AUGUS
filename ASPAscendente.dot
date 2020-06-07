@@ -3,400 +3,58 @@ digraph{ bgcolor = gray
  [shape=box, style=filled, color=gray14] 
  rankdir=UD 
  edge[color=white, dir=fordware]
-198[style = "filled" ; label = "init"] 
-197[style = "filled" ; label = "instrucciones"] 
-161[style = "filled" ; label = "instruccion"] 
-158[style = "filled" ; label = "pmain"] 
-159[style = "filled" ; label = "main"] 
-160[style = "filled" ; label = ":"] 
-157[style = "filled" ; label = "sentencias"] 
-150[style = "filled" ; label = "sentencias"] 
-141[style = "filled" ; label = "sentencias"] 
-134[style = "filled" ; label = "sentencias"] 
-127[style = "filled" ; label = "sentencias"] 
-118[style = "filled" ; label = "sentencias"] 
-109[style = "filled" ; label = "sentencias"] 
-100[style = "filled" ; label = "sentencias"] 
-91[style = "filled" ; label = "sentencias"] 
-82[style = "filled" ; label = "sentencias"] 
-72[style = "filled" ; label = "sentencias"] 
-60[style = "filled" ; label = "sentencias"] 
-52[style = "filled" ; label = "sentencias"] 
-43[style = "filled" ; label = "sentencias"] 
-34[style = "filled" ; label = "sentencias"] 
-25[style = "filled" ; label = "sentencias"] 
-16[style = "filled" ; label = "sentencias"] 
-7[style = "filled" ; label = "sentencia"] 
-3[style = "filled" ; label = "pvariable"] 
-4[style = "filled" ; label = "$t1"] 
-5[style = "filled" ; label = "="] 
-2[style = "filled" ; label = "operacion"] 
-1[style = "filled" ; label = "5"] 
-6[style = "filled" ; label = ";"] 
-12[style = "filled" ; label = "pvariable"] 
-13[style = "filled" ; label = "$t2"] 
-14[style = "filled" ; label = "="] 
+27[style = "filled" ; label = "init"] 
+26[style = "filled" ; label = "instruccion"] 
+23[style = "filled" ; label = "pmain"] 
+24[style = "filled" ; label = "main"] 
+25[style = "filled" ; label = ":"] 
+22[style = "filled" ; label = "sentencias"] 
+15[style = "filled" ; label = "sentencias"] 
+8[style = "filled" ; label = "sentencia"] 
+1[style = "filled" ; label = "pread"] 
+2[style = "filled" ; label = "$t1"] 
+3[style = "filled" ; label = "="] 
+4[style = "filled" ; label = "read"] 
+5[style = "filled" ; label = "("] 
+6[style = "filled" ; label = ")"] 
+7[style = "filled" ; label = ";"] 
+11[style = "filled" ; label = "pvariable"] 
+12[style = "filled" ; label = "$t2"] 
+13[style = "filled" ; label = "="] 
 10[style = "filled" ; label = "operacion"] 
-8[style = "filled" ; label = "6"] 
-11[style = "filled" ; label = "+"] 
-9[style = "filled" ; label = "6"] 
-15[style = "filled" ; label = ";"] 
-21[style = "filled" ; label = "pvariable"] 
-22[style = "filled" ; label = "$t3"] 
-23[style = "filled" ; label = "="] 
-19[style = "filled" ; label = "operacion"] 
-17[style = "filled" ; label = "6"] 
-20[style = "filled" ; label = "*"] 
-18[style = "filled" ; label = "6"] 
-24[style = "filled" ; label = ";"] 
-30[style = "filled" ; label = "pvariable"] 
-31[style = "filled" ; label = "$t4"] 
-32[style = "filled" ; label = "="] 
-28[style = "filled" ; label = "operacion"] 
-26[style = "filled" ; label = "6"] 
-29[style = "filled" ; label = "/"] 
-27[style = "filled" ; label = "6"] 
-33[style = "filled" ; label = ";"] 
-39[style = "filled" ; label = "pvariable"] 
-40[style = "filled" ; label = "$t5"] 
-41[style = "filled" ; label = "="] 
-37[style = "filled" ; label = "operacion"] 
-35[style = "filled" ; label = "6"] 
-38[style = "filled" ; label = "%"] 
-36[style = "filled" ; label = "6"] 
-42[style = "filled" ; label = ";"] 
-48[style = "filled" ; label = "pvariable"] 
-49[style = "filled" ; label = "$t6"] 
-50[style = "filled" ; label = "="] 
-46[style = "filled" ; label = "operacion"] 
-44[style = "filled" ; label = "5"] 
-47[style = "filled" ; label = "+"] 
-45[style = "filled" ; label = "6.2"] 
-51[style = "filled" ; label = ";"] 
-56[style = "filled" ; label = "pvariable"] 
-57[style = "filled" ; label = "$t7"] 
-58[style = "filled" ; label = "="] 
-54[style = "filled" ; label = "operacion"] 
-55[style = "filled" ; label = "-"] 
-53[style = "filled" ; label = "5"] 
-59[style = "filled" ; label = ";"] 
-68[style = "filled" ; label = "pvariable"] 
-69[style = "filled" ; label = "$t9"] 
-70[style = "filled" ; label = "="] 
-62[style = "filled" ; label = "operacion"] 
-63[style = "filled" ; label = "abs"] 
-64[style = "filled" ; label = "("] 
-65[style = "filled" ; label = "-"] 
-61[style = "filled" ; label = "5"] 
-66[style = "filled" ; label = ")"] 
-67[style = "filled" ; label = ";"] 
-71[style = "filled" ; label = ";"] 
-75[style = "filled" ; label = "pif"] 
-76[style = "filled" ; label = "if"] 
-77[style = "filled" ; label = "("] 
-74[style = "filled" ; label = "operacion"] 
-73[style = "filled" ; label = "$t4"] 
-78[style = "filled" ; label = ")"] 
-79[style = "filled" ; label = "got"] 
-80[style = "filled" ; label = "main2"] 
-81[style = "filled" ; label = ";"] 
-87[style = "filled" ; label = "pvariable"] 
-88[style = "filled" ; label = "$t10"] 
-89[style = "filled" ; label = "="] 
-85[style = "filled" ; label = "operacion"] 
-83[style = "filled" ; label = "1"] 
-86[style = "filled" ; label = "&&"] 
-84[style = "filled" ; label = "1"] 
-90[style = "filled" ; label = ";"] 
-96[style = "filled" ; label = "pvariable"] 
-97[style = "filled" ; label = "$t11"] 
-98[style = "filled" ; label = "="] 
-94[style = "filled" ; label = "operacion"] 
-92[style = "filled" ; label = "1"] 
-95[style = "filled" ; label = "||"] 
-93[style = "filled" ; label = "1"] 
-99[style = "filled" ; label = ";"] 
-105[style = "filled" ; label = "pvariable"] 
-106[style = "filled" ; label = "$t12"] 
-107[style = "filled" ; label = "="] 
-103[style = "filled" ; label = "operacion"] 
-101[style = "filled" ; label = "1"] 
-104[style = "filled" ; label = "xor"] 
-102[style = "filled" ; label = "1"] 
-108[style = "filled" ; label = ";"] 
-114[style = "filled" ; label = "pvariable"] 
-115[style = "filled" ; label = "$t13"] 
-116[style = "filled" ; label = "="] 
-112[style = "filled" ; label = "operacion"] 
-110[style = "filled" ; label = "1"] 
-113[style = "filled" ; label = "&&"] 
-111[style = "filled" ; label = "0"] 
-117[style = "filled" ; label = ";"] 
-123[style = "filled" ; label = "pvariable"] 
-124[style = "filled" ; label = "$a0"] 
-125[style = "filled" ; label = "="] 
-121[style = "filled" ; label = "operacion"] 
-119[style = "filled" ; label = "5"] 
-122[style = "filled" ; label = "*"] 
-120[style = "filled" ; label = "5"] 
-126[style = "filled" ; label = ";"] 
-130[style = "filled" ; label = "pvariable"] 
-131[style = "filled" ; label = "$v5"] 
-132[style = "filled" ; label = "="] 
-129[style = "filled" ; label = "operacion"] 
-128[style = "filled" ; label = "5"] 
-133[style = "filled" ; label = ";"] 
-137[style = "filled" ; label = "pvariable"] 
-138[style = "filled" ; label = "$s0"] 
-139[style = "filled" ; label = "="] 
-136[style = "filled" ; label = "operacion"] 
-135[style = "filled" ; label = "7"] 
-140[style = "filled" ; label = ";"] 
-146[style = "filled" ; label = "pvariable"] 
-147[style = "filled" ; label = "$ra"] 
-148[style = "filled" ; label = "="] 
-144[style = "filled" ; label = "operacion"] 
-142[style = "filled" ; label = "5"] 
-145[style = "filled" ; label = "+"] 
-143[style = "filled" ; label = "7"] 
-149[style = "filled" ; label = ";"] 
-153[style = "filled" ; label = "pvariable"] 
-154[style = "filled" ; label = "$sp"] 
-155[style = "filled" ; label = "="] 
-152[style = "filled" ; label = "operacion"] 
-151[style = "filled" ; label = "7"] 
-156[style = "filled" ; label = ";"] 
-194[style = "filled" ; label = "petiqueta"] 
-195[style = "filled" ; label = "main2"] 
-196[style = "filled" ; label = ":"] 
-193[style = "filled" ; label = "sentencias"] 
-189[style = "filled" ; label = "sentencias"] 
-182[style = "filled" ; label = "sentencias"] 
-175[style = "filled" ; label = "sentencias"] 
-168[style = "filled" ; label = "sentencia"] 
-164[style = "filled" ; label = "pvariable"] 
-165[style = "filled" ; label = "$t16"] 
-166[style = "filled" ; label = "="] 
-163[style = "filled" ; label = "operacion"] 
-162[style = "filled" ; label = "10"] 
-167[style = "filled" ; label = ";"] 
-169[style = "filled" ; label = "pprint"] 
-170[style = "filled" ; label = "print"] 
-171[style = "filled" ; label = "("] 
-172[style = "filled" ; label = "$t16"] 
-173[style = "filled" ; label = ")"] 
-174[style = "filled" ; label = ";"] 
-176[style = "filled" ; label = "pprint"] 
-177[style = "filled" ; label = "print"] 
-178[style = "filled" ; label = "("] 
-179[style = "filled" ; label = "SALTOL"] 
-180[style = "filled" ; label = ")"] 
-181[style = "filled" ; label = ";"] 
-183[style = "filled" ; label = "pprint"] 
-184[style = "filled" ; label = "print"] 
-185[style = "filled" ; label = "("] 
-186[style = "filled" ; label = "$t16"] 
-187[style = "filled" ; label = ")"] 
-188[style = "filled" ; label = ";"] 
-190[style = "filled" ; label = "pexit"] 
-191[style = "filled" ; label = "exit"] 
-192[style = "filled" ; label = ";"] 
-198->197;
-197->161;
-161->158;
-158->159;
-158->160;
-158->157;
-157->150;
-150->141;
-141->134;
-134->127;
-127->118;
-118->109;
-109->100;
-100->91;
-91->82;
-82->72;
-72->60;
-60->52;
-52->43;
-43->34;
-34->25;
-25->16;
-16->7;
-7->3;
-3->4;
-3->5;
-3->2;
-2->1;
-3->6;
-16->12;
-12->13;
-12->14;
-12->10;
-10->8;
-10->11;
+9[style = "filled" ; label = "100"] 
+14[style = "filled" ; label = ";"] 
+16[style = "filled" ; label = "pprint"] 
+17[style = "filled" ; label = "print"] 
+18[style = "filled" ; label = "("] 
+19[style = "filled" ; label = "$t1"] 
+20[style = "filled" ; label = ")"] 
+21[style = "filled" ; label = ";"] 
+27->26;
+26->23;
+23->24;
+23->25;
+23->22;
+22->15;
+15->8;
+8->1;
+1->2;
+1->3;
+1->4;
+1->5;
+1->6;
+1->7;
+15->11;
+11->12;
+11->13;
+11->10;
 10->9;
-12->15;
-25->21;
-21->22;
-21->23;
-21->19;
-19->17;
-19->20;
-19->18;
-21->24;
-34->30;
-30->31;
-30->32;
-30->28;
-28->26;
-28->29;
-28->27;
-30->33;
-43->39;
-39->40;
-39->41;
-39->37;
-37->35;
-37->38;
-37->36;
-39->42;
-52->48;
-48->49;
-48->50;
-48->46;
-46->44;
-46->47;
-46->45;
-48->51;
-60->56;
-56->57;
-56->58;
-56->54;
-54->55;
-54->53;
-56->59;
-72->68;
-68->69;
-68->70;
-68->62;
-62->63;
-62->64;
-62->65;
-62->61;
-62->66;
-62->67;
-68->71;
-82->75;
-75->76;
-75->77;
-75->74;
-74->73;
-75->78;
-75->79;
-75->80;
-75->81;
-91->87;
-87->88;
-87->89;
-87->85;
-85->83;
-85->86;
-85->84;
-87->90;
-100->96;
-96->97;
-96->98;
-96->94;
-94->92;
-94->95;
-94->93;
-96->99;
-109->105;
-105->106;
-105->107;
-105->103;
-103->101;
-103->104;
-103->102;
-105->108;
-118->114;
-114->115;
-114->116;
-114->112;
-112->110;
-112->113;
-112->111;
-114->117;
-127->123;
-123->124;
-123->125;
-123->121;
-121->119;
-121->122;
-121->120;
-123->126;
-134->130;
-130->131;
-130->132;
-130->129;
-129->128;
-130->133;
-141->137;
-137->138;
-137->139;
-137->136;
-136->135;
-137->140;
-150->146;
-146->147;
-146->148;
-146->144;
-144->142;
-144->145;
-144->143;
-146->149;
-157->153;
-153->154;
-153->155;
-153->152;
-152->151;
-153->156;
-197->194;
-194->195;
-194->196;
-194->193;
-193->189;
-189->182;
-182->175;
-175->168;
-168->164;
-164->165;
-164->166;
-164->163;
-163->162;
-164->167;
-175->169;
-169->170;
-169->171;
-169->172;
-169->173;
-169->174;
-182->176;
-176->177;
-176->178;
-176->179;
-176->180;
-176->181;
-189->183;
-183->184;
-183->185;
-183->186;
-183->187;
-183->188;
-193->190;
-190->191;
-190->192;
+11->14;
+22->16;
+16->17;
+16->18;
+16->19;
+16->20;
+16->21;
 
 }

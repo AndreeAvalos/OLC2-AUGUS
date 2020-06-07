@@ -127,6 +127,7 @@ tokens = [
     'ENTERO',
     'CARACTER',
     'CADENA',
+    'CADENA2',
     'ID',
     'MAS',
     'MENOS',
@@ -212,6 +213,11 @@ def t_VARIABLE(t):
 
 def t_CADENA(t):
     r'\'.*\''
+    t.value = t.value[1:-1] # remuevo las comillas
+    return t 
+
+def t_CADENA2(t):
+    r'\".*^\\n\"'
     t.value = t.value[1:-1] # remuevo las comillas
     return t 
 
@@ -385,24 +391,31 @@ def p_pif(p):
 
 def p_pprint(p):
     '''pprint   :   PRINT PARIZQ VARIABLE PARDER PYCOMA
-                |   PRINT PARIZQ ESCAPE PARDER PYCOMA
     '''
     nodo = NodoG(getIndex(),"pprint",[])
     nodo.add(NodoG(getIndex(),"print", None))
     nodo.add(NodoG(getIndex(),"(", None))
 
-    print(p[3])
-    if p[3] !='\"\\n\"':
-        nodo.add(NodoG(getIndex(),p[3], None))
-        nodo.add(NodoG(getIndex(),")", None))
-        nodo.add(NodoG(getIndex(),";", None))
-        p[0] = Nodo(Print_(OperacionCopiaVariable(p[3],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
-    else:
+    nodo.add(NodoG(getIndex(),p[3], None))
+    nodo.add(NodoG(getIndex(),")", None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(Print_(OperacionCopiaVariable(p[3],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
+
+    print('sentencia: pprint7; { sentencia = pprint}')
+
+def p_pprint2(p):
+    '''pprint   :   PRINT PARIZQ ESCAPE PARDER PYCOMA
+    '''
+    nodo = NodoG(getIndex(),"pprint",[])
+    nodo.add(NodoG(getIndex(),"print", None))
+    nodo.add(NodoG(getIndex(),"(", None))
+
+    if p[3] =='\"\\n\"':
         nodo.add(NodoG(getIndex(),'SALTOL', None))
         nodo.add(NodoG(getIndex(),")", None))
         nodo.add(NodoG(getIndex(),";", None))
-        p[0] = Nodo(Print_("-",p.lineno(1),find_column(p.slice[1])), nodo)
-    print('sentencia: pprint; { sentencia = pprint}')
+    p[0] = Nodo(Print_("-",p.lineno(1),find_column(p.slice[1])), nodo)
+    print('sentencia: pprint7; { sentencia = pprint}')
 
 def p_pread(p):
     'pread  :   VARIABLE IGUAL READ PARIZQ PARDER PYCOMA'
@@ -520,8 +533,9 @@ def p_valor(p):
 def p_valor2(p):
     '''valor    :   CADENA
                 |   CARACTER
+                |   CADENA2
     '''
-    p[0] = Nodo(OperacionNumero(p[1],p.lineno(1),find_column(p.slice[1])),p[1])
+    p[0] = Nodo(OperacionCadena(p[1],p.lineno(1),find_column(p.slice[1])),NodoG(getIndex(),str(p[1]), None))
 
 def p_valor3(p):
     '''valor    :   VARIABLE

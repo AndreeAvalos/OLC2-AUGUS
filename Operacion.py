@@ -81,3 +81,9 @@ class OperacionCopiaVariable(Instruccion):
         self.line =line
         self.column = column
 
+class OperacionCadena(Instruccion):
+    def __init__(self,num, line, column):
+        self.val = num
+        self.line = line
+        self.column = column
+

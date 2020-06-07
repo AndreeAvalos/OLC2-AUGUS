@@ -240,12 +240,7 @@ class Ui_MainWindow(object):
         #in_console.lst_errores = in_console.lst_errores+ gramatica.lst_errores
         #in_console.graficarErrores()
         ts.graficarSimbolos()
-        #in_console.stop()
-                
-        
-        
-        
-        
+        #in_console.stop()   
 
     def agregar_tab(self):
         text, okPressed = QInputDialog.getText(self.centralwidget, "Nuevo archivo","Nombre:", QLineEdit.Normal, "")
