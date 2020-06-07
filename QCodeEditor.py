@@ -159,7 +159,12 @@ class XMLHighlighter(QSyntaxHighlighter):
         self.valueFormat.setForeground(QColor("#F98D03")) #orange 
         self.valueStartExpression = QRegExp("\"")
         self.valueEndExpression = QRegExp("\"")
- 
+
+        #COLOR PARA COMENTARIOS
+        xmlAttributeFormat = QTextCharFormat()
+        xmlAttributeFormat.setFontItalic(True)
+        xmlAttributeFormat.setForeground(QColor("#29BB15")) #verde
+        self.highlightingRules.append((QRegExp("#.*"), xmlAttributeFormat))
  
         textFormat = QTextCharFormat()
         textFormat.setForeground(QColor("#000000")) #black

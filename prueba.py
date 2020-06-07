@@ -89,3 +89,29 @@ while contador <= 100:
        contador+=1
        print(contador)
 print("TIEMPO EXCEDIDO DE LECTURA")'''
+dic_principal = {}
+lst_direcciones = [0,'nombre']
+valor="Daniel"
+indice = 0
+
+
+def agregar(lst_direcciones, dic_principal,valor):
+       temporal = dic_principal
+       for x in range(len(lst_direcciones)):
+              new_dic = {}
+              if (x+1)==len(lst_direcciones):
+                     temporal[lst_direcciones[x]]=valor
+              else:
+                     temporal[lst_direcciones[x]]=new_dic
+              temporal=new_dic
+
+agregar(lst_direcciones,dic_principal,"Carlos")
+lst_direcciones = [1,'nombre']
+agregar(lst_direcciones,dic_principal,"Andree")
+lst_direcciones = [2,'nombre']
+agregar(lst_direcciones,dic_principal,"Avalos")
+lst_direcciones = [3,'nombre']
+agregar(lst_direcciones,dic_principal,"Soto")
+
+print(dic_principal)
+

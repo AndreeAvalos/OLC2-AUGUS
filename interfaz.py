@@ -201,12 +201,12 @@ class Ui_MainWindow(object):
     def ejecutar_analisis(self):
 
         self.consola.setText("****** Preparando Analisis ******")
+        
         indextab = self.editores.tabText(self.editores.currentIndex())
         self.consola.setText("Archivo a analizar: "+indextab)
         tab = self.editores.widget(self.editores.currentIndex())
-        items = self.tab.children()
+        items = tab.children()
         codigo = items[0].toPlainText()
-        #print(codigo)
         ast = None
         analisis_semantico = False
         print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
@@ -240,12 +240,7 @@ class Ui_MainWindow(object):
         #in_console.lst_errores = in_console.lst_errores+ gramatica.lst_errores
         #in_console.graficarErrores()
         ts.graficarSimbolos()
-        #in_console.stop()
-                
-        
-        
-        
-        
+        #in_console.stop()   
 
     def agregar_tab(self):
         text, okPressed = QInputDialog.getText(self.centralwidget, "Nuevo archivo","Nombre:", QLineEdit.Normal, "")

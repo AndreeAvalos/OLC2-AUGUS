@@ -22,6 +22,7 @@ class OPERACION_NUMERICA(Enum):
     MULTIPLICACION = 3
     DIVISION = 4
     MODULAR = 5
+    ABSOLUTO = 6
 
 class OPERACION_BIT(Enum):
     NOT = 1
@@ -78,5 +79,11 @@ class OperacionCopiaVariable(Instruccion):
     def __init__(self,id, line, column):
         self.id = id
         self.line =line
+        self.column = column
+
+class OperacionCadena(Instruccion):
+    def __init__(self,num, line, column):
+        self.val = num
+        self.line = line
         self.column = column
 

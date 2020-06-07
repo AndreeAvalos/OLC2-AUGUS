@@ -1,6 +1,6 @@
 from enum import Enum
 import subprocess
-
+from ArbolCaracteres import *
 class Tipo(Enum):
     ENTERO = 1
     DECIMAL = 2
@@ -26,6 +26,12 @@ class  Tipo_Etiqueta(Enum):
     CONTROL = 3
     MAIN = 4
     VARIABLE = 5
+    ETIQUETA = 6
+
+class Tipo_Salida(Enum):
+    EXIT=1
+    DESCARTAR = 2
+    SEGUIR = 3
 
 #clase para simular un apuntador
 class ref:
@@ -93,7 +99,12 @@ class TablaSimbolos:
                 file.write(self.simbolos[id].id)
                 file.write("</TD>")
                 file.write("<TD>")
-                file.write(str(self.simbolos[id].valor.get()))
+               
+                if isinstance(self.simbolos[id].valor.get(),ArbolCaracteres):
+                    arbol = self.simbolos[id].valor.get()
+                    file.write(arbol.getText())
+                else:
+                    file.write(str(self.simbolos[id].valor.get()))
                 file.write("</TD>")
                 file.write("<TD>")
                 file.write(str(self.simbolos[id].tipo))
@@ -105,7 +116,7 @@ class TablaSimbolos:
                 file.write(str(self.simbolos[id].etiqueta))
                 file.write("</TD>")
                 file.write("<TD>")
-                file.write(str(self.simbolos[id].line))
+                file.write(str(self.simbolos[id].line+1))
                 file.write("</TD>")
                 file.write("<TD>")
                 file.write(str(self.simbolos[id].column))
