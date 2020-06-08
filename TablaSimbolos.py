@@ -1,6 +1,7 @@
 from enum import Enum
 import subprocess
 from ArbolCaracteres import *
+from Arreglo import Arreglo
 class Tipo(Enum):
     ENTERO = 1
     DECIMAL = 2
@@ -9,16 +10,14 @@ class Tipo(Enum):
 
 class Tipo_Simbolo(Enum):
     TEMPORAL = 1
-    ARREGLONUMERICO =2
-    STRUCT = 3
-    MAIN = 4
-    ETIQUETA = 5
-    PARAMETRO = 6
-    RETORNO = 7
-    SIMULADOR = 8
-    PILA = 9
-    PUNTERO = 10
-    INVALIDO = 11
+    MAIN = 2
+    ETIQUETA = 3
+    PARAMETRO = 4
+    RETORNO = 5
+    SIMULADOR = 6
+    PILA = 7
+    PUNTERO = 8
+    INVALIDO = 9
 
 class  Tipo_Etiqueta(Enum):
     FUNCION = 1
@@ -27,6 +26,9 @@ class  Tipo_Etiqueta(Enum):
     MAIN = 4
     VARIABLE = 5
     ETIQUETA = 6
+    ARREGLO = 7
+    ARREGLONUMERICO =8
+    STRUCT = 9
 
 class Tipo_Salida(Enum):
     EXIT=1
@@ -103,6 +105,8 @@ class TablaSimbolos:
                 if isinstance(self.simbolos[id].valor.get(),ArbolCaracteres):
                     arbol = self.simbolos[id].valor.get()
                     file.write(arbol.getText())
+                elif isinstance(self.simbolos[id].valor.get(),Arreglo):
+                    file.write("ARREGLO")
                 else:
                     file.write(str(self.simbolos[id].valor.get()))
                 file.write("</TD>")

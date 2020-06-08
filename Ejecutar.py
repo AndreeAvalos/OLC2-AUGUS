@@ -7,6 +7,7 @@ import time
 from QCodeEditor import *
 import re 
 from ArbolCaracteres import ArbolCaracteres
+from Arreglo import Arreglo
 class Ejecutor(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, *, daemon=None):
@@ -25,17 +26,17 @@ class Ejecutor(threading.Thread):
 
 
     def run(self):
-        temp =  self.area.currentLineColor
-        try:      
+        #temp =  self.area.currentLineColor
+        #try:      
             #self.area.currentLineColor = QColor("#FF0000")
             self.procesar()
-        except:
-            print("ERROR DE EJECUCION")
-        finally:
+        #except:
+            #print("ERROR DE EJECUCION")
+        #finally:
             print("__________________________FIN______________________________")
             self.ts.graficarSimbolos()
             self.graficarErrores()
-            self.area.currentLineColor = temp
+            #self.area.currentLineColor = temp
 
     def setText(self,in_):
         self.entrada= in_
@@ -127,6 +128,8 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             elif isinstance(sentencia, Read): self.procesar_read(sentencia)
+            elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
+            elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
             #self.ts.graficarSimbolos()
             if exit == Tipo_Salida.EXIT:
                 return exit
@@ -154,6 +157,8 @@ class Ejecutor(threading.Thread):
             elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
             elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
             elif isinstance(sentencia, Read): self.procesar_read(sentencia)
+            elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
+            elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
             #self.ts.graficarSimbolos()
             
             if exit == Tipo_Salida.EXIT:
@@ -167,9 +172,9 @@ class Ejecutor(threading.Thread):
         if self.ts.existe(sentencia.id):
             simbol = self.ts.get(sentencia.id)
             if simbol.tipo == Tipo_Simbolo.ETIQUETA:
-                ambiente_ant = self.ambito
+                ambito = self.ambito
                 existe = self.procesar_etiqueta(simbol)
-                self.ambito = ambiente_ant
+                self.ambito = ambito
                 return existe
             else:
                 self.agregarError("{0} no es una etiqueta".format(sentencia.id),sentencia.line, sentencia.column)
@@ -241,6 +246,7 @@ class Ejecutor(threading.Thread):
         else:
             self.consola.append("")
         return Tipo_Salida.SEGUIR
+    
     def procesar_read(self,sentencia2):
         sentencia = sentencia2.sentencia
         self.consola.append("Escriba el valor")
@@ -282,12 +288,87 @@ class Ejecutor(threading.Thread):
                     self.ts.add(new_simbol)
                 else:
                     old_simbol = self.ts.get(sentencia.id)
-                    new_simbol = Simbolo(sentencia.id, None, result, sentencia.tipo,old_simbol.ambiente, sentencia.etiqueta,old_simbol.line,old_simbol.column)
-                    self.ts.actualizar(new_simbol)
+                    if isinstance(old_simbol.valor.get(),Arreglo):
+                        self.agregarError("{0} es un arreglo, no puede cambiar de tipo".format(sentencia.id),sentencia.line,sentencia.column)
+                    else:
+                        new_simbol = Simbolo(sentencia.id, None, result, sentencia.tipo,old_simbol.ambiente, sentencia.etiqueta,old_simbol.line,old_simbol.column)
+                        self.ts.actualizar(new_simbol)
         else:
-
             self.agregarError("La variable {0} invalida".format(sentencia.id),sentencia.line, sentencia.column)
 
+    def procesar_declaracionArreglo(self, sentencia):
+        if sentencia.tipo != Tipo_Simbolo.INVALIDO:
+            if not self.ts.existe(sentencia.id):
+                new_simbol = Simbolo(sentencia.id, None, Arreglo(), sentencia.tipo,self.ambito, sentencia.etiqueta,sentencia.line,sentencia.column)
+                self.ts.add(new_simbol)
+            else:
+                self.agregarError("{0} no puede cambiar su tipo a arrreglo".format(sentencia.id),sentencia.line,sentencia.column)
+        else:
+            self.agregarError("La variable {0} invalida".format(sentencia.id),sentencia.line, sentencia.column)       
+    
+    def procesar_arreglo(self,sentencia):
+        if sentencia.tipo != Tipo_Simbolo.INVALIDO:
+            result = self.procesar_operacion(sentencia.valor)
+            numerico = True
+            if result!=None:
+                                    #hacemos una lista de indices para poder ingresarlos a nuestro diccionario 
+                direcciones = []
+                for dimension in sentencia.dimensiones:
+                    indice = self.procesar_operacion(dimension)
+                    if indice==None:
+                        self.agregarError("indice no valido",dimension.line,dimension.column)
+                        return
+                    texto = indice
+                    if isinstance(indice,ArbolCaracteres):
+                        texto = indice.getText()
+                        numerico=False
+                    
+                    direcciones.append(texto)
+                  #terminamos de parsear los valores a una lista  
+                if not self.ts.existe(sentencia.id):
+                    #Si no existe es porque no se ha declarado la variable como arreglo, por ende no se puede asignar el valor 
+                    self.agregarError("{0} no es un arreglo".format(sentencia.id),sentencia.line, sentencia.column)
+                else:
+                    #Aqui debemos comprobar que el valor de la variable sea un arreglo, de lo contrario seria un error
+                    #dado que no puede cambiar de un tipo primitivo a un arreglo segun las indicaciones del auxiliar
+                    simbolo = self.ts.get(sentencia.id)
+                    #Comparamos si el valor del simbolo es un valor de arreglo
+                    if isinstance(simbolo.valor.get(), Arreglo):
+                        #aqui ya debemos hacer las comparaciones con si existe los indices
+                        # primero debemos comprobar si existen los los indices
+                        arreglo_auxiliar = simbolo.valor.get()
+                        existen_indices =  arreglo_auxiliar.exist(direcciones)
+                        #si no existe entonces comprobamos que si el ultimo no sea un arbol de caracteres
+                        if not existen_indices:
+                            isarbol = arreglo_auxiliar.isThree(direcciones)                    
+                            if not isarbol:
+                                arreglo_auxiliar.add(direcciones, result)
+                                simbolo.valor.set(arreglo_auxiliar)
+                                if numerico:
+                                    simbolo.etiqueta = Tipo_Etiqueta.ARREGLONUMERICO
+                                else:
+                                    simbolo.etiqueta = Tipo_Etiqueta.STRUCT
+                                self.ts.add(simbolo)
+                            else:
+                                #aqui debemos cambiar los caracteres de la cadena
+                                resultado = arreglo_auxiliar.setChars(direcciones, result.getText())
+                                if not resultado:
+                                    self.agregarError("index {0} no permitido".format(direcciones[len(direcciones)-1]),sentencia.line,sentencia.column)
+                                return
+                        else:
+                            arreglo_auxiliar.setValue(direcciones,result)
+                            simbolo.valor.set(arreglo_auxiliar)
+                            if numerico:
+                                simbolo.etiqueta = Tipo_Etiqueta.ARREGLONUMERICO
+                            else:
+                                simbolo.etiqueta = Tipo_Etiqueta.STRUCT
+                            self.ts.add(simbolo)
+                    else:
+                            self.agregarError("{0} no es un arreglo".format(sentencia.id),sentencia.line, sentencia.column)
+
+
+        else:
+            self.agregarError("La variable {0} invalida".format(sentencia.id),sentencia.line, sentencia.column)
 
     def procesar_referencia(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
@@ -300,7 +381,6 @@ class Ejecutor(threading.Thread):
                 else:
                     self.ts.referenciar(sentencia.id, result.valor)
         else:
-
             self.agregarError("La variable {0} invalida".format(sentencia.id),sentencia.line, sentencia.column)       
 
 

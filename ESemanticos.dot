@@ -3,6 +3,9 @@ graph [ratio=fill];node [label="\N", fontsize=15, shape=plaintext];
 graph [bb="0,0,352,154"];
 arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>TIPO</TD><TD>DESCRIPCION</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>
+<TR><TD>Semantico</TD><TD>index 4 no permitido</TD><TD>6</TD><TD>2</TD></TR>
+<TR><TD>Semantico</TD><TD>index 5 no permitido</TD><TD>7</TD><TD>2</TD></TR>
+<TR><TD>Semantico</TD><TD>index 7 no permitido</TD><TD>8</TD><TD>2</TD></TR>
 </TABLE>
 >, ];
 }

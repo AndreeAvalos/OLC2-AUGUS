@@ -16,13 +16,13 @@ class ArbolCaracteres:
     def setChar(self,num,char):
         #compara si se puede asignar el valor primero
         #De lo contrario es porque el index es mayor y se debe crear
-        if len(self.caracteres)>=num:
+        if len(self.caracteres)>num:
             self.caracteres[num] = char
         else:
             #obtenemos cuantos valores debemos insertar
-            restante = num-len(self.caracteres)
+            restante = num-len(self.caracteres)+1
             for x in range(restante):
-                self.caracteres.append("")
+                self.caracteres.append(" ")
             #asignamos el valor a su correspondiente indice
             self.caracteres[num] = char
     #Metodo que valida si se quiere ingresar a un indice mayor a la cantidad

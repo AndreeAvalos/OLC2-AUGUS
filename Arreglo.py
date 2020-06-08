@@ -1,14 +1,74 @@
+from ArbolCaracteres import ArbolCaracteres
 class Arreglo:
     def __init__(self):
         self.diccionario = {}
     #Direcciones es un arreglo de indices
     #valor es el valor que se desea guardar
     def add(self,direcciones, valor):
-        temporal = self.diccionario
-        for x in range(len(direcciones)):
-            new_dic={}
-            if(x+1) == len(direcciones):
-                temporal[direcciones[x]] = valor
+        self.__add3(0,direcciones,valor,self.diccionario)
+
+    def __add3(self,indice,direcciones,valor, diccionario):
+        if isinstance(diccionario,dict):
+            if not direcciones[indice] in diccionario:
+                new_dic = {}
+                diccionario[direcciones[indice]] = new_dic
+                if indice +1 < len(direcciones):
+                    self.__add3(indice+1,direcciones,valor,diccionario[direcciones[indice]])
+                else:
+                    diccionario[direcciones[indice]] = valor
             else:
-                temporal[direcciones[x]] = new_dic
-            temporal = new_dic
+                self.__add3(indice+1,direcciones,valor,diccionario[direcciones[indice]])
+    
+    def exist(self, direcciones):
+        return self.__existeIndex(0,direcciones,self.diccionario)
+
+    def __existeIndex(self, indice, direcciones, diccionario):
+        if isinstance(diccionario,dict):
+            if direcciones[indice] in diccionario:
+                if indice +1< len(direcciones): 
+                    return self.__existeIndex(indice+1, direcciones,diccionario[direcciones[indice]])
+            else:
+                return False
+        else:
+            if indice+1==len(direcciones):
+                if(diccionario, ArbolCaracteres):
+                    return False
+
+        return True
+
+    def isThree(self,direcciones):
+        return self.__lastElement(0, direcciones,self.diccionario)
+
+    def __lastElement(self,indice,direcciones, diccionario):
+        if isinstance(diccionario,dict):
+            if direcciones[indice] in diccionario:
+                if indice+1 < len(direcciones):
+                    return self.__lastElement(indice+1, direcciones, diccionario[direcciones[indice]])
+        else:
+            return True
+        return False
+
+    def setChars(self, direcciones, value):
+        self.__chars(0, direcciones,value, self.diccionario)
+    
+    def __chars(self, indice, direcciones, value, diccionario):
+        if isinstance(diccionario,dict):
+            if direcciones[indice] in diccionario:
+                if indice+1 < len(direcciones):
+                    return self.__chars(indice+1, direcciones,value, diccionario[direcciones[indice]])
+        else:
+            if isinstance(direcciones[indice],int):
+                diccionario.setChar(direcciones[indice],value)
+                return True
+            else:
+                return False
+                
+
+    def setValue(self, direcciones, value):
+        self.__set(0,direcciones,value,self.diccionario)
+    def __set(self,index, direcciones, value, diccionario):
+        if (index+1)==len(direcciones):
+            diccionario[direcciones[index]]=value
+        else:
+            self.__set(index+1, direcciones, value, diccionario[direcciones[index]])
+        

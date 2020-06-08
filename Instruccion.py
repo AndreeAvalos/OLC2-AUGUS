@@ -138,3 +138,83 @@ class Read(Instruccion):
         self.sentencia = id
         self.line = line
         self.column = column
+
+class AsignacionArreglo(Instruccion):
+    def __init__(self, id, dimensiones, valor, line, column):
+        self.dimensiones = dimensiones
+        #temporales
+        pattern = r'(\$t[0-9]+)'
+        match1 = re.match(pattern,id)
+        #parametros
+        pattern = r'(\$a[0-9]+)'
+        match2 = re.match(pattern,id)
+        #retornos
+        pattern = r'(\$v[0-9]+)'
+        match3 = re.match(pattern,id)
+        #pila
+        pattern = r'(\$s[0-9]+)'
+        match4 = re.match(pattern,id)
+        if match1: 
+            self.tipo = Tipo_Simbolo.TEMPORAL
+            self.id = match1.group()
+        elif match2:            
+            self.tipo = Tipo_Simbolo.PARAMETRO
+            self.id = match2.group()
+        elif match3:            
+            self.tipo = Tipo_Simbolo.RETORNO
+            self.id = match3.group()
+        elif match4:            
+            self.tipo = Tipo_Simbolo.PILA
+            self.id = match4.group()
+        elif id == "$ra":
+            self.tipo = Tipo_Simbolo.SIMULADOR
+            self.id = "$ra"
+        elif id == "$sp":
+            self.tipo = Tipo_Simbolo.PUNTERO
+            self.id = "$sp"
+        else:
+            self.tipo = Tipo_Simbolo.INVALIDO
+            self.id = id
+        self.valor = valor
+        self.line = line
+        self.column = column
+
+class DeclararArreglo(Instruccion):
+    def __init__(self,id,line, column):
+        #temporales
+        pattern = r'(\$t[0-9]+)'
+        match1 = re.match(pattern,id)
+        #parametros
+        pattern = r'(\$a[0-9]+)'
+        match2 = re.match(pattern,id)
+        #retornos
+        pattern = r'(\$v[0-9]+)'
+        match3 = re.match(pattern,id)
+        #pila
+        pattern = r'(\$s[0-9]+)'
+        match4 = re.match(pattern,id)
+        if match1: 
+            self.tipo = Tipo_Simbolo.TEMPORAL
+            self.id = match1.group()
+        elif match2:            
+            self.tipo = Tipo_Simbolo.PARAMETRO
+            self.id = match2.group()
+        elif match3:            
+            self.tipo = Tipo_Simbolo.RETORNO
+            self.id = match3.group()
+        elif match4:            
+            self.tipo = Tipo_Simbolo.PILA
+            self.id = match4.group()
+        elif id == "$ra":
+            self.tipo = Tipo_Simbolo.SIMULADOR
+            self.id = "$ra"
+        elif id == "$sp":
+            self.tipo = Tipo_Simbolo.PUNTERO
+            self.id = "$sp"
+        else:
+            self.tipo = Tipo_Simbolo.INVALIDO
+            self.id = id
+        self.etiqueta = Tipo_Etiqueta.ARREGLO
+        self.line = line
+        self.column = column
+        

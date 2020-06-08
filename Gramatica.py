@@ -68,7 +68,7 @@ def graficarErrores():
 def construirAST(nodo):
     #try:
         file = open("ASPAscendente.dot", "w")
-        file.write("digraph{ bgcolor = gray \n node[fontcolor = white, height = 0.5, color = white] \n [shape=box, style=filled, color=gray14] \n rankdir=UD \n edge[color=white, dir=fordware]\n")
+        file.write("digraph{ \n")
         imprimirNodos(nodo,file)
         graficar(nodo,file)
         file.write("\n}")
@@ -212,22 +212,17 @@ def t_VARIABLE(t):
 
 
 def t_CADENA(t):
-    r'\'.*\''
+    r'\'.*?\''
     t.value = t.value[1:-1] # remuevo las comillas
     return t 
 
 def t_CADENA2(t):
-    r'\".*^\\n\"'
-    t.value = t.value[1:-1] # remuevo las comillas
-    return t 
-
-def t_CARACTER(t):
-    r'\'[a-zA-Z0-9]\''
+    r'\".*?\"'
     t.value = t.value[1:-1] # remuevo las comillas
     return t 
 
 def t_COMENTARIO(t):
-    r'\#.*\n'
+    r'\#.*'
     t.lexer.lineno += 1
 
 
@@ -243,17 +238,6 @@ def t_error(t):
     t.lexer.skip(1)
 
 lexer = lex.lex()
-'''
-precedence = (
-    ('left','XOR'),
-    ('left','AND'),
-    ('left','NOT'),
-    ('left','IGUALIGUAL', 'DIFERENTE','MENOR', 'MENORIGUAL', 'MAYOR', 'MAYORIGUAL'),
-    ('left','MAS','MENOS'),
-    ('left','POR','DIVIDIDO', 'MODULAR'),
-    #('right','UMENOS'),
-    )
-'''
 
 def getIndex():
     global index
@@ -271,7 +255,9 @@ def p_init(p):
 def p_instrucciones(p):
     ''' instrucciones : instrucciones instruccion '''
     p[1].instruccion.append(p[2].instruccion)
-    p[1].nodo.append(p[2].nodo)
+    nodo2 = NodoG(getIndex(),"instruccion",[])
+    nodo2.add(p[2].nodo)
+    p[1].nodo.append(nodo2)
     nodo = NodoG(getIndex(),"instrucciones",p[1].nodo)
     p[0] = Nodo(p[1].instruccion,[nodo])
     print("instrucciones : instrucciones instruccion; {instrucciones2.append(instruccion); instrucciones = instrucciones2}")
@@ -303,7 +289,9 @@ def p_pmain(p):
 def p_sentencias(p):
     'sentencias    :   sentencias sentencia'
     p[1].instruccion.append(p[2].instruccion)
-    p[1].nodo.append(p[2].nodo)
+    nodo2 = NodoG(getIndex(),"sentencia",[])
+    nodo2.add(p[2].nodo)
+    p[1].nodo.append(nodo2)
     nodo = NodoG(getIndex(),"sentencias",p[1].nodo)
     p[0] = Nodo(p[1].instruccion,[nodo])
     print("sentencias : sentencias sentencia; sentencias2.append(sentencia); sentencias = sentencias2")
@@ -324,8 +312,19 @@ def p_sentencia(p):
                     | pif
                     | pprint
                     | pread
+                    | parreglo
+                    | parray
     '''
     p[0] = p[1]
+
+def p_array(p):
+    'parray :   VARIABLE IGUAL ARRAY PARIZQ PARDER PYCOMA'
+    nodo = NodoG(getIndex(),"parray",[])
+    nodo.add(NodoG(getIndex(),p[1], None))
+    nodo.add(NodoG(getIndex(),"=", None))
+    nodo.add(NodoG(getIndex(),"array()", None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(DeclararArreglo(p[1],p.lineno(1),find_column(p.slice[1])),nodo)
 
 def p_pvariable(p):
     'pvariable : VARIABLE IGUAL operacion PYCOMA'
@@ -337,6 +336,38 @@ def p_pvariable(p):
     p[0] = Nodo(Asignacion(p[1],p[3].instruccion,Tipo_Etiqueta.VARIABLE,p.lineno(1),find_column(p.slice[1])),nodo)
     
     print('sentencia: pvariable; { sentencia = pvariable}')
+
+def p_arreglo(p):
+    'parreglo   :   VARIABLE dimensiones IGUAL operacion PYCOMA'
+    nodo = NodoG(getIndex(),"pvariable",[])
+    nodo.add(NodoG(getIndex(),p[1], None))
+    for item in p[2].nodo:
+        nodo.add(item)
+    nodo.add(NodoG(getIndex(),"=", None))
+    nodo.add(p[4].nodo)
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0] = Nodo(AsignacionArreglo(p[1],p[2].instruccion,p[4].instruccion,p.lineno(1),find_column(p.slice[1])),nodo)
+
+def p_dimensiones(p):
+    'dimensiones    :   dimensiones dimension'
+    p[1].instruccion.append(p[2].instruccion)
+    nodo2 = NodoG(getIndex(),"dimension",[])
+    nodo2.add(p[2].nodo)
+    p[1].nodo.append(nodo2)
+    nodo = NodoG(getIndex(),"dimensiones",p[1].nodo)
+    p[0] = Nodo(p[1].instruccion,[nodo])
+    print("dimensiones : dimensiones dimension; dimensiones.append(dimension);")
+
+def p_dimensiones2(p):
+    'dimensiones    :   dimension'
+    arreglo = []
+    arreglo.append(p[1].instruccion)
+    p[0]= Nodo(arreglo,[NodoG(getIndex(),"dimension",[p[1].nodo])])
+    print("dimensiones : dimension; dimensiones = new lista; dimensiones.append(dimension)")
+
+def p_dimension(p):
+    'dimension  :   CORIZQ valor CORDER'
+    p[0] = p[2]
 
 def p_prefencia(p):
     'preferencia    :  VARIABLE IGUAL ANDBIT VARIABLE PYCOMA '''
@@ -352,6 +383,7 @@ def p_prefencia(p):
 def p_pgoto(p):
     'pgoto  :   GOTO ID PYCOMA'
     nodo = NodoG(getIndex(),"pgoto",[])
+    nodo.add(NodoG(getIndex(),"goto", None))
     nodo.add(NodoG(getIndex(),p[2], None))
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(Goto(p[2],p.lineno(1),find_column(p.slice[1])), nodo)
@@ -532,7 +564,6 @@ def p_valor(p):
 
 def p_valor2(p):
     '''valor    :   CADENA
-                |   CARACTER
                 |   CADENA2
     '''
     p[0] = Nodo(OperacionCadena(p[1],p.lineno(1),find_column(p.slice[1])),NodoG(getIndex(),str(p[1]), None))
@@ -556,6 +587,7 @@ def p_petiqueta(p):
 def p_error(p):
     global input
     global parser
+    print(p)
     agregarError("Sintactico","Sintaxis no reconocida \"{0}\"".format(p.value),p.lineno+1, find_column(p))
 
     while True:

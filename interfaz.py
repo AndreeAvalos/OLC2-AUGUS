@@ -209,10 +209,12 @@ class Ui_MainWindow(object):
         codigo = items[0].toPlainText()
         ast = None
         analisis_semantico = False
+        gramatica.lst_errores=[]
+        ast = gramatica.parse(codigo)
         print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
         try:
-            gramatica.lst_errores=[]
-            ast = gramatica.parse(codigo)
+            #gramatica.lst_errores=[]
+            #ast = gramatica.parse(codigo)
             gramatica.construirAST(ast.nodo)
         except:
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
@@ -225,8 +227,8 @@ class Ui_MainWindow(object):
         
         in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola),daemon=False)
         if ast!=None:
-            print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
-            try:
+            #try:
+                print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
                 recolector = Recolectar(ast.instruccion,ts, lst)
                 print("******FIN CONSTRUCTOR**********")
                 recolector.procesar()
@@ -234,9 +236,9 @@ class Ui_MainWindow(object):
                 print("******FIN RECOLECCION*******")
                 print("********** FIN DE CONSTRUCTOR ********")
                 in_console.start()
-            except:
-                self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
-                self.consola.append("REVISAR REPORTE DE ERRORES")
+            #except:
+                #self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
+                #self.consola.append("REVISAR REPORTE DE ERRORES")
         #in_console.lst_errores = in_console.lst_errores+ gramatica.lst_errores
         #in_console.graficarErrores()
         ts.graficarSimbolos()
