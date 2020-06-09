@@ -3,8 +3,10 @@ graph [ratio=fill];node [label="\N", fontsize=15, shape=plaintext];
 graph [bb="0,0,352,154"];
 arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>IDENTIFICADOR</TD><TD>VALOR</TD><TD>TIPO</TD><TD>AMBIENTE</TD><TD>ETIQUETA</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>
-<TR><TD>main</TD><TD>None</TD><TD>Tipo_Simbolo.MAIN</TD><TD>global</TD><TD>Tipo_Etiqueta.MAIN</TD><TD>1</TD><TD>1</TD></TR>
-<TR><TD>$t1</TD><TD>ARREGLO</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.STRUCT</TD><TD>4</TD><TD>2</TD></TR>
+<TR><TD>main</TD><TD>None</TD><TD>Tipo_Simbolo.MAIN</TD><TD>global</TD><TD>Tipo_Etiqueta.MAIN</TD><TD>3</TD><TD>1</TD></TR>
+<TR><TD>$t1</TD><TD>Carlos </TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>4</TD><TD>2</TD></TR>
+<TR><TD>$t2</TD><TD>Andree</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>5</TD><TD>2</TD></TR>
+<TR><TD>$t3</TD><TD>Carlos Andree</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>6</TD><TD>2</TD></TR>
 </TABLE>
 >, ];
 }

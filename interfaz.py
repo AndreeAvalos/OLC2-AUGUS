@@ -77,11 +77,13 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("new")
         self.parar.setIcon(icon)
         self.parar.setObjectName("parar")
+        self.parar.clicked.connect(self.detenerEjecucion)
         self.step = QtWidgets.QPushButton(self.centralwidget)
         self.step.setGeometry(QtCore.QRect(400, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.step.setIcon(icon)
         self.step.setObjectName("step")
+        self.step.clicked.connect(self.setStep)
         self.color = QtWidgets.QPushButton(self.centralwidget)
         self.color.setGeometry(QtCore.QRect(530, 0, 51, 41))
         self.continuar = QtWidgets.QPushButton(self.centralwidget)
@@ -89,6 +91,7 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("new")
         self.continuar.setIcon(icon)
         self.continuar.setObjectName("continuar")
+        self.continuar.clicked.connect(self.setContinuar)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 735, 21))
@@ -197,6 +200,15 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.editores.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def setStep(self):
+        in_console.step = True
+    def setContinuar(self):
+        in_console.continuar = True
+        in_console.step = True
+    
+    def detenerEjecucion(self):
+        in_console.stop()
 
     def ejecutar_analisis(self):
 

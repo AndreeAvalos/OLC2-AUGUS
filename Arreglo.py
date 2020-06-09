@@ -18,6 +18,9 @@ class Arreglo:
                     diccionario[direcciones[indice]] = valor
             else:
                 self.__add3(indice+1,direcciones,valor,diccionario[direcciones[indice]])
+    def firstElement(self,diccionario):
+        for index in diccionario.values():
+            return index
     
     def exist(self, direcciones):
         return self.__existeIndex(0,direcciones,self.diccionario)
@@ -63,6 +66,15 @@ class Arreglo:
                 return True
         return False
                 
+
+    def getValue(self,direcciones):
+        return self.__get(0,direcciones, self.diccionario)
+
+    def __get(self,index, direcciones, diccionario):
+        if (index+1)==len(direcciones):
+            return diccionario[direcciones[index]]
+        else:
+            return self.__get(index+1, direcciones, diccionario[direcciones[index]])
 
     def setValue(self, direcciones, value):
         self.__set(0,direcciones,value,self.diccionario)

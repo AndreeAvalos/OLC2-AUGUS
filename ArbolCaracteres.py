@@ -28,7 +28,7 @@ class ArbolCaracteres:
     #Metodo que valida si se quiere ingresar a un indice mayor a la cantidad
     #de elementos del arreglo
     def valid(self, num):
-        return True if(num<=len(self.caracteres)) else False
+        return True if(num+1<len(self.caracteres)) else False
     #Metodo que retorna un caracter por su indice
     def indexOf(self, num):
         return self.caracteres[num]
