@@ -177,7 +177,7 @@ t_ORBIT = r'\|'
 t_XORBIT = r'\^'
 t_SHIFTIZQ = r'<<'
 t_SHIFTDER = r'>>'
-t_ESCAPE =r'\"\\n\"'
+#t_ESCAPE =r'\"\\n\"'
 
 t_ignore = " \t"
 
@@ -285,6 +285,36 @@ def p_pmain(p):
     print("pmain : MAIN DOSPUNTOS sentencias; acciones ")
     print("instruccion : pmain; instruccion = pmain")
     
+def p_pmain2(p):
+    'pmain : MAIN DOSPUNTOS empty '
+    nodo2 = NodoG(getIndex(),"pmain",[])
+    nodo2.add(NodoG(getIndex(),"main", None))
+    nodo2.add(NodoG(getIndex(),":", None))
+    p[0] = Nodo(Main(Vacio(),p.lineno(1),find_column(p.slice[1])),nodo2)
+
+def p_petiqueta(p):
+    'petiqueta : ID DOSPUNTOS sentencias'
+    nodo2 = NodoG(getIndex(),"petiqueta",[])
+    nodo2.add(NodoG(getIndex(),p[1], None))
+    nodo2.add(NodoG(getIndex(),":", None))
+    for item in p[3].nodo:
+        nodo2.add(item)
+    p[0] = Nodo(Etiqueta(p[1],p[3].instruccion,p.lineno(1),find_column(p.slice[1])),nodo2)
+    print("petiqueta : "+p[1]+" DOSPUNTOS sentencias; acciones ")
+    print("instruccion : petiqueta; instruccion = petiqueta")
+
+
+def p_petiqueta2(p):
+    'pmain : ID DOSPUNTOS empty '
+    nodo2 = NodoG(getIndex(),"pmain",[])
+    nodo2.add(NodoG(getIndex(),"main", None))
+    nodo2.add(NodoG(getIndex(),":", None))
+    p[0] = Nodo(Etiqueta(p[1],Vacio(),p.lineno(1),find_column(p.slice[1])),nodo2)
+
+
+def p_empty(p):
+    'empty :'
+    pass
 
 def p_sentencias(p):
     'sentencias    :   sentencias sentencia'
@@ -316,6 +346,7 @@ def p_sentencia(p):
                     | parray
     '''
     p[0] = p[1]
+
 
 def p_array(p):
     'parray :   VARIABLE IGUAL ARRAY PARIZQ PARDER PYCOMA'
@@ -434,9 +465,24 @@ def p_pprint(p):
     p[0] = Nodo(Print_(OperacionCopiaVariable(p[3],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
 
     print('sentencia: pprint7; { sentencia = pprint}')
+def p_pprint3(p):
+    'pprint :  PRINT PARIZQ VARIABLE dimensiones PARDER PYCOMA'
+    nodo = NodoG(getIndex(),"pprint",[])
+    nodo.add(NodoG(getIndex(),"print", None))
+    nodo.add(NodoG(getIndex(),"(", None))
+    nodo2 = NodoG(getIndex(),"operacion",[])
+    nodo2.add(NodoG(getIndex(),p[3], None))
+    for item in p[4].nodo:
+        nodo2.add(item)
+    nodo.add(nodo2)
+    nodo.add(NodoG(getIndex(),")", None))
+    nodo.add(NodoG(getIndex(),";", None))
+    p[0]=Nodo(Print_(OperacionArreglo(p[3],p[4].instruccion,p.lineno(3),find_column(p.slice[3])),p.lineno(3),find_column(p.slice[3])),nodo)
+
+
 
 def p_pprint2(p):
-    '''pprint   :   PRINT PARIZQ ESCAPE PARDER PYCOMA
+    '''pprint   :   PRINT PARIZQ CADENA2 PARDER PYCOMA
     '''
     nodo = NodoG(getIndex(),"pprint",[])
     nodo.add(NodoG(getIndex(),"print", None))
@@ -550,6 +596,13 @@ def p_operaciones6(p):
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(OperacionUnaria(p[4].instruccion,OPERACION_NUMERICA.ABSOLUTO,p.lineno(1),find_column(p.slice[1])),nodo)
 
+def p_operacion7(p):
+    'operacion  :   VARIABLE dimensiones'
+    nodo = NodoG(getIndex(),"operacion",[])
+    nodo.add(NodoG(getIndex(),p[1], None))
+    for item in p[2].nodo:
+        nodo.add(item)
+    p[0]=Nodo(OperacionArreglo(p[1],p[2].instruccion,p.lineno(1),find_column(p.slice[1])),nodo)
 def p_operacion(p):
     ' operacion     :   valor '
     nodo = NodoG(getIndex(),"operacion",[p[1].nodo])

@@ -109,62 +109,64 @@ class Ejecutor(threading.Thread):
                     return exit
 
     def procesar_main(self,main):
-        self.ambito = "main"
-        exit = False
-        #cursor = self.area.textCursor()
-        #cursor.setPosition(0)
-        for sentencia in main.sentencias:
-            exit = Tipo_Salida.SEGUIR
-            #time.sleep(0.2)
+        if not isinstance(main.sentencias,Vacio):
+            self.ambito = "main"
+            exit = False
+            #cursor = self.area.textCursor()
             #cursor.setPosition(0)
-            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-            #self.area.setTextCursor(cursor)
+            for sentencia in main.sentencias:
+                exit = Tipo_Salida.SEGUIR
+                #time.sleep(0.2)
+                #cursor.setPosition(0)
+                #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+                #self.area.setTextCursor(cursor)
 
-            if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
-            elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
-            elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
-            elif isinstance(sentencia, Exit): return Tipo_Salida.EXIT
-            elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
-            elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
-            elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
-            elif isinstance(sentencia, Read): self.procesar_read(sentencia)
-            elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
-            elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
-            #self.ts.graficarSimbolos()
-            if exit == Tipo_Salida.EXIT:
-                return exit
-            if exit == Tipo_Salida.DESCARTAR:
-                return exit
+                if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
+                elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
+                elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
+                elif isinstance(sentencia, Exit): return Tipo_Salida.EXIT
+                elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
+                elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
+                elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
+                elif isinstance(sentencia, Read): self.procesar_read(sentencia)
+                elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
+                elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
+                #self.ts.graficarSimbolos()
+                if exit == Tipo_Salida.EXIT:
+                    return exit
+                if exit == Tipo_Salida.DESCARTAR:
+                    return exit
         
         return Tipo_Salida.SEGUIR
 
     def procesar_etiqueta(self, etiqueta):
-        self.ambito = etiqueta.id
-        exit = False
-        #cursor = self.area.textCursor()
-        #cursor.setPosition(0)
-        for sentencia in etiqueta.sentencias:
-            exit = Tipo_Salida.SEGUIR
-            #time.sleep(0.2)
+        if not isinstance(etiqueta.sentencias,Vacio):
+            self.ambito = etiqueta.id
+            exit = False
+            #cursor = self.area.textCursor()
             #cursor.setPosition(0)
-            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-            #self.area.setTextCursor(cursor)
-            if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
-            elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
-            elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
-            elif isinstance(sentencia, Exit): return Tipo_Salida.EXIT
-            elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
-            elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
-            elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
-            elif isinstance(sentencia, Read): self.procesar_read(sentencia)
-            elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
-            elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
-            #self.ts.graficarSimbolos()
-            
-            if exit == Tipo_Salida.EXIT:
-                return exit
-            if exit == Tipo_Salida.DESCARTAR:
-                return exit
+            for sentencia in etiqueta.sentencias:
+                exit = Tipo_Salida.SEGUIR
+                #time.sleep(0.2)
+                #cursor.setPosition(0)
+                #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+                #self.area.setTextCursor(cursor)
+                if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
+                elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
+                elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
+                elif isinstance(sentencia, Exit): return Tipo_Salida.EXIT
+                elif isinstance(sentencia, UnSet): self.procesar_unset(sentencia)
+                elif isinstance(sentencia, If_): exit = self.procesar_if(sentencia)
+                elif isinstance(sentencia, Print_): self.procesar_print(sentencia)
+                elif isinstance(sentencia, Read): self.procesar_read(sentencia)
+                elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
+                elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
+                #self.ts.graficarSimbolos()
+                
+                if exit == Tipo_Salida.EXIT:
+                    return exit
+                if exit == Tipo_Salida.DESCARTAR:
+                    return exit
         
         return Tipo_Salida.SEGUIR
     
@@ -241,7 +243,17 @@ class Ejecutor(threading.Thread):
             result = self.procesar_valor(sentencia.val)
             if isinstance(result, ArbolCaracteres):
                 self.consola.append(str(result.getText()))
-            else:
+            elif isinstance(result, Arreglo):
+                self.agregarError("No se puede imprimir un arreglo", sentencia.line, sentencia.column)
+            elif result!=None:
+                self.consola.append(str(result))
+        elif isinstance(sentencia.val, OperacionArreglo):
+            result = self.procesar_opeacionArreglo(sentencia.val)
+            if isinstance(result, ArbolCaracteres):
+                self.consola.append(str(result.getText()))
+            elif isinstance(result, Arreglo):
+                self.agregarError("No se puede imprimir un arreglo", sentencia.line, sentencia.column)
+            elif result!=None:
                 self.consola.append(str(result))
         else:
             self.consola.append("")
@@ -249,7 +261,7 @@ class Ejecutor(threading.Thread):
     
     def procesar_read(self,sentencia2):
         sentencia = sentencia2.sentencia
-        self.consola.append("Escriba el valor")
+        #self.consola.append("Escriba el valor")
         self.consola.append("")
         new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambito, sentencia.etiqueta,sentencia.line,sentencia.column)
         self.ts.add(new_simbol)
@@ -393,6 +405,7 @@ class Ejecutor(threading.Thread):
         elif isinstance(operacion, OperacionLogica): return self.procesar_operacionLogica(operacion)
         elif isinstance(operacion, OperacionUnaria): return self.procesar_operacionUnaria(operacion)
         elif isinstance(operacion,OperacionRelacional): return self.procesar_operacionRelacional(operacion)
+        elif isinstance(operacion, OperacionArreglo):   return self.procesar_opeacionArreglo(operacion)
 
     def procesar_operacionNumerica(self, operacion):
         try:
@@ -472,6 +485,57 @@ class Ejecutor(threading.Thread):
             else:
                 self.agregarError("{0} no es un valor numerico".format(op1),operacion.line,operacion.column)
                 return op1
+
+    def procesar_opeacionArreglo(self,operacion):
+        if self.ts.existe(operacion.id):
+            simbolo = self.ts.get(operacion.id)
+            arbol = simbolo.valor.get()
+            if isinstance(arbol,Arreglo):
+                direcciones = []
+                for dimension in operacion.dimensiones:
+                    indice = self.procesar_operacion(dimension)
+                    if indice==None:
+                        self.agregarError("indice no valido",dimension.line,dimension.column)
+                        return
+                    texto = indice
+                    if isinstance(indice,ArbolCaracteres):
+                        texto = indice.getText()
+                        numerico=False
+                    
+                    direcciones.append(texto)
+                if arbol.exist(direcciones):
+                    ret = arbol.getValue(direcciones)
+                    return arbol.getValue(direcciones)
+                else:
+                    if arbol.isThree(direcciones):
+                        arbol2 = arbol.getValue(direcciones[0:len(direcciones)-1])
+                        if arbol2.valid(direcciones[len(direcciones)-1]):
+                            return arbol2.indexOf(direcciones[len(direcciones)-1])
+                        else:
+                            self.agregarError("Indice {0} inalcanzable".format(direcciones[len(direcciones)-1]),operacion.line, operacion.column)
+                            return
+                    else:
+                        self.agregarError("{0} no es un valor numerico".format(direcciones[len(direcciones)-1]),operacion.line, operacion.column)
+                        return
+
+
+                    self.agregarError("Indices inexistentes",operacion.line,operacion.column)
+            elif isinstance(arbol, ArbolCaracteres):
+                if len(direcciones)==1:
+                    if isinstance(direcciones[0],int):
+                        if arbol.valid(direcciones[0]):
+                            return arbol.indexOf(direcciones[0])
+                        else:
+                            self.agregarError("Indice {0} inalcanzable".format(direcciones[0]),operacion.line, operacion.column)
+                    else:
+                        self.agregarError("{0} no es un valor numerico".format(direcciones[0]),operacion.line, operacion.column)
+                else:
+                    self.agregarError("Indices fuera del rango de un stirng",operacion.line, operacion.column)
+            else:
+                self.agregarError("{0} no es tipo arreglo".format(operacion.id),operacion.line, operacion.column)
+        else:
+            self.agregarError("{0} no existe variable".format(operacion.id),operacion.line, operacion.column)
+                    
 
     def procesar_valor(self,expresion):
         if isinstance(expresion,OperacionNumero):

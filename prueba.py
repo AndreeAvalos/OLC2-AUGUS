@@ -89,7 +89,7 @@ while contador <= 100:
        contador+=1
        print(contador)
 print("TIEMPO EXCEDIDO DE LECTURA")'''
-dic_principal = {}
+'''dic_principal = {}
 lst_direcciones = [0,'nombre']
 valor="Daniel"
 indice = 0
@@ -113,5 +113,7 @@ agregar(lst_direcciones,dic_principal,"Avalos")
 lst_direcciones = [3,'nombre']
 agregar(lst_direcciones,dic_principal,"Soto")
 
-print(dic_principal)
+print(dic_principal)'''
 
+lst = [1,2,3,4]
+print(len(lst))

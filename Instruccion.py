@@ -217,4 +217,7 @@ class DeclararArreglo(Instruccion):
         self.etiqueta = Tipo_Etiqueta.ARREGLO
         self.line = line
         self.column = column
-        
+    
+class Vacio(Instruccion):
+    def __init__(self):
+        super().__init__()

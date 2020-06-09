@@ -86,4 +86,11 @@ class OperacionCadena(Instruccion):
         self.val = num
         self.line = line
         self.column = column
+        
+class OperacionArreglo(Instruccion):
+    def __init__(self,id, dimensiones,line, column):
+        self.id = id
+        self.dimensiones = dimensiones
+        self.line =line
+        self.column = column
 
