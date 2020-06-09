@@ -94,3 +94,9 @@ class OperacionArreglo(Instruccion):
         self.line =line
         self.column = column
 
+class OperacionCasteo(Instruccion):
+    def __init__(self,tipo,id,line, column):
+        self.tipo = tipo
+        self.expresion = id
+        self.line = line
+        self.column = column

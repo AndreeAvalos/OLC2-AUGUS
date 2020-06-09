@@ -114,6 +114,6 @@ lst_direcciones = [3,'nombre']
 agregar(lst_direcciones,dic_principal,"Soto")
 
 print(dic_principal)'''
-
-lst = [1,2,3,4]
-print(len(lst))
+charcater = 'a'
+ent = ord(charcater)
+print(ent)

@@ -609,6 +609,19 @@ def p_operacion(p):
     
     p[0]=Nodo(p[1].instruccion,nodo)
 
+def p_operacion8(p):
+    '''operacion    :   PARIZQ INTEGER PARDER valor
+                    |   PARIZQ FLOAT PARDER valor
+                    |   PARIZQ CHAR PARDER valor
+    '''
+    nodo = NodoG(getIndex(),"operacion",[])
+    nodo.add(NodoG(getIndex(),"(",None))
+    nodo.add(NodoG(getIndex(),p[2],None))
+    nodo.add(NodoG(getIndex(),")",None))
+    nodo.add(p[4].nodo)
+    p[0] = Nodo(OperacionCasteo(p[2],p[4].instruccion,p.lineno(1),find_column(p.slice[1])),nodo)
+
+
 def p_valor(p):
     '''valor    :   ENTERO
                 |   DECIMAL

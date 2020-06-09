@@ -18,6 +18,9 @@ class Arreglo:
                     diccionario[direcciones[indice]] = valor
             else:
                 self.__add3(indice+1,direcciones,valor,diccionario[direcciones[indice]])
+    def firstElement(self,diccionario):
+        for index in diccionario.values():
+            return index
     
     def exist(self, direcciones):
         return self.__existeIndex(0,direcciones,self.diccionario)

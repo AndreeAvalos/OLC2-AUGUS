@@ -206,7 +206,7 @@ class Ejecutor(threading.Thread):
             else:
                 self.agregarError("{0} no es una etiqueta".format(sentencia.id),sentencia.line, sentencia.column)
         else:
-            self.agregarError("{0} no esta declarad".format(sentencia.id),sentencia.line,sentencia.column)
+            self.agregarError("{0} no esta declarado".format(sentencia.id),sentencia.line,sentencia.column)
 
         return Tipo_Salida.EXIT
     
@@ -431,6 +431,7 @@ class Ejecutor(threading.Thread):
         elif isinstance(operacion, OperacionUnaria): return self.procesar_operacionUnaria(operacion)
         elif isinstance(operacion,OperacionRelacional): return self.procesar_operacionRelacional(operacion)
         elif isinstance(operacion, OperacionArreglo):   return self.procesar_opeacionArreglo(operacion)
+        elif isinstance(operacion, OperacionCasteo): return self.procesar_casteo(operacion)
 
     def procesar_operacionNumerica(self, operacion):
         try:
@@ -587,8 +588,52 @@ class Ejecutor(threading.Thread):
     def procesar_cadena(self, expresion):
         if isinstance(expresion, OperacionCadena):
             return ArbolCaracteres(expresion.val)
-            
- 
+    
+    def procesar_casteo(self, expresion):
+        result = self.procesar_operacion(expresion.expresion)
+        if result!=None:
+            return self.castear(expresion.tipo, result)
+        return None
+
+    def castear(self, tipo, result):
+        if tipo == "int":
+            if isinstance(result, int):
+                return result
+            elif isinstance(result,float):
+                return int(result)
+            elif isinstance(result, ArbolCaracteres):
+                return ord(result.indexOf(0))
+            elif isinstance(result,Arreglo):
+                return self.castear(tipo, result.firstElement())
+        elif tipo == "float":
+            if isinstance(result, int):
+                return float(result)
+            elif isinstance(result,float):
+                return result
+            elif isinstance(result, ArbolCaracteres):
+                return float(ord(result.indexOf(0)))
+            elif isinstance(result,Arreglo):
+                return self.castear(tipo, result.firstElement())
+        elif tipo == "char":
+            if isinstance(result, int):
+                if result>=0 and result<=255:
+                    char = chr(result)
+                elif result>255:
+                    new_result = result%256
+                    char = chr(new_result)
+                return ArbolCaracteres(str(char))
+            elif isinstance(result, float):
+                return self.castear(tipo, int(result))
+            elif isinstance(result,ArbolCaracteres):
+                return self.castear(tipo,ord(result.indexOf(0)))
+            elif isinstance(result,Arreglo):
+                return self.castear(tipo, result.firstElement(result.diccionario))
+            elif isinstance(result,dict):
+                aux = Arreglo()
+                return self.castear(tipo,aux.firstElement(result))
+                    
+
+
 
     def stop(self):
         self.detener = True
