@@ -8,6 +8,7 @@ from QCodeEditor import *
 import re 
 from ArbolCaracteres import ArbolCaracteres
 from Arreglo import Arreglo
+import sys
 class Ejecutor(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, *, daemon=None):
@@ -23,12 +24,16 @@ class Ejecutor(threading.Thread):
         self.consola = args[5]
         self.last = ""
         self.encontro_if = False
+        sys.setrecursionlimit(5000)
+        self.step = True
+        self.continuar = False
+        self.detener = False
 
 
     def run(self):
-        #temp =  self.area.currentLineColor
+            temp =  self.area.currentLineColor
         #try:      
-            #self.area.currentLineColor = QColor("#FF0000")
+            self.area.currentLineColor = QColor("#FF0000")
             self.procesar()
         #except:
             #print("ERROR DE EJECUCION")
@@ -36,7 +41,11 @@ class Ejecutor(threading.Thread):
             print("__________________________FIN______________________________")
             self.ts.graficarSimbolos()
             self.graficarErrores()
-            #self.area.currentLineColor = temp
+            self.area.currentLineColor = temp
+            #cursor = self.area.textCursor()
+            #cursor.setPosition(0)
+            #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  0)
+            #self.area.setTextCursor(cursor)
 
     def setText(self,in_):
         self.entrada= in_
@@ -112,14 +121,28 @@ class Ejecutor(threading.Thread):
         if not isinstance(main.sentencias,Vacio):
             self.ambito = "main"
             exit = False
-            #cursor = self.area.textCursor()
-            #cursor.setPosition(0)
+            cursor = self.area.textCursor()
+            cursor.setPosition(0)
             for sentencia in main.sentencias:
+
                 exit = Tipo_Salida.SEGUIR
-                #time.sleep(0.2)
-                #cursor.setPosition(0)
-                #cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
-                #self.area.setTextCursor(cursor)
+                
+                if self.detener:
+                    return
+                '''self.step = False
+                if self.continuar:
+                    time.sleep(1)
+                    cursor.setPosition(0)
+                    cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+                    self.area.setTextCursor(cursor)
+                else:
+                    while self.step!=True:
+                        time.sleep(0.3)
+                        cursor.setPosition(0)
+                        cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+                        self.area.setTextCursor(cursor)
+                        if self.detener:
+                            return'''
 
                 if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
                 elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
@@ -146,6 +169,8 @@ class Ejecutor(threading.Thread):
             #cursor = self.area.textCursor()
             #cursor.setPosition(0)
             for sentencia in etiqueta.sentencias:
+                if self.detener:
+                    return
                 exit = Tipo_Salida.SEGUIR
                 #time.sleep(0.2)
                 #cursor.setPosition(0)
@@ -566,5 +591,5 @@ class Ejecutor(threading.Thread):
  
 
     def stop(self):
-        self.stopped = True
+        self.detener = True
 
