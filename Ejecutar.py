@@ -435,7 +435,18 @@ class Ejecutor(threading.Thread):
 
     def procesar_operacionNumerica(self, operacion):
         try:
-            if operacion.operacion == OPERACION_NUMERICA.SUMA: return self.procesar_valor(operacion.operadorIzq) + self.procesar_valor(operacion.operadorDer)
+            
+            if operacion.operacion == OPERACION_NUMERICA.SUMA: 
+                op1 = self.procesar_valor(operacion.operadorIzq)
+                op2 = self.procesar_valor(operacion.operadorDer)
+                if isinstance(op1, int) and isinstance(op2,int):
+                    return op1 + op2
+                elif isinstance(op1,ArbolCaracteres) and isinstance(op2,ArbolCaracteres):
+                    return op1.getText() + op2.getText()
+                else:
+                    self.agregarError("No se puede sumar operadores",operacion.line, operacion.column)
+                    return None
+                return self.procesar_valor(operacion.operadorIzq) + self.procesar_valor(operacion.operadorDer)
             elif operacion.operacion == OPERACION_NUMERICA.RESTA: return self.procesar_valor(operacion.operadorIzq) - self.procesar_valor(operacion.operadorDer)
             elif operacion.operacion == OPERACION_NUMERICA.MULTIPLICACION: return self.procesar_valor(operacion.operadorIzq) * self.procesar_valor(operacion.operadorDer)
             elif operacion.operacion == OPERACION_NUMERICA.DIVISION: return self.procesar_valor(operacion.operadorIzq) / self.procesar_valor(operacion.operadorDer)
