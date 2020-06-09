@@ -352,7 +352,8 @@ class Ejecutor(threading.Thread):
                             else:
                                 #aqui debemos cambiar los caracteres de la cadena
                                 resultado = arreglo_auxiliar.setChars(direcciones, result.getText())
-                                if not resultado:
+                                
+                                if resultado == False:
                                     self.agregarError("index {0} no permitido".format(direcciones[len(direcciones)-1]),sentencia.line,sentencia.column)
                                 return
                         else:

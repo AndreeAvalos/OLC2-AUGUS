@@ -2,7 +2,7 @@ from ArbolCaracteres import ArbolCaracteres
 class Arreglo:
     def __init__(self):
         self.diccionario = {}
-    #Direcciones es un arreglo de indices
+    #Direcciones es un arreglo de indices {0:{{Nombre:"Daniel"},{Direccion: "Zona 4"},{Telefono:{0:56457854,1:48457585}}}}
     #valor es el valor que se desea guardar
     def add(self,direcciones, valor):
         self.__add3(0,direcciones,valor,self.diccionario)
@@ -45,7 +45,8 @@ class Arreglo:
                 if indice+1 < len(direcciones):
                     return self.__lastElement(indice+1, direcciones, diccionario[direcciones[indice]])
         else:
-            return True
+            if isinstance(diccionario,ArbolCaracteres):
+                return True
         return False
 
     def setChars(self, direcciones, value):
@@ -60,8 +61,7 @@ class Arreglo:
             if isinstance(direcciones[indice],int):
                 diccionario.setChar(direcciones[indice],value)
                 return True
-            else:
-                return False
+        return False
                 
 
     def setValue(self, direcciones, value):
