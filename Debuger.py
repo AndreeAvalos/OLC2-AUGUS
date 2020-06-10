@@ -9,6 +9,7 @@ import re
 from ArbolCaracteres import ArbolCaracteres
 from Arreglo import Arreglo
 import sys
+from PyQt5 import QtWidgets,QtCore
 class Debuger(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, *, daemon=None):
@@ -25,12 +26,13 @@ class Debuger(threading.Thread):
         self.last = ""
         self.encontro_if = False
         sys.setrecursionlimit(5000)
-        self.step = True
+        self.step = False
         self.continuar = False
         self.detener = False
         self.procedimiento = False
         self.funcion = False
         self.control = False 
+        self.GTS = args[6]
 
 
     def run(self):
@@ -50,6 +52,7 @@ class Debuger(threading.Thread):
             cursor.setPosition(0)
             cursor.movePosition(cursor.Down, cursor.KeepAnchor,  0)
             self.area.setTextCursor(cursor)
+            self.fullGTS()
 
     def setText(self,in_):
         self.entrada= in_
@@ -127,6 +130,8 @@ class Debuger(threading.Thread):
             exit = False
             cursor = self.area.textCursor()
             cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  main.line)
+            self.area.setTextCursor(cursor)
             self.control = True
             self.funcion = False
             self.procedimiento = False
@@ -138,13 +143,13 @@ class Debuger(threading.Thread):
                 if self.continuar:
                     time.sleep(1)
                     cursor.setPosition(0)
-                    cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+                    cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line-1)
                     self.area.setTextCursor(cursor)
                 else:
                     while self.step!=True:
                         time.sleep(0.3)
                         cursor.setPosition(0)
-                        cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+                        cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line-1)
                         self.area.setTextCursor(cursor)
                         if self.detener:
                             return
@@ -159,7 +164,7 @@ class Debuger(threading.Thread):
                 elif isinstance(sentencia, Read): self.procesar_read(sentencia)
                 elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
                 elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
-                #self.ts.graficarSimbolos()
+                self.fullGTS()
                 if exit == Tipo_Salida.EXIT:
                     return exit
                 if exit == Tipo_Salida.DESCARTAR:
@@ -175,6 +180,8 @@ class Debuger(threading.Thread):
             self.procedimiento = False
             cursor = self.area.textCursor()
             cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  etiqueta.line)
+            self.area.setTextCursor(cursor)
             for sentencia in etiqueta.sentencias:
                 if self.detener:
                     return
@@ -205,7 +212,7 @@ class Debuger(threading.Thread):
                 elif isinstance(sentencia, Read): self.procesar_read(sentencia)
                 elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
                 elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
-                #self.ts.graficarSimbolos()
+                self.fullGTS()
                 
                 if exit == Tipo_Salida.EXIT:
                     return exit
@@ -697,6 +704,28 @@ class Debuger(threading.Thread):
             self.funcion = True
             self.ts.etiqueta(self.ambito,Tipo_Etiqueta.FUNCION)
 
+    def fullGTS(self):
+        datos = []
+        for id in self.ts.simbolos:
+            if isinstance(self.ts.simbolos[id].valor.get(),ArbolCaracteres):
+                datos.append((self.ts.simbolos[id].id,str(self.ts.simbolos[id].valor.get().getText())))
+            elif isinstance(self.ts.simbolos[id].valor.get(),Arreglo):
+                datos.append((self.ts.simbolos[id].id,"Arreglo"))
+            else:
+                datos.append((self.ts.simbolos[id].id,str(self.ts.simbolos[id].valor.get())))
+        for i in range(self.GTS.rowCount()):
+            self.GTS.removeRow(i)
+        self.GTS.clearContents()
+
+        fila = 0
+        for registro in datos:
+            columna = 0
+            self.GTS.insertRow(fila)
+            for item in registro:
+                celda = QtWidgets.QTableWidgetItem(item)
+                self.GTS.setItem(fila,columna,celda)
+                columna+=1
+            fila+=1
     def stop(self):
         self.detener = True
 

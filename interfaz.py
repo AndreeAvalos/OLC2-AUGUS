@@ -27,12 +27,12 @@ class PlainTextEdit(QtWidgets.QTextEdit):
 
         
 
-class Ui_MainWindow(object):
+class Interfaz(QMainWindow):
         
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(735, 600)
+        MainWindow.resize(735, 611)
         self.mw = MainWindow
         #area para declarar variables globales
         self.pestañas = {}
@@ -44,7 +44,8 @@ class Ui_MainWindow(object):
         self.rutaTemp = ""
         self.debug_mode = False#variable que nos va a indicar si es modo debuger
         self.cambiado = False
-
+        self.analizador_cambiado = False
+        #Aqui inician los componentes
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.nuevo = QtWidgets.QPushButton(self.centralwidget)
@@ -111,6 +112,29 @@ class Ui_MainWindow(object):
         self.continuar.setIcon(icon)
         self.continuar.setObjectName("continuar")
         self.continuar.clicked.connect(self.setContinuar)
+        #Tabla para mostrar los simbolos
+        self.GTS = QtWidgets.QTableWidget(self.centralwidget)
+        self.GTS.setGeometry(QtCore.QRect(500, 80, 221, 461))
+        self.GTS.setObjectName("GTS")
+        self.GTS.setColumnCount(2)
+        self.GTS.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.GTS.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.GTS.setHorizontalHeaderItem(1, item)
+        #Boton para cambiar tipo de analizador
+        self.cambiaTipoAnalizador = QtWidgets.QPushButton(self.centralwidget)
+        self.cambiaTipoAnalizador.setGeometry(QtCore.QRect(500, 50, 221, 23))
+        self.cambiaTipoAnalizador.setObjectName("cambiaTipoAnalizador")
+        self.cambiaTipoAnalizador.clicked.connect(self.cambiarAnalizador)
+        #etiqueta tipo:
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(20, 550, 21, 16))
+        self.label.setObjectName("label")
+        #etiqueta que cambiara dependiendo el tipo de analizador
+        self.etiqueta_analizador = QtWidgets.QLabel(self.centralwidget)
+        self.etiqueta_analizador.setGeometry(QtCore.QRect(50, 550, 71, 16))
+        self.etiqueta_analizador.setObjectName("etiqueta_analizador")
         #Declaracion No los he usado
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -223,6 +247,15 @@ class Ui_MainWindow(object):
         self.editores.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def cambiarAnalizador(self):
+        if self.analizador_cambiado:
+            self.etiqueta_analizador.setText("Ascendente")
+            self.analizador_cambiado = False
+        else:
+            self.etiqueta_analizador.setText("Descendente")
+            self.analizador_cambiado = True
+        
+
     def setStep(self):
         in_console.step = True
     def setContinuar(self):
@@ -262,9 +295,9 @@ class Ui_MainWindow(object):
         lst = []
         global in_console
         if self.debug_mode:
-            in_console = Debuger(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola),daemon=False)
+            in_console = Debuger(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
         else:
-            in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola),daemon=False)
+            in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
         if ast!=None:
             try:
                 print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
@@ -279,6 +312,9 @@ class Ui_MainWindow(object):
                 self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
                 self.consola.append("REVISAR REPORTE DE ERRORES")
         ts.graficarSimbolos() 
+
+        
+
 
     def agregar_tab(self):
         text, okPressed = QInputDialog.getText(self.centralwidget, "Nuevo archivo","Nombre:", QLineEdit.Normal, "")
@@ -427,8 +463,15 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'MS Shell Dlg 2\';\"><br /></p></body></html>"))
-        self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.continuar.setText(_translate("MainWindow", "|>"))
+        self.cambiaTipoAnalizador.setText(_translate("MainWindow", "Cambiar Tipo"))
+        self.label.setText(_translate("MainWindow", "Tipo:"))
+        self.etiqueta_analizador.setText(_translate("MainWindow", "Ascendente"))
+        item = self.GTS.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Variable"))
+        item = self.GTS.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Valor"))
+        self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuProject.setTitle(_translate("MainWindow", "Project"))
         self.menuedit.setTitle(_translate("MainWindow", "Edit"))
         self.menuProgram.setTitle(_translate("MainWindow", "Program"))
@@ -437,16 +480,3 @@ class Ui_MainWindow(object):
         format = self.area.document().rootFrame().frameFormat()
         format.setBottomMargin(10)
         self.area.document().rootFrame().setFrameFormat(format)
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    
-
-    MainWindow.show()
-    sys.exit(app.exec_())
