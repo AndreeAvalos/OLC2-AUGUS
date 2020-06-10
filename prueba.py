@@ -114,6 +114,6 @@ lst_direcciones = [3,'nombre']
 agregar(lst_direcciones,dic_principal,"Soto")
 
 print(dic_principal)'''
-charcater = 'a'
-ent = ord(charcater)
-print(ent)
+op1 = 10
+op2 = 11
+print(op1^op2)

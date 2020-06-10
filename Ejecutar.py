@@ -432,6 +432,7 @@ class Ejecutor(threading.Thread):
         elif isinstance(operacion,OperacionRelacional): return self.procesar_operacionRelacional(operacion)
         elif isinstance(operacion, OperacionArreglo):   return self.procesar_opeacionArreglo(operacion)
         elif isinstance(operacion, OperacionCasteo): return self.procesar_casteo(operacion)
+        elif isinstance(operacion, OperacionBit): return self.procesar_operacionBit(operacion)
 
     def procesar_operacionNumerica(self, operacion):
         try:
@@ -452,7 +453,7 @@ class Ejecutor(threading.Thread):
             elif operacion.operacion == OPERACION_NUMERICA.DIVISION: return self.procesar_valor(operacion.operadorIzq) / self.procesar_valor(operacion.operadorDer)
             elif operacion.operacion == OPERACION_NUMERICA.MODULAR: return self.procesar_valor(operacion.operadorIzq) % self.procesar_valor(operacion.operadorDer)
         except:
-            self.agregarError("No es posible operar",operacion.line,operacion.column)
+            self.agregarError("No es posible la operacion numerica",operacion.line,operacion.column)
 
     def procesar_operacionLogica(self, operacion):
         op1 = self.procesar_valor(operacion.operadorIzq)
@@ -496,12 +497,27 @@ class Ejecutor(threading.Thread):
             elif operacion.operacion == OPERACION_RELACIONAL.MAYOR: return 1 if(self.procesar_valor(operacion.operadorIzq) > self.procesar_valor(operacion.operadorDer)) else 0
             elif operacion.operacion == OPERACION_RELACIONAL.MENOR: return 1 if(self.procesar_valor(operacion.operadorIzq) < self.procesar_valor(operacion.operadorDer)) else 0
         except:
-            self.agregarError("No es posible operar",operacion.line,operacion.column)
+            self.agregarError("No es posible la operacion relacional",operacion.line,operacion.column)
+
+    def procesar_operacionBit(self,operacion):
+        try:
+            if operacion.operacion == OPERACION_BIT.AND: return self.procesar_valor(operacion.operadorIzq) & self.procesar_valor(operacion.operadorDer)
+            elif operacion.operacion == OPERACION_BIT.OR: return self.procesar_valor(operacion.operadorIzq) | self.procesar_valor(operacion.operadorDer)
+            elif operacion.operacion == OPERACION_BIT.XOR: return self.procesar_valor(operacion.operadorIzq) ^ self.procesar_valor(operacion.operadorDer)
+            elif operacion.operacion == OPERACION_BIT.SHIFTIZQ: return self.procesar_valor(operacion.operadorIzq) << self.procesar_valor(operacion.operadorDer)
+            elif operacion.operacion == OPERACION_BIT.SHIFTDER: return self.procesar_valor(operacion.operadorIzq) >> self.procesar_valor(operacion.operadorDer)
+        except:
+            self.agregarError("No es posible operar bit a bit",operacion.line,operacion.column)
+
 
     def procesar_operacionUnaria(self,operacion):
         op1 = self.procesar_valor(operacion.operadorIzq) 
         if operacion.operacion == OPERACION_BIT.NOT:
-            return 0
+            if isinstance(op1, int):
+                return ~op1
+            else:
+                self.agregarError("{0} no es un valor entero".format(op1),operacion.line, operacion.column)
+
         elif operacion.operacion == OPERACION_LOGICA.NOT:
             if op1==1:
                 return 0
