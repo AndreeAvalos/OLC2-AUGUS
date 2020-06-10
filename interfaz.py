@@ -6,6 +6,7 @@ import Gramatica as gramatica
 from Recolectar import Recolectar
 from TablaSimbolos import TablaSimbolos
 from Ejecutar import Ejecutor
+from Debuger import Debuger
 #variable global donde se almacerana la instancia, ya se de ejecucion o debug para paserlos los valores de read
 in_console = None
 
@@ -32,6 +33,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(735, 600)
+        #area para declarar variables globales
         self.pestañas = {}
         self.lineas = True
         self.metodo =None
@@ -39,6 +41,8 @@ class Ui_MainWindow(object):
         self.nombre = ""
         self.gc = False
         self.rutaTemp = ""
+        self.debug_mode = False#variable que nos va a indicar si es modo debuger
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.nuevo = QtWidgets.QPushButton(self.centralwidget)
@@ -71,7 +75,6 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("new")
         self.ejecutar.setIcon(icon)
         self.ejecutar.setObjectName("ejecutar")
-
         self.ejecutar.clicked.connect(self.ejecutar_analisis)
 
         self.depurar = QtWidgets.QPushButton(self.centralwidget)
@@ -79,6 +82,7 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("new")
         self.depurar.setIcon(icon)
         self.depurar.setObjectName("depurar")
+        self.depurar.clicked.connect(self.debugear)
         self.parar = QtWidgets.QPushButton(self.centralwidget)
         self.parar.setGeometry(QtCore.QRect(350, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
@@ -216,6 +220,11 @@ class Ui_MainWindow(object):
     
     def detenerEjecucion(self):
         in_console.stop()
+    
+    def debugear(self):
+        self.debug_mode =True
+        self.ejecutar_analisis()
+        self.debug_mode =False
 
     def ejecutar_analisis(self):
 
@@ -243,8 +252,10 @@ class Ui_MainWindow(object):
         ts = TablaSimbolos()
         lst = []
         global in_console
-        
-        in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola),daemon=False)
+        if self.debug_mode:
+            in_console = Debuger(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola),daemon=False)
+        else:
+            in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola),daemon=False)
         if ast!=None:
             #try:
                 print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
@@ -261,6 +272,7 @@ class Ui_MainWindow(object):
         #in_console.lst_errores = in_console.lst_errores+ gramatica.lst_errores
         #in_console.graficarErrores()
         ts.graficarSimbolos()
+
         #in_console.stop()   
 
     def agregar_tab(self):
