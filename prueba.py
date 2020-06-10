@@ -114,8 +114,3 @@ lst_direcciones = [3,'nombre']
 agregar(lst_direcciones,dic_principal,"Soto")
 
 print(dic_principal)'''
-from PyQt5 import QtWidgets
-dialog = QtWidgets.QFileDialog().getOpenFileName(None,' Open document',r"C:\Users\\","All Files (*)")
-ruta = dialog[0]
-trozos = ruta.split("/")
-print(trozos[len(trozos)-1])

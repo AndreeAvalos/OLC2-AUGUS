@@ -286,6 +286,8 @@ class Interfaz(QMainWindow):
             gramatica.lst_errores=[]
             ast = gramatica.parse(codigo)
             gramatica.construirAST(ast.nodo)
+            gramatica.construirReporteGramatical()
+            gramatica.lstGrmaticales = []
         except:
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
             self.consola.append("REVISAR REPORTE DE ERRORES")
