@@ -33,6 +33,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(735, 600)
+        self.mw = MainWindow
         #area para declarar variables globales
         self.pestañas = {}
         self.lineas = True
@@ -42,6 +43,7 @@ class Ui_MainWindow(object):
         self.gc = False
         self.rutaTemp = ""
         self.debug_mode = False#variable que nos va a indicar si es modo debuger
+        self.cambiado = False
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -51,44 +53,49 @@ class Ui_MainWindow(object):
         self.nuevo.setIcon(icon)
         self.nuevo.setObjectName("nuevo")
         self.nuevo.clicked.connect(self.agregar_tab)
-
+        #Declaracion de boton abrir
         self.abrir = QtWidgets.QPushButton(self.centralwidget)
         self.abrir.setGeometry(QtCore.QRect(50, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.abrir.setIcon(icon)
         self.abrir.setObjectName("abrir")
         self.abrir.clicked.connect(self.abrir_archivo)
+        #Declaracion de boton save
         self.save = QtWidgets.QPushButton(self.centralwidget)
         self.save.setGeometry(QtCore.QRect(100, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.save.setIcon(icon)
         self.save.setObjectName("save")
         self.save.clicked.connect(self.guardar)
+        #Declaracion de boton save as..
         self.saveas = QtWidgets.QPushButton(self.centralwidget)
         self.saveas.setGeometry(QtCore.QRect(150, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.saveas.setIcon(icon)
         self.saveas.setObjectName("saveas")
         self.saveas.clicked.connect(self.guardar_como)
+        #Declaracion de boton ejecutar
         self.ejecutar = QtWidgets.QPushButton(self.centralwidget)
         self.ejecutar.setGeometry(QtCore.QRect(250, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.ejecutar.setIcon(icon)
         self.ejecutar.setObjectName("ejecutar")
         self.ejecutar.clicked.connect(self.ejecutar_analisis)
-
+        #Declaracion de boton depurar
         self.depurar = QtWidgets.QPushButton(self.centralwidget)
         self.depurar.setGeometry(QtCore.QRect(300, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.depurar.setIcon(icon)
         self.depurar.setObjectName("depurar")
         self.depurar.clicked.connect(self.debugear)
+        #Declaracion de boton parar
         self.parar = QtWidgets.QPushButton(self.centralwidget)
         self.parar.setGeometry(QtCore.QRect(350, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.parar.setIcon(icon)
         self.parar.setObjectName("parar")
         self.parar.clicked.connect(self.detenerEjecucion)
+        #Declaracion de boton paso a paso
         self.step = QtWidgets.QPushButton(self.centralwidget)
         self.step.setGeometry(QtCore.QRect(400, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
@@ -97,18 +104,22 @@ class Ui_MainWindow(object):
         self.step.clicked.connect(self.setStep)
         self.color = QtWidgets.QPushButton(self.centralwidget)
         self.color.setGeometry(QtCore.QRect(530, 0, 51, 41))
+        #Declaracion de boton continuar y ejecucion solo
         self.continuar = QtWidgets.QPushButton(self.centralwidget)
         self.continuar.setGeometry(QtCore.QRect(450, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.continuar.setIcon(icon)
         self.continuar.setObjectName("continuar")
         self.continuar.clicked.connect(self.setContinuar)
+        #Declaracion No los he usado
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 735, 21))
         icon = QtGui.QIcon.fromTheme("new")
+        #Declaracion de boton para cambiar color de ide
         self.color.setIcon(icon)
         self.color.setObjectName("color")
+        self.color.clicked.connect(self.changeColor)
         self.lineas = QtWidgets.QPushButton(self.centralwidget)
         self.lineas.setGeometry(QtCore.QRect(580, 0, 51, 41))
         self.lineas.clicked.connect(self.cambiarLineas)
@@ -237,12 +248,10 @@ class Ui_MainWindow(object):
         codigo = items[0].toPlainText()
         ast = None
         analisis_semantico = False
-        gramatica.lst_errores=[]
-        ast = gramatica.parse(codigo)
         print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
         try:
-            #gramatica.lst_errores=[]
-            #ast = gramatica.parse(codigo)
+            gramatica.lst_errores=[]
+            ast = gramatica.parse(codigo)
             gramatica.construirAST(ast.nodo)
         except:
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
@@ -257,7 +266,7 @@ class Ui_MainWindow(object):
         else:
             in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola),daemon=False)
         if ast!=None:
-            #try:
+            try:
                 print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
                 recolector = Recolectar(ast.instruccion,ts, lst)
                 print("******FIN CONSTRUCTOR**********")
@@ -266,14 +275,10 @@ class Ui_MainWindow(object):
                 print("******FIN RECOLECCION*******")
                 print("********** FIN DE CONSTRUCTOR ********")
                 in_console.start()
-            #except:
-                #self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
-                #self.consola.append("REVISAR REPORTE DE ERRORES")
-        #in_console.lst_errores = in_console.lst_errores+ gramatica.lst_errores
-        #in_console.graficarErrores()
-        ts.graficarSimbolos()
-
-        #in_console.stop()   
+            except:
+                self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
+                self.consola.append("REVISAR REPORTE DE ERRORES")
+        ts.graficarSimbolos() 
 
     def agregar_tab(self):
         text, okPressed = QInputDialog.getText(self.centralwidget, "Nuevo archivo","Nombre:", QLineEdit.Normal, "")
@@ -383,6 +388,17 @@ class Ui_MainWindow(object):
         area.setParent(tab)
         self.editores.removeTab(self.editores.currentIndex())
         self.editores.addTab(tab, indextab)
+    
+    def changeColor(self):
+        p = self.mw.palette()
+        if self.cambiado:
+            p.setColor(self.mw.backgroundRole(), Qt.white)
+            self.cambiado=False
+        else:
+            p.setColor(self.mw.backgroundRole(), Qt.black)
+            self.cambiado=True
+        self.mw.setPalette(p)
+        
 
     def closeTab(self, index):
         tab = self.editores.widget(index)
