@@ -1,12 +1,50 @@
 digraph{ 
-321[style = "filled" ; label = "init"] 
-320[style = "filled" ; label = "instruccion"] 
-317[style = "filled" ; label = "pmain"] 
-318[style = "filled" ; label = "main"] 
-319[style = "filled" ; label = ":"] 
-321->320;
-320->317;
-317->318;
-317->319;
+115[style = "filled" ; label = "init"] 
+114[style = "filled" ; label = "instrucciones"] 
+102[style = "filled" ; label = "instruccion"] 
+99[style = "filled" ; label = "pmain"] 
+100[style = "filled" ; label = "main"] 
+101[style = "filled" ; label = ":"] 
+98[style = "filled" ; label = "sentencia"] 
+94[style = "filled" ; label = "pvariable"] 
+95[style = "filled" ; label = "$t1"] 
+96[style = "filled" ; label = "="] 
+93[style = "filled" ; label = "operacion"] 
+92[style = "filled" ; label = "10"] 
+97[style = "filled" ; label = ";"] 
+113[style = "filled" ; label = "instruccion"] 
+110[style = "filled" ; label = "petiqueta"] 
+111[style = "filled" ; label = "prueba"] 
+112[style = "filled" ; label = ":"] 
+109[style = "filled" ; label = "sentencia"] 
+103[style = "filled" ; label = "pprint"] 
+104[style = "filled" ; label = "print"] 
+105[style = "filled" ; label = "("] 
+106[style = "filled" ; label = "$t1"] 
+107[style = "filled" ; label = ")"] 
+108[style = "filled" ; label = ";"] 
+115->114;
+114->102;
+102->99;
+99->100;
+99->101;
+99->98;
+98->94;
+94->95;
+94->96;
+94->93;
+93->92;
+94->97;
+114->113;
+113->110;
+110->111;
+110->112;
+110->109;
+109->103;
+103->104;
+103->105;
+103->106;
+103->107;
+103->108;
 
 }

@@ -28,6 +28,9 @@ class Ejecutor(threading.Thread):
         self.step = True
         self.continuar = False
         self.detener = False
+        self.procedimiento = False
+        self.funcion = False
+        self.control = False 
 
 
     def run(self):
@@ -121,10 +124,13 @@ class Ejecutor(threading.Thread):
         if not isinstance(main.sentencias,Vacio):
             self.ambito = "main"
             exit = False
-            cursor = self.area.textCursor()
-            cursor.setPosition(0)
+            #cursor = self.area.textCursor()
+            #cursor.setPosition(0)
+            self.control = True
+            self.funcion = False
+            self.procedimiento = False
             for sentencia in main.sentencias:
-
+            
                 exit = Tipo_Salida.SEGUIR
                 
                 if self.detener:
@@ -159,13 +165,15 @@ class Ejecutor(threading.Thread):
                     return exit
                 if exit == Tipo_Salida.DESCARTAR:
                     return exit
-        
         return Tipo_Salida.SEGUIR
 
     def procesar_etiqueta(self, etiqueta):
         if not isinstance(etiqueta.sentencias,Vacio):
             self.ambito = etiqueta.id
             exit = False
+            self.control = True
+            self.funcion = False
+            self.procedimiento = False
             #cursor = self.area.textCursor()
             #cursor.setPosition(0)
             for sentencia in etiqueta.sentencias:
@@ -200,6 +208,7 @@ class Ejecutor(threading.Thread):
             simbol = self.ts.get(sentencia.id)
             if simbol.tipo == Tipo_Simbolo.ETIQUETA:
                 ambito = self.ambito
+                self.actualizarEtiqueta(sentencia.id)
                 existe = self.procesar_etiqueta(simbol)
                 self.ambito = ambito
                 return existe
@@ -318,6 +327,7 @@ class Ejecutor(threading.Thread):
 
     def procesar_asignacion(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
+            self.activarBanderas(sentencia.tipo)
             result = self.procesar_operacion(sentencia.valor)
             if result != None:
                 if not self.ts.existe(sentencia.id):
@@ -335,11 +345,12 @@ class Ejecutor(threading.Thread):
 
     def procesar_declaracionArreglo(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
+            self.activarBanderas(sentencia.tipo)
             if not self.ts.existe(sentencia.id):
                 new_simbol = Simbolo(sentencia.id, None, Arreglo(), sentencia.tipo,self.ambito, sentencia.etiqueta,sentencia.line,sentencia.column)
                 self.ts.add(new_simbol)
             else:
-                self.agregarError("{0} no puede cambiar su tipo a arrreglo".format(sentencia.id),sentencia.line,sentencia.column)
+                self.agregarError("{0} no puede cambiar su tipo a arreglo".format(sentencia.id),sentencia.line,sentencia.column)
         else:
             self.agregarError("La variable {0} invalida".format(sentencia.id),sentencia.line, sentencia.column)       
     
@@ -410,6 +421,7 @@ class Ejecutor(threading.Thread):
 
     def procesar_referencia(self, sentencia):
         if sentencia.tipo != Tipo_Simbolo.INVALIDO:
+            self.activarBanderas(sentencia.tipo)
             result = self.procesar_valor(sentencia.valor)
             if result != None:
                 if not self.ts.existe(sentencia.id):
@@ -659,8 +671,22 @@ class Ejecutor(threading.Thread):
                 aux = Arreglo()
                 return self.castear(tipo,aux.firstElement(result))
                     
-
-
+    def actualizarEtiqueta(self,id):
+        if self.procedimiento:
+            self.ts.etiqueta(id,Tipo_Etiqueta.PROCEDIMIENTO)
+            return
+        else :
+            self.ts.etiqueta(id,Tipo_Etiqueta.CONTROL)
+            return
+    
+    def activarBanderas(self, tipo):
+        if tipo == Tipo_Simbolo.PARAMETRO or tipo == Tipo_Simbolo.SIMULADOR:
+            self.procedimiento = True
+            self.control = False
+        elif tipo == Tipo_Simbolo.RETORNO:
+            self.control = False
+            self.funcion = True
+            self.ts.etiqueta(self.ambito,Tipo_Etiqueta.FUNCION)
 
     def stop(self):
         self.detener = True
