@@ -85,6 +85,9 @@ class TablaSimbolos:
     #Metodo para referenciar una variable
     def referenciar(self, id, valor):
         self.simbolos[id].valor = valor
+    #Metodo para actualizar etiqueta
+    def etiqueta(self, id, etiqueta):
+        self.simbolos[id].etiqueta = etiqueta
     #Metodo para graficar simbolos
     def graficarSimbolos(self):
         try:

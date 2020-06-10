@@ -57,6 +57,15 @@ class OperacionRelacional(Instruccion):
         self.line =line
         self.column = column
 
+class OperacionBit(Instruccion):
+    def __init__(self, op1, op2, operacion, line, column):
+        self.operadorIzq = op1
+        self.operadorDer = op2
+        self.operacion = operacion
+        self.line =line
+        self.column = column
+
+
 class OperacionUnaria(Instruccion):
     def __init__(self, op1, operacion, line, column):
         self.operadorIzq = op1

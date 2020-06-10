@@ -6,6 +6,7 @@ import Gramatica as gramatica
 from Recolectar import Recolectar
 from TablaSimbolos import TablaSimbolos
 from Ejecutar import Ejecutor
+from Debuger import Debuger
 #variable global donde se almacerana la instancia, ya se de ejecucion o debug para paserlos los valores de read
 in_console = None
 
@@ -26,15 +27,25 @@ class PlainTextEdit(QtWidgets.QTextEdit):
 
         
 
-class Ui_MainWindow(object):
+class Interfaz(QMainWindow):
         
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(735, 600)
+        MainWindow.resize(735, 611)
+        self.mw = MainWindow
+        #area para declarar variables globales
+        self.pestañas = {}
         self.lineas = True
         self.metodo =None
         self.cambio = False
+        self.nombre = ""
+        self.gc = False
+        self.rutaTemp = ""
+        self.debug_mode = False#variable que nos va a indicar si es modo debuger
+        self.cambiado = False
+        self.analizador_cambiado = False
+        #Aqui inician los componentes
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.nuevo = QtWidgets.QPushButton(self.centralwidget)
@@ -43,41 +54,49 @@ class Ui_MainWindow(object):
         self.nuevo.setIcon(icon)
         self.nuevo.setObjectName("nuevo")
         self.nuevo.clicked.connect(self.agregar_tab)
-
+        #Declaracion de boton abrir
         self.abrir = QtWidgets.QPushButton(self.centralwidget)
         self.abrir.setGeometry(QtCore.QRect(50, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.abrir.setIcon(icon)
         self.abrir.setObjectName("abrir")
+        self.abrir.clicked.connect(self.abrir_archivo)
+        #Declaracion de boton save
         self.save = QtWidgets.QPushButton(self.centralwidget)
         self.save.setGeometry(QtCore.QRect(100, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.save.setIcon(icon)
         self.save.setObjectName("save")
+        self.save.clicked.connect(self.guardar)
+        #Declaracion de boton save as..
         self.saveas = QtWidgets.QPushButton(self.centralwidget)
         self.saveas.setGeometry(QtCore.QRect(150, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.saveas.setIcon(icon)
         self.saveas.setObjectName("saveas")
+        self.saveas.clicked.connect(self.guardar_como)
+        #Declaracion de boton ejecutar
         self.ejecutar = QtWidgets.QPushButton(self.centralwidget)
         self.ejecutar.setGeometry(QtCore.QRect(250, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.ejecutar.setIcon(icon)
         self.ejecutar.setObjectName("ejecutar")
-
         self.ejecutar.clicked.connect(self.ejecutar_analisis)
-
+        #Declaracion de boton depurar
         self.depurar = QtWidgets.QPushButton(self.centralwidget)
         self.depurar.setGeometry(QtCore.QRect(300, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.depurar.setIcon(icon)
         self.depurar.setObjectName("depurar")
+        self.depurar.clicked.connect(self.debugear)
+        #Declaracion de boton parar
         self.parar = QtWidgets.QPushButton(self.centralwidget)
         self.parar.setGeometry(QtCore.QRect(350, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.parar.setIcon(icon)
         self.parar.setObjectName("parar")
         self.parar.clicked.connect(self.detenerEjecucion)
+        #Declaracion de boton paso a paso
         self.step = QtWidgets.QPushButton(self.centralwidget)
         self.step.setGeometry(QtCore.QRect(400, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
@@ -86,18 +105,45 @@ class Ui_MainWindow(object):
         self.step.clicked.connect(self.setStep)
         self.color = QtWidgets.QPushButton(self.centralwidget)
         self.color.setGeometry(QtCore.QRect(530, 0, 51, 41))
+        #Declaracion de boton continuar y ejecucion solo
         self.continuar = QtWidgets.QPushButton(self.centralwidget)
         self.continuar.setGeometry(QtCore.QRect(450, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.continuar.setIcon(icon)
         self.continuar.setObjectName("continuar")
         self.continuar.clicked.connect(self.setContinuar)
+        #Tabla para mostrar los simbolos
+        self.GTS = QtWidgets.QTableWidget(self.centralwidget)
+        self.GTS.setGeometry(QtCore.QRect(500, 80, 221, 461))
+        self.GTS.setObjectName("GTS")
+        self.GTS.setColumnCount(2)
+        self.GTS.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.GTS.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.GTS.setHorizontalHeaderItem(1, item)
+        #Boton para cambiar tipo de analizador
+        self.cambiaTipoAnalizador = QtWidgets.QPushButton(self.centralwidget)
+        self.cambiaTipoAnalizador.setGeometry(QtCore.QRect(500, 50, 221, 23))
+        self.cambiaTipoAnalizador.setObjectName("cambiaTipoAnalizador")
+        self.cambiaTipoAnalizador.clicked.connect(self.cambiarAnalizador)
+        #etiqueta tipo:
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(20, 550, 21, 16))
+        self.label.setObjectName("label")
+        #etiqueta que cambiara dependiendo el tipo de analizador
+        self.etiqueta_analizador = QtWidgets.QLabel(self.centralwidget)
+        self.etiqueta_analizador.setGeometry(QtCore.QRect(50, 550, 71, 16))
+        self.etiqueta_analizador.setObjectName("etiqueta_analizador")
+        #Declaracion No los he usado
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 735, 21))
         icon = QtGui.QIcon.fromTheme("new")
+        #Declaracion de boton para cambiar color de ide
         self.color.setIcon(icon)
         self.color.setObjectName("color")
+        self.color.clicked.connect(self.changeColor)
         self.lineas = QtWidgets.QPushButton(self.centralwidget)
         self.lineas.setGeometry(QtCore.QRect(580, 0, 51, 41))
         self.lineas.clicked.connect(self.cambiarLineas)
@@ -109,7 +155,7 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("new")
         self.ayuda.setIcon(icon)
         self.ayuda.setObjectName("ayuda")
-
+        
         self.editores = QtWidgets.QTabWidget(self.centralwidget)
         self.editores.setGeometry(QtCore.QRect(10, 60, 481, 321))
         self.editores.setObjectName("editores")
@@ -201,6 +247,15 @@ class Ui_MainWindow(object):
         self.editores.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def cambiarAnalizador(self):
+        if self.analizador_cambiado:
+            self.etiqueta_analizador.setText("Ascendente")
+            self.analizador_cambiado = False
+        else:
+            self.etiqueta_analizador.setText("Descendente")
+            self.analizador_cambiado = True
+        
+
     def setStep(self):
         in_console.step = True
     def setContinuar(self):
@@ -209,6 +264,11 @@ class Ui_MainWindow(object):
     
     def detenerEjecucion(self):
         in_console.stop()
+    
+    def debugear(self):
+        self.debug_mode =True
+        self.ejecutar_analisis()
+        self.debug_mode =False
 
     def ejecutar_analisis(self):
 
@@ -221,12 +281,10 @@ class Ui_MainWindow(object):
         codigo = items[0].toPlainText()
         ast = None
         analisis_semantico = False
-        gramatica.lst_errores=[]
-        ast = gramatica.parse(codigo)
         print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
         try:
-            #gramatica.lst_errores=[]
-            #ast = gramatica.parse(codigo)
+            gramatica.lst_errores=[]
+            ast = gramatica.parse(codigo)
             gramatica.construirAST(ast.nodo)
         except:
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
@@ -236,10 +294,12 @@ class Ui_MainWindow(object):
         ts = TablaSimbolos()
         lst = []
         global in_console
-        
-        in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola),daemon=False)
+        if self.debug_mode:
+            in_console = Debuger(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
+        else:
+            in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
         if ast!=None:
-            #try:
+            try:
                 print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
                 recolector = Recolectar(ast.instruccion,ts, lst)
                 print("******FIN CONSTRUCTOR**********")
@@ -248,13 +308,13 @@ class Ui_MainWindow(object):
                 print("******FIN RECOLECCION*******")
                 print("********** FIN DE CONSTRUCTOR ********")
                 in_console.start()
-            #except:
-                #self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
-                #self.consola.append("REVISAR REPORTE DE ERRORES")
-        #in_console.lst_errores = in_console.lst_errores+ gramatica.lst_errores
-        #in_console.graficarErrores()
-        ts.graficarSimbolos()
-        #in_console.stop()   
+            except:
+                self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
+                self.consola.append("REVISAR REPORTE DE ERRORES")
+        ts.graficarSimbolos() 
+
+        
+
 
     def agregar_tab(self):
         text, okPressed = QInputDialog.getText(self.centralwidget, "Nuevo archivo","Nombre:", QLineEdit.Normal, "")
@@ -270,8 +330,79 @@ class Ui_MainWindow(object):
             area.setObjectName("area")
             area.setParent(tab)
             self.editores.addTab(tab, text+".ags")
+
+    def guardar(self):
+        indextab = self.editores.tabText(self.editores.currentIndex())
+        if indextab.split(".")[0] in self.pestañas:
+            ruta = self.pestañas[indextab.split(".")[0]]
+            trozos = ruta.split("/")
+            name = indextab
+            try:
+                file = open(ruta,"w")
+                tab = self.editores.widget(self.editores.currentIndex())
+                items = tab.children()
+                codigo = items[0].toPlainText()
+                file.write(codigo)
+            except:
+                em = Qt.QErrorMessage(self.main_window)
+                em.showMessage("No fue posible guardar {0}".format(name))
+            finally:
+                file.close()
+        else:
+            self.gc = True
+            self.nombre = indextab
+            self.guardar_como()
+            self.pestañas[self.nombre]=self.rutaTemp
+            self.nombre = ""
+            self.gc = False
+
+    def guardar_como(self):
+        
+        if not self.gc:
+            self.nombre, okPressed = QInputDialog.getText(self.centralwidget, "Nuevo archivo","Nombre:", QLineEdit.Normal, "")
+        carpeta = QtWidgets.QFileDialog().getExistingDirectory(self.centralwidget, "Seleccione carpeta")
+        tname = self.nombre.split(".")
+        name = tname[0]
+        ruta = "{0}/{1}.ags".format(carpeta,name)
+        self.nombre=name
+        self.rutaTemp = ruta
+        try:
+            file = open(ruta,"w+")
+            tab = self.editores.widget(self.editores.currentIndex())
+            items = tab.children()
+            codigo = items[0].toPlainText()
+            file.write(codigo)
+        except:
+            em = Qt.QErrorMessage(self.main_window)
+            em.showMessage("No fue posible guardar {0}".format(name))
+        finally:
+            file.close()
+        
     
-    
+    def abrir_archivo(self):
+        try:
+            dialog = QtWidgets.QFileDialog().getOpenFileName(None,' Open document',r"C:\Users\\","All Files (*)")
+            ruta = dialog[0]
+            trozos = ruta.split("/")
+            name = trozos[len(trozos)-1]
+            self.pestañas[name] = ruta
+            file = open(ruta,'r')
+            codigo = file.read()
+            tab = QtWidgets.QWidget()
+            area = QCodeEditor(DISPLAY_LINE_NUMBERS=True, 
+                                HIGHLIGHT_CURRENT_LINE=True,
+                                SyntaxHighlighter=XMLHighlighter)
+            area.setGeometry(QtCore.QRect(0, 0, 471, 291))
+            area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+            area.setPlainText(codigo)
+            area.setObjectName("area")
+            area.setParent(tab)
+            self.editores.addTab(tab, name)
+        except:
+            em = Qt.QErrorMessage(self.main_window)
+            em.showMessage("Error al abrir {0}".format(name))
+        finally:
+            file.close()
 
     def cambiarLineas(self):
         if self.lineas: self.lineas =False
@@ -293,9 +424,22 @@ class Ui_MainWindow(object):
         area.setParent(tab)
         self.editores.removeTab(self.editores.currentIndex())
         self.editores.addTab(tab, indextab)
+    
+    def changeColor(self):
+        p = self.mw.palette()
+        if self.cambiado:
+            p.setColor(self.mw.backgroundRole(), Qt.white)
+            self.cambiado=False
+        else:
+            p.setColor(self.mw.backgroundRole(), Qt.black)
+            self.cambiado=True
+        self.mw.setPalette(p)
+        
 
     def closeTab(self, index):
         tab = self.editores.widget(index)
+        name = self.editores.tabText(self.editores.currentIndex())
+        print(name)
         tab.deleteLater()
         self.editores.removeTab(index)
 
@@ -319,8 +463,15 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'MS Shell Dlg 2\';\"><br /></p></body></html>"))
-        self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.continuar.setText(_translate("MainWindow", "|>"))
+        self.cambiaTipoAnalizador.setText(_translate("MainWindow", "Cambiar Tipo"))
+        self.label.setText(_translate("MainWindow", "Tipo:"))
+        self.etiqueta_analizador.setText(_translate("MainWindow", "Ascendente"))
+        item = self.GTS.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Variable"))
+        item = self.GTS.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Valor"))
+        self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuProject.setTitle(_translate("MainWindow", "Project"))
         self.menuedit.setTitle(_translate("MainWindow", "Edit"))
         self.menuProgram.setTitle(_translate("MainWindow", "Program"))
@@ -329,16 +480,3 @@ class Ui_MainWindow(object):
         format = self.area.document().rootFrame().frameFormat()
         format.setBottomMargin(10)
         self.area.document().rootFrame().setFrameFormat(format)
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    
-
-    MainWindow.show()
-    sys.exit(app.exec_())

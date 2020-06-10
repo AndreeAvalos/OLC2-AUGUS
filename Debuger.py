@@ -10,7 +10,7 @@ from ArbolCaracteres import ArbolCaracteres
 from Arreglo import Arreglo
 import sys
 from PyQt5 import QtWidgets,QtCore
-class Ejecutor(threading.Thread):
+class Debuger(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, *, daemon=None):
         super().__init__(group=group, target=target, name=name,
@@ -26,7 +26,7 @@ class Ejecutor(threading.Thread):
         self.last = ""
         self.encontro_if = False
         sys.setrecursionlimit(5000)
-        self.step = True
+        self.step = False
         self.continuar = False
         self.detener = False
         self.procedimiento = False
@@ -38,6 +38,7 @@ class Ejecutor(threading.Thread):
     def run(self):
         temp =  self.area.currentLineColor
         try:      
+            self.area.currentLineColor = QColor("#FF0000")
             self.procesar()
         except:
             print("ERROR DE EJECUCION")
@@ -45,10 +46,13 @@ class Ejecutor(threading.Thread):
             print("__________________________FIN______________________________")
             self.ts.graficarSimbolos()
             self.graficarErrores()
-            self.fullGTS()
+            self.area.currentLineColor = temp
             self.stop()
-
-    
+            cursor = self.area.textCursor()
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  0)
+            self.area.setTextCursor(cursor)
+            self.fullGTS()
 
     def setText(self,in_):
         self.entrada= in_
@@ -124,15 +128,32 @@ class Ejecutor(threading.Thread):
         if not isinstance(main.sentencias,Vacio):
             self.ambito = "main"
             exit = False
+            cursor = self.area.textCursor()
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  main.line)
+            self.area.setTextCursor(cursor)
             self.control = True
             self.funcion = False
             self.procedimiento = False
             for sentencia in main.sentencias:
-            
                 exit = Tipo_Salida.SEGUIR
-                
                 if self.detener:
                     return
+                self.step = False
+                if self.continuar:
+                    time.sleep(1)
+                    cursor.setPosition(0)
+                    cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line-1)
+                    self.area.setTextCursor(cursor)
+                else:
+                    while self.step!=True:
+                        time.sleep(0.3)
+                        cursor.setPosition(0)
+                        cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line-1)
+                        self.area.setTextCursor(cursor)
+                        if self.detener:
+                            return
+
                 if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
                 elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
                 elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
@@ -143,6 +164,7 @@ class Ejecutor(threading.Thread):
                 elif isinstance(sentencia, Read): self.procesar_read(sentencia)
                 elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
                 elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
+                self.fullGTS()
                 if exit == Tipo_Salida.EXIT:
                     return exit
                 if exit == Tipo_Salida.DESCARTAR:
@@ -156,11 +178,30 @@ class Ejecutor(threading.Thread):
             self.control = True
             self.funcion = False
             self.procedimiento = False
-
+            cursor = self.area.textCursor()
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  etiqueta.line)
+            self.area.setTextCursor(cursor)
             for sentencia in etiqueta.sentencias:
                 if self.detener:
                     return
                 exit = Tipo_Salida.SEGUIR
+                if self.detener:
+                    return
+                self.step = False
+                if self.continuar:
+                    time.sleep(1)
+                    cursor.setPosition(0)
+                    cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+                    self.area.setTextCursor(cursor)
+                else:
+                    while self.step!=True:
+                        time.sleep(0.3)
+                        cursor.setPosition(0)
+                        cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
+                        self.area.setTextCursor(cursor)
+                        if self.detener:
+                            return
                 if isinstance(sentencia, Asignacion): self.procesar_asignacion(sentencia)
                 elif isinstance(sentencia, Referencia): self.procesar_referencia(sentencia)
                 elif isinstance(sentencia, Goto): exit = self.procesar_goto(sentencia)
@@ -171,6 +212,7 @@ class Ejecutor(threading.Thread):
                 elif isinstance(sentencia, Read): self.procesar_read(sentencia)
                 elif isinstance(sentencia, AsignacionArreglo): self.procesar_arreglo(sentencia)
                 elif isinstance(sentencia, DeclararArreglo): self.procesar_declaracionArreglo(sentencia)
+                self.fullGTS()
                 
                 if exit == Tipo_Salida.EXIT:
                     return exit
@@ -271,6 +313,7 @@ class Ejecutor(threading.Thread):
     
     def procesar_read(self,sentencia2):
         sentencia = sentencia2.sentencia
+        #self.consola.append("Escriba el valor")
         self.consola.append("")
         new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambito, sentencia.etiqueta,sentencia.line,sentencia.column)
         self.ts.add(new_simbol)
@@ -334,7 +377,7 @@ class Ejecutor(threading.Thread):
             result = self.procesar_operacion(sentencia.valor)
             numerico = True
             if result!=None:
-                #hacemos una lista de indices para poder ingresarlos a nuestro diccionario 
+                                    #hacemos una lista de indices para poder ingresarlos a nuestro diccionario 
                 direcciones = []
                 for dimension in sentencia.dimensiones:
                     indice = self.procesar_operacion(dimension)
@@ -683,7 +726,6 @@ class Ejecutor(threading.Thread):
                 self.GTS.setItem(fila,columna,celda)
                 columna+=1
             fila+=1
-
     def stop(self):
         self.detener = True
 

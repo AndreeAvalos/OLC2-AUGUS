@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>735</width>
-    <height>600</height>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -389,6 +389,65 @@ p, li { white-space: pre-wrap; }
      <iconset theme="new">
       <normaloff>../../../</normaloff>../../../</iconset>
     </property>
+   </widget>
+   <widget class="QPushButton" name="cambiaTipoAnalizador">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>50</y>
+      <width>221</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cambiar Tipo</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>550</y>
+      <width>21</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tipo:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="etiqueta_analizador">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>550</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ascendente</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="GTS">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>80</y>
+      <width>221</width>
+      <height>461</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>Variable</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Valor</string>
+     </property>
+    </column>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

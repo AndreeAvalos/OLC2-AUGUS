@@ -487,11 +487,9 @@ def p_pprint2(p):
     nodo = NodoG(getIndex(),"pprint",[])
     nodo.add(NodoG(getIndex(),"print", None))
     nodo.add(NodoG(getIndex(),"(", None))
-
-    if p[3] =='\"\\n\"':
-        nodo.add(NodoG(getIndex(),'SALTOL', None))
-        nodo.add(NodoG(getIndex(),")", None))
-        nodo.add(NodoG(getIndex(),";", None))
+    nodo.add(NodoG(getIndex(),'SALTOL', None))
+    nodo.add(NodoG(getIndex(),")", None))
+    nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(Print_("-",p.lineno(1),find_column(p.slice[1])), nodo)
     print('sentencia: pprint7; { sentencia = pprint}')
 
@@ -575,6 +573,7 @@ def p_operaciones4(p):
     elif p[2] == '>': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MAYOR,p.lineno(2),find_column(p.slice[2])),nodo)
     elif p[2] == '<': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MENOR,p.lineno(2),find_column(p.slice[2])),nodo)
 
+
 def p_operaciones5(p):
     'operacion  :   ABS PARIZQ valor PARDER'
     nodo = NodoG(getIndex(),"operacion",[])
@@ -620,6 +619,24 @@ def p_operacion8(p):
     nodo.add(NodoG(getIndex(),")",None))
     nodo.add(p[4].nodo)
     p[0] = Nodo(OperacionCasteo(p[2],p[4].instruccion,p.lineno(1),find_column(p.slice[1])),nodo)
+
+def p_operaciones9(p):
+    ''' operacion   :   valor ANDBIT valor
+                    |   valor ORBIT valor
+                    |   valor XORBIT valor
+                    |   valor SHIFTIZQ valor
+                    |   valor SHIFTDER valor
+    '''
+    nodo = NodoG(getIndex(),"operacion",[])
+    nodo.add(p[1].nodo)
+    nodo.add(NodoG(getIndex(),p[2], None))
+    nodo.add(p[3].nodo)
+
+    if p[2] == '&': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.AND,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '|': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.OR,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '^': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.XOR,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '<<': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.SHIFTIZQ,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '>>': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.SHIFTDER,p.lineno(2),find_column(p.slice[2])),nodo)
 
 
 def p_valor(p):
