@@ -32,9 +32,13 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(735, 600)
+        self.pestañas = {}
         self.lineas = True
         self.metodo =None
         self.cambio = False
+        self.nombre = ""
+        self.gc = False
+        self.rutaTemp = ""
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.nuevo = QtWidgets.QPushButton(self.centralwidget)
@@ -49,16 +53,19 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("new")
         self.abrir.setIcon(icon)
         self.abrir.setObjectName("abrir")
+        self.abrir.clicked.connect(self.abrir_archivo)
         self.save = QtWidgets.QPushButton(self.centralwidget)
         self.save.setGeometry(QtCore.QRect(100, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.save.setIcon(icon)
         self.save.setObjectName("save")
+        self.save.clicked.connect(self.guardar)
         self.saveas = QtWidgets.QPushButton(self.centralwidget)
         self.saveas.setGeometry(QtCore.QRect(150, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
         self.saveas.setIcon(icon)
         self.saveas.setObjectName("saveas")
+        self.saveas.clicked.connect(self.guardar_como)
         self.ejecutar = QtWidgets.QPushButton(self.centralwidget)
         self.ejecutar.setGeometry(QtCore.QRect(250, 0, 51, 41))
         icon = QtGui.QIcon.fromTheme("new")
@@ -109,7 +116,7 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("new")
         self.ayuda.setIcon(icon)
         self.ayuda.setObjectName("ayuda")
-
+        
         self.editores = QtWidgets.QTabWidget(self.centralwidget)
         self.editores.setGeometry(QtCore.QRect(10, 60, 481, 321))
         self.editores.setObjectName("editores")
@@ -270,8 +277,79 @@ class Ui_MainWindow(object):
             area.setObjectName("area")
             area.setParent(tab)
             self.editores.addTab(tab, text+".ags")
+
+    def guardar(self):
+        indextab = self.editores.tabText(self.editores.currentIndex())
+        if indextab.split(".")[0] in self.pestañas:
+            ruta = self.pestañas[indextab.split(".")[0]]
+            trozos = ruta.split("/")
+            name = indextab
+            try:
+                file = open(ruta,"w")
+                tab = self.editores.widget(self.editores.currentIndex())
+                items = tab.children()
+                codigo = items[0].toPlainText()
+                file.write(codigo)
+            except:
+                em = Qt.QErrorMessage(self.main_window)
+                em.showMessage("No fue posible guardar {0}".format(name))
+            finally:
+                file.close()
+        else:
+            self.gc = True
+            self.nombre = indextab
+            self.guardar_como()
+            self.pestañas[self.nombre]=self.rutaTemp
+            self.nombre = ""
+            self.gc = False
+
+    def guardar_como(self):
+        
+        if not self.gc:
+            self.nombre, okPressed = QInputDialog.getText(self.centralwidget, "Nuevo archivo","Nombre:", QLineEdit.Normal, "")
+        carpeta = QtWidgets.QFileDialog().getExistingDirectory(self.centralwidget, "Seleccione carpeta")
+        tname = self.nombre.split(".")
+        name = tname[0]
+        ruta = "{0}/{1}.ags".format(carpeta,name)
+        self.nombre=name
+        self.rutaTemp = ruta
+        try:
+            file = open(ruta,"w+")
+            tab = self.editores.widget(self.editores.currentIndex())
+            items = tab.children()
+            codigo = items[0].toPlainText()
+            file.write(codigo)
+        except:
+            em = Qt.QErrorMessage(self.main_window)
+            em.showMessage("No fue posible guardar {0}".format(name))
+        finally:
+            file.close()
+        
     
-    
+    def abrir_archivo(self):
+        try:
+            dialog = QtWidgets.QFileDialog().getOpenFileName(None,' Open document',r"C:\Users\\","All Files (*)")
+            ruta = dialog[0]
+            trozos = ruta.split("/")
+            name = trozos[len(trozos)-1]
+            self.pestañas[name] = ruta
+            file = open(ruta,'r')
+            codigo = file.read()
+            tab = QtWidgets.QWidget()
+            area = QCodeEditor(DISPLAY_LINE_NUMBERS=True, 
+                                HIGHLIGHT_CURRENT_LINE=True,
+                                SyntaxHighlighter=XMLHighlighter)
+            area.setGeometry(QtCore.QRect(0, 0, 471, 291))
+            area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+            area.setPlainText(codigo)
+            area.setObjectName("area")
+            area.setParent(tab)
+            self.editores.addTab(tab, name)
+        except:
+            em = Qt.QErrorMessage(self.main_window)
+            em.showMessage("Error al abrir {0}".format(name))
+        finally:
+            file.close()
 
     def cambiarLineas(self):
         if self.lineas: self.lineas =False
@@ -296,6 +374,8 @@ class Ui_MainWindow(object):
 
     def closeTab(self, index):
         tab = self.editores.widget(index)
+        name = self.editores.tabText(self.editores.currentIndex())
+        print(name)
         tab.deleteLater()
         self.editores.removeTab(index)
 

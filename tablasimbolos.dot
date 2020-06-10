@@ -4,14 +4,6 @@ graph [bb="0,0,352,154"];
 arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>IDENTIFICADOR</TD><TD>VALOR</TD><TD>TIPO</TD><TD>AMBIENTE</TD><TD>ETIQUETA</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>
 <TR><TD>main</TD><TD>None</TD><TD>Tipo_Simbolo.MAIN</TD><TD>global</TD><TD>Tipo_Etiqueta.MAIN</TD><TD>3</TD><TD>1</TD></TR>
-<TR><TD>$t1</TD><TD>10</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>4</TD><TD>2</TD></TR>
-<TR><TD>$t2</TD><TD>-11</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>5</TD><TD>2</TD></TR>
-<TR><TD>$t3</TD><TD>11</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>7</TD><TD>2</TD></TR>
-<TR><TD>$t4</TD><TD>10</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>8</TD><TD>2</TD></TR>
-<TR><TD>$t5</TD><TD>11</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>11</TD><TD>2</TD></TR>
-<TR><TD>$t6</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>14</TD><TD>2</TD></TR>
-<TR><TD>$t7</TD><TD>20480</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>17</TD><TD>2</TD></TR>
-<TR><TD>$t8</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>20</TD><TD>2</TD></TR>
 </TABLE>
 >, ];
 }
