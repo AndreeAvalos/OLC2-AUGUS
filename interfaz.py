@@ -7,6 +7,7 @@ from Recolectar import Recolectar
 from TablaSimbolos import TablaSimbolos
 from Ejecutar import Ejecutor
 from Debuger import Debuger
+import GramaticaDescendente as gramaticaD
 #variable global donde se almacerana la instancia, ya se de ejecucion o debug para paserlos los valores de read
 in_console = None
 
@@ -281,13 +282,22 @@ class Interfaz(QMainWindow):
         codigo = items[0].toPlainText()
         ast = None
         analisis_semantico = False
+        if not self.analizador_cambiado:
+                gramaticaD.parse(codigo)
+                print("GRAMATICA SUCCESS")
+                return
         print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
         try:
-            gramatica.lst_errores=[]
-            ast = gramatica.parse(codigo)
-            gramatica.construirAST(ast.nodo)
-            gramatica.construirReporteGramatical()
-            gramatica.lstGrmaticales = []
+            if not self.analizador_cambiado:
+                gramaticaD.parse(codigo)
+                print("GRAMATICA SUCCESS")
+                return
+            else:
+                gramatica.lst_errores=[]
+                ast = gramatica.parse(codigo)
+                gramatica.construirAST(ast.nodo)
+                gramatica.construirReporteGramatical()
+                gramatica.lstGrmaticales = []
         except:
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
             self.consola.append("REVISAR REPORTE DE ERRORES")
