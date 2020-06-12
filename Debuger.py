@@ -39,6 +39,9 @@ class Debuger(threading.Thread):
         temp =  self.area.currentLineColor
         try:      
             self.area.currentLineColor = QColor("#FF0000")
+            cursor = self.area.textCursor()
+            cursor.setPosition(0)
+            cursor.movePosition(cursor.Down, cursor.KeepAnchor,  0)
             self.procesar()
         except:
             print("ERROR DE EJECUCION")
@@ -53,6 +56,7 @@ class Debuger(threading.Thread):
             cursor.movePosition(cursor.Down, cursor.KeepAnchor,  0)
             self.area.setTextCursor(cursor)
             self.fullGTS()
+            return
 
     def setText(self,in_):
         self.entrada= in_
@@ -190,7 +194,7 @@ class Debuger(threading.Thread):
                     return
                 self.step = False
                 if self.continuar:
-                    time.sleep(1)
+                    time.sleep(0.2)
                     cursor.setPosition(0)
                     cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line)
                     self.area.setTextCursor(cursor)
@@ -307,13 +311,17 @@ class Debuger(threading.Thread):
                 self.agregarError("No se puede imprimir un arreglo", sentencia.line, sentencia.column)
             elif result!=None:
                 self.consola.append(str(result))
-        else:
-            self.consola.append("")
+        elif isinstance(sentencia.val, OperacionCadena):
+            result = self.procesar_cadena(sentencia.val)
+            if isinstance(result, ArbolCaracteres):
+                if str(result.getText())=="\\n":
+                    self.consola.append("")
+                else:
+                    self.consola.append(str(result.getText()))
         return Tipo_Salida.SEGUIR
     
     def procesar_read(self,sentencia2):
         sentencia = sentencia2.sentencia
-        #self.consola.append("Escriba el valor")
         self.consola.append("")
         new_simbol = Simbolo(sentencia.id, None, None, sentencia.tipo,self.ambito, sentencia.etiqueta,sentencia.line,sentencia.column)
         self.ts.add(new_simbol)
@@ -326,12 +334,12 @@ class Debuger(threading.Thread):
             contador = 0 #contador para contar los segundos de tiempo de lida maxima
             self.leido = False
             while contador <100:
-                time.sleep(1)
+                time.sleep(0.4)
                 if self.leido:
                     if re.match(entero,self.entrada):
-                        self.ts.set(id,self.entrada)
+                        self.ts.set(id,int(self.entrada))
                     elif re.match(decimal,self.entrada):
-                        self.ts.set(id,self.entrada)
+                        self.ts.set(id,float(self.entrada))
                     elif re.match(string,self.entrada):
                         'ARREGLAR PARA CONVERTIR EN ARREGLO'
                         arbol = ArbolCaracteres(self.entrada)
@@ -377,7 +385,7 @@ class Debuger(threading.Thread):
             result = self.procesar_operacion(sentencia.valor)
             numerico = True
             if result!=None:
-                                    #hacemos una lista de indices para poder ingresarlos a nuestro diccionario 
+                #hacemos una lista de indices para poder ingresarlos a nuestro diccionario 
                 direcciones = []
                 for dimension in sentencia.dimensiones:
                     indice = self.procesar_operacion(dimension)
@@ -602,6 +610,18 @@ class Debuger(threading.Thread):
 
                     self.agregarError("Indices inexistentes",operacion.line,operacion.column)
             elif isinstance(arbol, ArbolCaracteres):
+                direcciones = []
+                for dimension in operacion.dimensiones:
+                    indice = self.procesar_operacion(dimension)
+                    if indice==None:
+                        self.agregarError("indice no valido",dimension.line,dimension.column)
+                        return
+                    texto = indice
+                    if isinstance(indice,ArbolCaracteres):
+                        texto = indice.getText()
+                        numerico=False
+                    
+                    direcciones.append(texto)
                 if len(direcciones)==1:
                     if isinstance(direcciones[0],int):
                         if arbol.valid(direcciones[0]):
@@ -726,6 +746,7 @@ class Debuger(threading.Thread):
                 self.GTS.setItem(fila,columna,celda)
                 columna+=1
             fila+=1
+
     def stop(self):
         self.detener = True
 

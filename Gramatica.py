@@ -619,24 +619,7 @@ def p_pif(p):
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(If_(p[3].instruccion,Goto(p[6],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
 
-def p_pprint(p):
-    '''pprint   :   PRINT PARIZQ VARIABLE PARDER PYCOMA
-    '''
-    #Parte para reporte Gramatical
-    gramatical = NodoGramatical("pprint-> PRINT PARIZQ VARIABLE PARDER PYCOMA")
-    gramatical.add("pprint.val = Print_(OperacionCopiaVariable({0}))".format(p[3]))
-    lstGrmaticales.append(gramatical)
-    gramatical = NodoGramatical("sentencia-> pprint")
-    gramatical.add("sentencia.val = pprint.val")
-    lstGrmaticales.append(gramatical)
-    #Parte para AST y GRAFO DE PARSER
-    nodo = NodoG(getIndex(),"pprint",[])
-    nodo.add(NodoG(getIndex(),"print", None))
-    nodo.add(NodoG(getIndex(),"(", None))
-    nodo.add(NodoG(getIndex(),p[3], None))
-    nodo.add(NodoG(getIndex(),")", None))
-    nodo.add(NodoG(getIndex(),";", None))
-    p[0] = Nodo(Print_(OperacionCopiaVariable(p[3],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
+
 
 def p_pprint3(p):
     'pprint :  PRINT PARIZQ VARIABLE dimensiones PARDER PYCOMA'
@@ -663,10 +646,10 @@ def p_pprint3(p):
 
 
 def p_pprint2(p):
-    '''pprint   :   PRINT PARIZQ CADENA2 PARDER PYCOMA
+    '''pprint   :   PRINT PARIZQ valor PARDER PYCOMA
     '''
     #Parte para reporte Gramatical
-    gramatical = NodoGramatical("pprint-> PRINT PARIZQ CADENA2 PARDER PYCOMA")
+    gramatical = NodoGramatical("pprint-> PRINT PARIZQ valor PARDER PYCOMA")
     gramatical.add("pprint.val = Print_(Nueva linea)")
     lstGrmaticales.append(gramatical)
     gramatical = NodoGramatical("sentencia-> pprint")
@@ -676,10 +659,10 @@ def p_pprint2(p):
     nodo = NodoG(getIndex(),"pprint",[])
     nodo.add(NodoG(getIndex(),"print", None))
     nodo.add(NodoG(getIndex(),"(", None))
-    nodo.add(NodoG(getIndex(),'SALTOL', None))
+    nodo.add(p[3].nodo)
     nodo.add(NodoG(getIndex(),")", None))
     nodo.add(NodoG(getIndex(),";", None))
-    p[0] = Nodo(Print_("-",p.lineno(1),find_column(p.slice[1])), nodo)
+    p[0] = Nodo(Print_(p[3].instruccion, p.lineno(1),find_column(p.slice[1])), nodo)
 
 def p_pread(p):
     'pread  :   VARIABLE IGUAL READ PARIZQ PARDER PYCOMA'

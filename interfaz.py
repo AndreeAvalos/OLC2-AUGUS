@@ -284,12 +284,7 @@ class Interfaz(QMainWindow):
         ast = None
         analisis_semantico = False
 
-        if  self.analizador_cambiado:
-                gramaticaD.lst_errores=[]
-                ast = gramaticaD.parse(codigo)
-                arbolparser = GramaticaDG.parse(codigo)
-                GramaticaDG.construirAST(arbolparser)
-        print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
+        #print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
         try:
             if  self.analizador_cambiado:
                 gramaticaD.lst_errores=[]
@@ -307,7 +302,7 @@ class Interfaz(QMainWindow):
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
             self.consola.append("REVISAR REPORTE DE ERRORES")
         finally:
-            if self.analizador_cambiado:
+            if not self.analizador_cambiado:
                 gramatica.graficarErrores()
             else:
                 gramaticaD.graficarErrores()
@@ -320,7 +315,7 @@ class Interfaz(QMainWindow):
         else:
             in_console = Ejecutor(args=(ast if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
         if ast!=None:
-            try:
+            #try:
                 print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
                 recolector = Recolectar(ast,ts, lst)
                 print("******FIN CONSTRUCTOR**********")
@@ -329,9 +324,9 @@ class Interfaz(QMainWindow):
                 print("******FIN RECOLECCION*******")
                 print("********** FIN DE CONSTRUCTOR ********")
                 in_console.start()
-            except:
-                self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
-                self.consola.append("REVISAR REPORTE DE ERRORES")
+            #except:
+                #self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
+                #self.consola.append("REVISAR REPORTE DE ERRORES")
         ts.graficarSimbolos() 
 
         

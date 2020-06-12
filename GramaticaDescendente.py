@@ -317,14 +317,9 @@ def p_pif(p):
     p[0] = If_(p[3],Goto(p[6],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1]))
 
 def p_pprint(p):
-    '''pprint   :   PRINT PARIZQ VARIABLE PARDER PYCOMA
+    '''pprint   :   PRINT PARIZQ valor PARDER PYCOMA
     '''
-    p[0] = Print_(OperacionCopiaVariable(p[3],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1]))
-
-def p_pprint2(p):
-    '''pprint   :   PRINT PARIZQ CADENA2 PARDER PYCOMA
-    '''
-    p[0] = Print_("-",p.lineno(1),find_column(p.slice[1]))
+    p[0] = Print_(p[3], p.lineno(1),find_column(p.slice[1]))
 
 def p_pprint3(p):
     'pprint :  PRINT PARIZQ VARIABLE dimensiones PARDER PYCOMA'
@@ -364,7 +359,7 @@ def p_operacion8(p):
                     |   PARIZQ FLOAT PARDER valor
                     |   PARIZQ CHAR PARDER valor
     '''
-    p[0] = OperacionCasteo(p[2],p[4].instruccion,p.lineno(1),find_column(p.slice[1]))
+    p[0] = OperacionCasteo(p[2],p[4],p.lineno(1),find_column(p.slice[1]))
 
 def p_operacion2(p):
     '''operacion    :   valor operacionP

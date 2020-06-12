@@ -401,24 +401,14 @@ def p_pif(p):
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = nodo
 
-def p_pprint(p):
-    '''pprint   :   PRINT PARIZQ VARIABLE PARDER PYCOMA
-    '''
-    nodo = NodoG(getIndex(),"pprint",[])
-    nodo.add(NodoG(getIndex(),"print", None))
-    nodo.add(NodoG(getIndex(),"(", None))
-    nodo.add(NodoG(getIndex(),p[3], None))
-    nodo.add(NodoG(getIndex(),")", None))
-    nodo.add(NodoG(getIndex(),";", None))
-    p[0] = nodo
 
-def p_pprint2(p):
-    '''pprint   :   PRINT PARIZQ CADENA2 PARDER PYCOMA
+def p_pprint(p):
+    '''pprint   :   PRINT PARIZQ valor PARDER PYCOMA
     '''
     nodo = NodoG(getIndex(),"pprint",[])
     nodo.add(NodoG(getIndex(),"print", None))
     nodo.add(NodoG(getIndex(),"(", None))
-    nodo.add(NodoG(getIndex(),'SALTOL', None))
+    nodo.add(p[3])
     nodo.add(NodoG(getIndex(),")", None))
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = nodo
