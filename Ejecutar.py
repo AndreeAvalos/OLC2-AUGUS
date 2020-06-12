@@ -148,6 +148,8 @@ class Ejecutor(threading.Thread):
                     return exit
                 if exit == Tipo_Salida.DESCARTAR:
                     return exit
+
+                self.fullGTS()
         return Tipo_Salida.SEGUIR
 
     def procesar_etiqueta(self, etiqueta):
@@ -177,7 +179,8 @@ class Ejecutor(threading.Thread):
                     return exit
                 if exit == Tipo_Salida.DESCARTAR:
                     return exit
-        
+
+                self.fullGTS()
         return Tipo_Salida.SEGUIR
     
     def procesar_goto(self,sentencia):

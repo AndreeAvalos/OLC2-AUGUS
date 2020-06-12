@@ -264,7 +264,7 @@ def t_COMENTARIO(t):
 
 def t_nuevalinea(t):
     r'\n+'
-    t.lexer.lineno += len(t.value)
+    t.lexer.lineno += t.value.count("\n")
     
 def t_error(t):
     #editar para agregar a una tabla
@@ -272,7 +272,6 @@ def t_error(t):
     agregarError('Lexico',"Caracter \'{0}\' ilegal".format(t.value[0]), t.lexer.lineno+1,find_column(t))
     t.lexer.skip(1)
 
-lexer = lex.lex()
 
 def getIndex():
     global index
@@ -998,7 +997,6 @@ def p_valor3(p):
 def p_error(p):
     global input
     global parser
-    print(p)
     agregarError("Sintactico","Sintaxis no reconocida \"{0}\"".format(p.value),p.lineno+1, find_column(p))
 
     while True:
@@ -1009,18 +1007,21 @@ def p_error(p):
 
     return tok
  
-
-parser = yacc.yacc()
-
+parser = yacc.yacc(write_tables=False)
 input = ""
 def parse(inpu) :
-    global input
-    global lexer
     global index
+    global parser
+    global input
+    lexer = lex.lex()
     lexer.lineno=0
     input = inpu
-    index=0
-    return parser.parse(inpu)
+    index = 0
+    return parser.parse(inpu, lexer=lexer)
+
+def restart():
+    global parser
+    parser.restart()
 
 def find_column(token):
     line_start = input.rfind('\n', 0, token.lexpos) + 1

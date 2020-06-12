@@ -183,7 +183,6 @@ def t_error(t):
 
 stack = []
 
-lexer = lex.lex()
 index = 0
 #Metodo para generar un nuevo index
 def getIndex():
@@ -561,8 +560,7 @@ parser = yacc.yacc()
 input = ""
 def parse(inpu) :
     global input
-    global lexer
-    lexer.lineno=0
+    lexer = lex.lex()
     input = inpu
     global index
     index = 0

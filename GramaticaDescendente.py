@@ -178,11 +178,9 @@ def t_COMENTARIO(t):
     r'\#.*'
     t.lexer.lineno += 1
 
-
-
 def t_nuevalinea(t):
     r'\n+'
-    t.lexer.lineno += len(t.value)
+    t.lexer.lineno += t.value.count("\n")
     
 def t_error(t):
     #editar para agregar a una tabla
@@ -191,8 +189,6 @@ def t_error(t):
     t.lexer.skip(1)
 
 stack = []
-
-lexer = lex.lex()
 def p_init(p):
     'init : instrucciones'
     p[0] = p[1]
@@ -472,10 +468,9 @@ parser = yacc.yacc()
 input = ""
 def parse(inpu) :
     global input
-    global lexer
-    lexer.lineno=0
+    lexer = lex.lex()
     input = inpu
-    return parser.parse(inpu)
+    return parser.parse(inpu, lexer=lexer)
 
 def find_column(token):
     line_start = input.rfind('\n', 0, token.lexpos) + 1

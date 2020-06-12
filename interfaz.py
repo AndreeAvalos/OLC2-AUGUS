@@ -283,21 +283,25 @@ class Interfaz(QMainWindow):
         codigo = items[0].toPlainText()
         ast = None
         analisis_semantico = False
-
+        lst = []
         #print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
         try:
             if  self.analizador_cambiado:
+                print("AQUI")
                 gramaticaD.lst_errores=[]
                 ast = gramaticaD.parse(codigo)
                 arbolparser = GramaticaDG.parse(codigo)
                 GramaticaDG.construirAST(arbolparser)
+                lst = gramaticaD.lst_errores
             else:
                 gramatica.lst_errores=[]
                 ast2 = gramatica.parse(codigo)
+                gramatica.restart()
                 gramatica.construirAST(ast2.nodo)
                 gramatica.construirReporteGramatical()
                 gramatica.lstGrmaticales = []
                 ast = ast2.instruccion
+                lst = gramatica.lst_errores
         except:
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
             self.consola.append("REVISAR REPORTE DE ERRORES")
@@ -308,12 +312,12 @@ class Interfaz(QMainWindow):
                 gramaticaD.graficarErrores()
 
         ts = TablaSimbolos()
-        lst = []
+        
         global in_console
         if self.debug_mode:
-            in_console = Debuger(args=(ast if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
+            in_console = Debuger(args=(ast if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=True)
         else:
-            in_console = Ejecutor(args=(ast if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
+            in_console = Ejecutor(args=(ast if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=True)
         if ast!=None:
             #try:
                 print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")

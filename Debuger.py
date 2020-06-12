@@ -42,6 +42,7 @@ class Debuger(threading.Thread):
             cursor = self.area.textCursor()
             cursor.setPosition(0)
             cursor.movePosition(cursor.Down, cursor.KeepAnchor,  0)
+            self.area.setTextCursor(cursor)
             self.procesar()
         except:
             print("ERROR DE EJECUCION")
@@ -50,11 +51,11 @@ class Debuger(threading.Thread):
             self.ts.graficarSimbolos()
             self.graficarErrores()
             self.area.currentLineColor = temp
-            self.stop()
             cursor = self.area.textCursor()
             cursor.setPosition(0)
             cursor.movePosition(cursor.Down, cursor.KeepAnchor,  0)
             self.area.setTextCursor(cursor)
+            self.stop()
             self.fullGTS()
             return
 
@@ -145,7 +146,7 @@ class Debuger(threading.Thread):
                     return
                 self.step = False
                 if self.continuar:
-                    time.sleep(1)
+                    time.sleep(0.2)
                     cursor.setPosition(0)
                     cursor.movePosition(cursor.Down, cursor.KeepAnchor,  sentencia.line-1)
                     self.area.setTextCursor(cursor)

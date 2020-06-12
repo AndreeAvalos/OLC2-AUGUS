@@ -49,13 +49,6 @@ arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>pprint: PRINT PARIZQ valor PARDER PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pprint.val = Print_(Nueva linea)</TD></TR></TABLE></TD></TR>
 <TR><TD>sentencia: pprint</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pprint.val</TD></TR></TABLE></TD></TR>
 <TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
-<TR><TD>operacion: CADENA</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionCadena(\n)</TD></TR></TABLE></TD></TR>
-<TR><TD>pprint: PRINT PARIZQ valor PARDER PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pprint.val = Print_(Nueva linea)</TD></TR></TABLE></TD></TR>
-<TR><TD>sentencia: pprint</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pprint.val</TD></TR></TABLE></TD></TR>
-<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
-<TR><TD>pgoto: GOTO ID PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pgoto.val = Goto(factorial)</TD></TR></TABLE></TD></TR>
-<TR><TD>sentencia: pgoto</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pgoto.val</TD></TR></TABLE></TD></TR>
-<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
 <TR><TD>petiqueta: ID DOSPUNTOS sentencias</TD><TD><TABLE BORDER="0"><TR><TD>petiqueta.val = Etiqueta(ret0,sentencias.val)</TD></TR></TABLE></TD></TR>
 <TR><TD>instruccion: petiqueta</TD><TD><TABLE BORDER="0"><TR><TD>instrucion.val = petiqueta.val</TD></TR></TABLE></TD></TR>
 <TR><TD>instrucciones: intrucciones2 instruccion</TD><TD><TABLE BORDER="0"><TR><TD>instrucciones2.val.append(instruccion)</TD></TR><TR><TD>instrucciones.val = instrucciones2.val</TD></TR></TABLE></TD></TR>
