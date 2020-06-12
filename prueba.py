@@ -114,3 +114,76 @@ lst_direcciones = [3,'nombre']
 agregar(lst_direcciones,dic_principal,"Soto")
 
 print(dic_principal)'''
+import ply.yacc as yacc
+import ply.lex as lex
+
+
+reservadas = {
+       'hola':'RESERVADA'
+}
+
+tokens = [
+    'COMA',
+    'ID'
+] + list(reservadas.values())
+
+t_COMA = r','
+
+def t_ID(t):
+     r'id[0-9]*'
+     t.type = reservadas.get(t.value.lower(),'ID')
+     return t
+
+def t_error(t):
+    #editar para agregar a una tabla
+    print("Illegal character '%s'" % t.value[0])
+    #agregarError('Lexico',"Caracter \'{0}\' ilegal".format(t.value[0]), t.lexer.lineno+1,find_column(t))
+    t.lexer.skip(1)
+
+
+stack = []
+
+lexer = lex.lex()
+
+
+def p_init(p):
+       'init : instrucciones'
+       print(p[1])
+
+def p_instrucciones(p):
+       'instrucciones  :   ID instruccionesP'
+       p[2].insert(0,p[1])
+       p[0] = p[2]
+
+def p_instruccionesP(p):
+       '''instruccionesP   :  COMA intruccion instruccionesP
+       '''
+       
+       #print(find_column(p.slice[-1].token))
+       p[3].insert(0,p[2])
+       p[0] = p[3]
+
+def p_instruccionesP2(p):
+       'instruccionesP   :'
+       p[0] = []
+       
+def p_instruccion(p):
+       'intruccion   : ID'
+       print(p.slice[1])
+       p[0] = p[1]
+
+def find_column(token):
+       line_start = -1
+       return (token.lexpos - line_start) + 1
+
+
+parser = yacc.yacc()
+input = ""
+def parse(inpu) :
+    global input
+    global lexer
+    lexer.lineno=0
+    input = inpu
+    return parser.parse(inpu)
+
+parse("id,id2,id3")

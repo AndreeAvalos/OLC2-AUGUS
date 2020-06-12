@@ -8,6 +8,7 @@ from TablaSimbolos import TablaSimbolos
 from Ejecutar import Ejecutor
 from Debuger import Debuger
 import GramaticaDescendente as gramaticaD
+import GramaticaDG
 #variable global donde se almacerana la instancia, ya se de ejecucion o debug para paserlos los valores de read
 in_console = None
 
@@ -282,38 +283,46 @@ class Interfaz(QMainWindow):
         codigo = items[0].toPlainText()
         ast = None
         analisis_semantico = False
-        if not self.analizador_cambiado:
-                gramaticaD.parse(codigo)
-                print("GRAMATICA SUCCESS")
-                return
+
+        if  self.analizador_cambiado:
+                gramaticaD.lst_errores=[]
+                ast = gramaticaD.parse(codigo)
+                arbolparser = GramaticaDG.parse(codigo)
+                GramaticaDG.construirAST(arbolparser)
         print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
         try:
-            if not self.analizador_cambiado:
-                gramaticaD.parse(codigo)
-                print("GRAMATICA SUCCESS")
-                return
+            if  self.analizador_cambiado:
+                gramaticaD.lst_errores=[]
+                ast = gramaticaD.parse(codigo)
+                arbolparser = GramaticaDG.parse(codigo)
+                GramaticaDG.construirAST(arbolparser)
             else:
                 gramatica.lst_errores=[]
-                ast = gramatica.parse(codigo)
-                gramatica.construirAST(ast.nodo)
+                ast2 = gramatica.parse(codigo)
+                gramatica.construirAST(ast2.nodo)
                 gramatica.construirReporteGramatical()
                 gramatica.lstGrmaticales = []
+                ast = ast2.instruccion
         except:
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
             self.consola.append("REVISAR REPORTE DE ERRORES")
         finally:
-            gramatica.graficarErrores()
+            if self.analizador_cambiado:
+                gramatica.graficarErrores()
+            else:
+                gramaticaD.graficarErrores()
+
         ts = TablaSimbolos()
         lst = []
         global in_console
         if self.debug_mode:
-            in_console = Debuger(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
+            in_console = Debuger(args=(ast if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
         else:
-            in_console = Ejecutor(args=(ast.instruccion if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
+            in_console = Ejecutor(args=(ast if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=False)
         if ast!=None:
             try:
                 print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
-                recolector = Recolectar(ast.instruccion,ts, lst)
+                recolector = Recolectar(ast,ts, lst)
                 print("******FIN CONSTRUCTOR**********")
                 recolector.procesar()
                 recolector.getErrores()

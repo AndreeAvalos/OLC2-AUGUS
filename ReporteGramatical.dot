@@ -20,9 +20,127 @@ arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t3,operacion.val)</TD></TR></TABLE></TD></TR>
 <TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
 <TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(6)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(6)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor DIVISION valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumerica(valor.val,valor.val, /)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t4,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(6)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(6)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor MODULAR valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumerica(valor.val,valor.val, %)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t5,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(5)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(6.2)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor MAS valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumerica(valor.val,valor.val, +)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t6,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(5)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: MENOS valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionUnaria(valor.val,RESTA)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t7,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: CADENA</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionCadena(Ingresar el valor:)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = valor.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t20,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pprint: PRINT PARIZQ VARIABLE PARDER PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pprint.val = Print_(OperacionCopiaVariable($t20))</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pprint</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pprint.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pread: VARIABLE IGUAL READ PARIZQ PARDER PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pread.val = Read(Asignacion($t8))</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pread</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pread.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(5)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: ABS PARIZQ MENOS valor PARDER</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionUnaria(valor.val,ABSOLUTO)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t9,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>punset: UNSET PARIZQ VARIABLE PARDER PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>punset.val = unset($t1)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: punset</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = punset.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: VARIABLE</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionCopiaVariable($t4)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: NOT valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionUnaria(valor.val,NOT)</TD></TR></TABLE></TD></TR>
+<TR><TD>pif: IF PARIZQ operacion PARDER GOTO ID PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pif.val = If_(operacion.val,goto(main2))</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pif</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pif.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(1)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(1)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor AND valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionLogica(valor.val,valor.val,AND)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t10,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(1)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(1)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor OR valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionLogica(valor.val,valor.val,OR)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t11,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(1)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(1)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor XOR valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionLogica(valor.val,valor.val,XOR)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t12,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(1)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(0)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor AND valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionLogica(valor.val,valor.val,AND)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t13,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(5)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(5)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor MULTIPLICACION valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumerica(valor.val,valor.val, *)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($a0,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(5)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = valor.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($v5,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(7)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = valor.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($s0,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(5)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(7)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor MAS valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumerica(valor.val,valor.val, +)</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($ra,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(7)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = valor.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($sp,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
 <TR><TD>pmain: MAIN DOSPUNTOS sentencias</TD><TD><TABLE BORDER="0"><TR><TD>pmain.val = Main(sentencias.val)</TD></TR></TABLE></TD></TR>
 <TR><TD>instruccion: pmain</TD><TD><TABLE BORDER="0"><TR><TD>instrucion = pmain</TD></TR></TABLE></TD></TR>
 <TR><TD>instrucciones: instruccion</TD><TD><TABLE BORDER="0"><TR><TD>instru = []</TD></TR><TR><TD>instru.append(instruccion)</TD></TR><TR><TD>instrucciones.val = instru</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: Entero</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = OperacionNumero(10)</TD></TR></TABLE></TD></TR>
+<TR><TD>operacion: valor</TD><TD><TABLE BORDER="0"><TR><TD>operacion.val = valor.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pvariable: VARIABLE IGUAL operacion PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pvariable.val = Asignacion($t16,operacion.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pvariable</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pvariable.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sent = []</TD></TR><TR><TD>sent.append(sentencia)</TD></TR><TR><TD>sentencias.val = sent</TD></TR></TABLE></TD></TR>
+<TR><TD>pprint: PRINT PARIZQ VARIABLE PARDER PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pprint.val = Print_(OperacionCopiaVariable($t16))</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pprint</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pprint.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pprint: PRINT PARIZQ CADENA2 PARDER PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pprint.val = Print_(Nueva linea)</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pprint</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pprint.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pprint: PRINT PARIZQ VARIABLE PARDER PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pprint.val = Print_(OperacionCopiaVariable($t16))</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pprint</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pprint.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>pexit: EXIT PYCOMA</TD><TD><TABLE BORDER="0"><TR><TD>pexit.val = Exit()</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencia: pexit</TD><TD><TABLE BORDER="0"><TR><TD>sentencia.val = pexit.val</TD></TR></TABLE></TD></TR>
+<TR><TD>sentencias: sentencias1 sentencia</TD><TD><TABLE BORDER="0"><TR><TD>sentencias1.val.append(sentencia)</TD></TR><TR><TD>sentencias.val = sentencias1.val</TD></TR></TABLE></TD></TR>
+<TR><TD>petiqueta: ID DOSPUNTOS sentencias</TD><TD><TABLE BORDER="0"><TR><TD>petiqueta.val = Etiqueta(main2,sentencias.val)</TD></TR></TABLE></TD></TR>
+<TR><TD>instruccion: petiqueta</TD><TD><TABLE BORDER="0"><TR><TD>instrucion.val = petiqueta.val</TD></TR></TABLE></TD></TR>
+<TR><TD>instrucciones: intrucciones2 instruccion</TD><TD><TABLE BORDER="0"><TR><TD>instrucciones2.val.append(instruccion)</TD></TR><TR><TD>instrucciones.val = instrucciones2.val</TD></TR></TABLE></TD></TR>
 <TR><TD>initi: instrucciones</TD><TD><TABLE BORDER="0"><TR><TD>init=instrucciones</TD></TR></TABLE></TD></TR>
 </TABLE>
 >, ];

@@ -3,6 +3,27 @@ graph [ratio=fill];node [label="\N", fontsize=15, shape=plaintext];
 graph [bb="0,0,352,154"];
 arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>IDENTIFICADOR</TD><TD>VALOR</TD><TD>TIPO</TD><TD>AMBIENTE</TD><TD>ETIQUETA</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>
+<TR><TD>main</TD><TD>None</TD><TD>Tipo_Simbolo.MAIN</TD><TD>global</TD><TD>Tipo_Etiqueta.FUNCION</TD><TD>34</TD><TD>1</TD></TR>
+<TR><TD>main2</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.ETIQUETA</TD><TD>57</TD><TD>1</TD></TR>
+<TR><TD>$t2</TD><TD>12</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>36</TD><TD>2</TD></TR>
+<TR><TD>$t3</TD><TD>36</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>37</TD><TD>2</TD></TR>
+<TR><TD>$t4</TD><TD>1.0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>38</TD><TD>2</TD></TR>
+<TR><TD>$t5</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>39</TD><TD>2</TD></TR>
+<TR><TD>$t6</TD><TD>11.2</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>40</TD><TD>2</TD></TR>
+<TR><TD>$t7</TD><TD>-5</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>41</TD><TD>2</TD></TR>
+<TR><TD>$t20</TD><TD>Ingresar el valor:</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>42</TD><TD>2</TD></TR>
+<TR><TD>$t8</TD><TD>5</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>44</TD><TD>2</TD></TR>
+<TR><TD>$t9</TD><TD>5</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>45</TD><TD>2</TD></TR>
+<TR><TD>$t10</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>48</TD><TD>2</TD></TR>
+<TR><TD>$t11</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>49</TD><TD>2</TD></TR>
+<TR><TD>$t12</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>50</TD><TD>2</TD></TR>
+<TR><TD>$t13</TD><TD>0</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>51</TD><TD>2</TD></TR>
+<TR><TD>$a0</TD><TD>25</TD><TD>Tipo_Simbolo.PARAMETRO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>52</TD><TD>2</TD></TR>
+<TR><TD>$v5</TD><TD>5</TD><TD>Tipo_Simbolo.RETORNO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>53</TD><TD>2</TD></TR>
+<TR><TD>$s0</TD><TD>7</TD><TD>Tipo_Simbolo.PILA</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>54</TD><TD>2</TD></TR>
+<TR><TD>$ra</TD><TD>12</TD><TD>Tipo_Simbolo.SIMULADOR</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>55</TD><TD>2</TD></TR>
+<TR><TD>$sp</TD><TD>7</TD><TD>Tipo_Simbolo.PUNTERO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>56</TD><TD>2</TD></TR>
+<TR><TD>$t16</TD><TD>10</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>main2</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>58</TD><TD>2</TD></TR>
 </TABLE>
 >, ];
 }

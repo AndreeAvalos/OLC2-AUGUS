@@ -1033,8 +1033,10 @@ input = ""
 def parse(inpu) :
     global input
     global lexer
+    global index
     lexer.lineno=0
     input = inpu
+    index=0
     return parser.parse(inpu)
 
 def find_column(token):

@@ -1,0 +1,556 @@
+digraph{ 
+277[style = "filled" ; label = "init"] 
+275[style = "filled" ; label = "instruciones"] 
+276[style = "filled" ; label = "instruccion"] 
+227[style = "filled" ; label = "main"] 
+228[style = "filled" ; label = "main"] 
+229[style = "filled" ; label = ":"] 
+225[style = "filled" ; label = "sentencias"] 
+226[style = "filled" ; label = "sentencia"] 
+4[style = "filled" ; label = "pvariable"] 
+5[style = "filled" ; label = "$t1"] 
+6[style = "filled" ; label = "="] 
+3[style = "filled" ; label = "operacion"] 
+1[style = "filled" ; label = "5"] 
+2[style = "filled" ; label = "epsilon"] 
+7[style = "filled" ; label = ";"] 
+223[style = "filled" ; label = "sentenciasP"] 
+224[style = "filled" ; label = "sentencia"] 
+13[style = "filled" ; label = "pvariable"] 
+14[style = "filled" ; label = "$t2"] 
+15[style = "filled" ; label = "="] 
+12[style = "filled" ; label = "operacion"] 
+8[style = "filled" ; label = "6"] 
+10[style = "filled" ; label = "operacionP"] 
+11[style = "filled" ; label = "+"] 
+9[style = "filled" ; label = "6"] 
+16[style = "filled" ; label = ";"] 
+221[style = "filled" ; label = "sentenciasP"] 
+222[style = "filled" ; label = "sentencia"] 
+22[style = "filled" ; label = "pvariable"] 
+23[style = "filled" ; label = "$t3"] 
+24[style = "filled" ; label = "="] 
+21[style = "filled" ; label = "operacion"] 
+17[style = "filled" ; label = "6"] 
+19[style = "filled" ; label = "operacionP"] 
+20[style = "filled" ; label = "*"] 
+18[style = "filled" ; label = "6"] 
+25[style = "filled" ; label = ";"] 
+219[style = "filled" ; label = "sentenciasP"] 
+220[style = "filled" ; label = "sentencia"] 
+31[style = "filled" ; label = "pvariable"] 
+32[style = "filled" ; label = "$t4"] 
+33[style = "filled" ; label = "="] 
+30[style = "filled" ; label = "operacion"] 
+26[style = "filled" ; label = "6"] 
+28[style = "filled" ; label = "operacionP"] 
+29[style = "filled" ; label = "/"] 
+27[style = "filled" ; label = "6"] 
+34[style = "filled" ; label = ";"] 
+217[style = "filled" ; label = "sentenciasP"] 
+218[style = "filled" ; label = "sentencia"] 
+40[style = "filled" ; label = "pvariable"] 
+41[style = "filled" ; label = "$t5"] 
+42[style = "filled" ; label = "="] 
+39[style = "filled" ; label = "operacion"] 
+35[style = "filled" ; label = "6"] 
+37[style = "filled" ; label = "operacionP"] 
+38[style = "filled" ; label = "%"] 
+36[style = "filled" ; label = "6"] 
+43[style = "filled" ; label = ";"] 
+215[style = "filled" ; label = "sentenciasP"] 
+216[style = "filled" ; label = "sentencia"] 
+49[style = "filled" ; label = "pvariable"] 
+50[style = "filled" ; label = "$t6"] 
+51[style = "filled" ; label = "="] 
+48[style = "filled" ; label = "operacion"] 
+44[style = "filled" ; label = "5"] 
+46[style = "filled" ; label = "operacionP"] 
+47[style = "filled" ; label = "+"] 
+45[style = "filled" ; label = "6.2"] 
+52[style = "filled" ; label = ";"] 
+213[style = "filled" ; label = "sentenciasP"] 
+214[style = "filled" ; label = "sentencia"] 
+56[style = "filled" ; label = "pvariable"] 
+57[style = "filled" ; label = "$t7"] 
+58[style = "filled" ; label = "="] 
+54[style = "filled" ; label = "operacion"] 
+55[style = "filled" ; label = "-"] 
+53[style = "filled" ; label = "5"] 
+59[style = "filled" ; label = ";"] 
+211[style = "filled" ; label = "sentenciasP"] 
+212[style = "filled" ; label = "sentencia"] 
+63[style = "filled" ; label = "pvariable"] 
+64[style = "filled" ; label = "$t20"] 
+65[style = "filled" ; label = "="] 
+62[style = "filled" ; label = "operacion"] 
+60[style = "filled" ; label = "Ingresar el valor:"] 
+61[style = "filled" ; label = "epsilon"] 
+66[style = "filled" ; label = ";"] 
+209[style = "filled" ; label = "sentenciasP"] 
+210[style = "filled" ; label = "sentencia"] 
+67[style = "filled" ; label = "pprint"] 
+68[style = "filled" ; label = "print"] 
+69[style = "filled" ; label = "("] 
+70[style = "filled" ; label = "$t20"] 
+71[style = "filled" ; label = ")"] 
+72[style = "filled" ; label = ";"] 
+207[style = "filled" ; label = "sentenciasP"] 
+208[style = "filled" ; label = "sentencia"] 
+73[style = "filled" ; label = "pread"] 
+74[style = "filled" ; label = "$t8"] 
+75[style = "filled" ; label = "="] 
+76[style = "filled" ; label = "read"] 
+77[style = "filled" ; label = "("] 
+78[style = "filled" ; label = ")"] 
+79[style = "filled" ; label = ";"] 
+205[style = "filled" ; label = "sentenciasP"] 
+206[style = "filled" ; label = "sentencia"] 
+87[style = "filled" ; label = "pvariable"] 
+88[style = "filled" ; label = "$t9"] 
+89[style = "filled" ; label = "="] 
+81[style = "filled" ; label = "operacion"] 
+82[style = "filled" ; label = "abs"] 
+83[style = "filled" ; label = "("] 
+84[style = "filled" ; label = "-"] 
+80[style = "filled" ; label = "5"] 
+85[style = "filled" ; label = ")"] 
+86[style = "filled" ; label = ";"] 
+90[style = "filled" ; label = ";"] 
+203[style = "filled" ; label = "sentenciasP"] 
+204[style = "filled" ; label = "sentencia"] 
+91[style = "filled" ; label = "punset"] 
+92[style = "filled" ; label = "unset"] 
+93[style = "filled" ; label = "("] 
+94[style = "filled" ; label = "$t1"] 
+95[style = "filled" ; label = ")"] 
+96[style = "filled" ; label = ";"] 
+201[style = "filled" ; label = "sentenciasP"] 
+202[style = "filled" ; label = "sentencia"] 
+100[style = "filled" ; label = "pif"] 
+101[style = "filled" ; label = "if"] 
+102[style = "filled" ; label = "("] 
+98[style = "filled" ; label = "operacion"] 
+99[style = "filled" ; label = "!"] 
+97[style = "filled" ; label = "$t4"] 
+103[style = "filled" ; label = ")"] 
+104[style = "filled" ; label = "got"] 
+105[style = "filled" ; label = "main2"] 
+106[style = "filled" ; label = ";"] 
+199[style = "filled" ; label = "sentenciasP"] 
+200[style = "filled" ; label = "sentencia"] 
+112[style = "filled" ; label = "pvariable"] 
+113[style = "filled" ; label = "$t10"] 
+114[style = "filled" ; label = "="] 
+111[style = "filled" ; label = "operacion"] 
+107[style = "filled" ; label = "1"] 
+109[style = "filled" ; label = "operacionP"] 
+110[style = "filled" ; label = "&&"] 
+108[style = "filled" ; label = "1"] 
+115[style = "filled" ; label = ";"] 
+197[style = "filled" ; label = "sentenciasP"] 
+198[style = "filled" ; label = "sentencia"] 
+121[style = "filled" ; label = "pvariable"] 
+122[style = "filled" ; label = "$t11"] 
+123[style = "filled" ; label = "="] 
+120[style = "filled" ; label = "operacion"] 
+116[style = "filled" ; label = "1"] 
+118[style = "filled" ; label = "operacionP"] 
+119[style = "filled" ; label = "||"] 
+117[style = "filled" ; label = "1"] 
+124[style = "filled" ; label = ";"] 
+195[style = "filled" ; label = "sentenciasP"] 
+196[style = "filled" ; label = "sentencia"] 
+130[style = "filled" ; label = "pvariable"] 
+131[style = "filled" ; label = "$t12"] 
+132[style = "filled" ; label = "="] 
+129[style = "filled" ; label = "operacion"] 
+125[style = "filled" ; label = "1"] 
+127[style = "filled" ; label = "operacionP"] 
+128[style = "filled" ; label = "xor"] 
+126[style = "filled" ; label = "1"] 
+133[style = "filled" ; label = ";"] 
+193[style = "filled" ; label = "sentenciasP"] 
+194[style = "filled" ; label = "sentencia"] 
+139[style = "filled" ; label = "pvariable"] 
+140[style = "filled" ; label = "$t13"] 
+141[style = "filled" ; label = "="] 
+138[style = "filled" ; label = "operacion"] 
+134[style = "filled" ; label = "1"] 
+136[style = "filled" ; label = "operacionP"] 
+137[style = "filled" ; label = "&&"] 
+135[style = "filled" ; label = "0"] 
+142[style = "filled" ; label = ";"] 
+191[style = "filled" ; label = "sentenciasP"] 
+192[style = "filled" ; label = "sentencia"] 
+148[style = "filled" ; label = "pvariable"] 
+149[style = "filled" ; label = "$a0"] 
+150[style = "filled" ; label = "="] 
+147[style = "filled" ; label = "operacion"] 
+143[style = "filled" ; label = "5"] 
+145[style = "filled" ; label = "operacionP"] 
+146[style = "filled" ; label = "*"] 
+144[style = "filled" ; label = "5"] 
+151[style = "filled" ; label = ";"] 
+189[style = "filled" ; label = "sentenciasP"] 
+190[style = "filled" ; label = "sentencia"] 
+155[style = "filled" ; label = "pvariable"] 
+156[style = "filled" ; label = "$v5"] 
+157[style = "filled" ; label = "="] 
+154[style = "filled" ; label = "operacion"] 
+152[style = "filled" ; label = "5"] 
+153[style = "filled" ; label = "epsilon"] 
+158[style = "filled" ; label = ";"] 
+187[style = "filled" ; label = "sentenciasP"] 
+188[style = "filled" ; label = "sentencia"] 
+162[style = "filled" ; label = "pvariable"] 
+163[style = "filled" ; label = "$s0"] 
+164[style = "filled" ; label = "="] 
+161[style = "filled" ; label = "operacion"] 
+159[style = "filled" ; label = "7"] 
+160[style = "filled" ; label = "epsilon"] 
+165[style = "filled" ; label = ";"] 
+185[style = "filled" ; label = "sentenciasP"] 
+186[style = "filled" ; label = "sentencia"] 
+171[style = "filled" ; label = "pvariable"] 
+172[style = "filled" ; label = "$ra"] 
+173[style = "filled" ; label = "="] 
+170[style = "filled" ; label = "operacion"] 
+166[style = "filled" ; label = "5"] 
+168[style = "filled" ; label = "operacionP"] 
+169[style = "filled" ; label = "+"] 
+167[style = "filled" ; label = "7"] 
+174[style = "filled" ; label = ";"] 
+183[style = "filled" ; label = "sentenciasP"] 
+184[style = "filled" ; label = "sentencia"] 
+178[style = "filled" ; label = "pvariable"] 
+179[style = "filled" ; label = "$sp"] 
+180[style = "filled" ; label = "="] 
+177[style = "filled" ; label = "operacion"] 
+175[style = "filled" ; label = "7"] 
+176[style = "filled" ; label = "epsilon"] 
+181[style = "filled" ; label = ";"] 
+182[style = "filled" ; label = "epsilon"] 
+273[style = "filled" ; label = "instrucionesP"] 
+274[style = "filled" ; label = "instruccion"] 
+269[style = "filled" ; label = "etiqueta"] 
+270[style = "filled" ; label = "main2"] 
+271[style = "filled" ; label = ":"] 
+267[style = "filled" ; label = "sentencias"] 
+268[style = "filled" ; label = "sentencia"] 
+233[style = "filled" ; label = "pvariable"] 
+234[style = "filled" ; label = "$t16"] 
+235[style = "filled" ; label = "="] 
+232[style = "filled" ; label = "operacion"] 
+230[style = "filled" ; label = "10"] 
+231[style = "filled" ; label = "epsilon"] 
+236[style = "filled" ; label = ";"] 
+265[style = "filled" ; label = "sentenciasP"] 
+266[style = "filled" ; label = "sentencia"] 
+237[style = "filled" ; label = "pprint"] 
+238[style = "filled" ; label = "print"] 
+239[style = "filled" ; label = "("] 
+240[style = "filled" ; label = "$t16"] 
+241[style = "filled" ; label = ")"] 
+242[style = "filled" ; label = ";"] 
+263[style = "filled" ; label = "sentenciasP"] 
+264[style = "filled" ; label = "sentencia"] 
+243[style = "filled" ; label = "pprint"] 
+244[style = "filled" ; label = "print"] 
+245[style = "filled" ; label = "("] 
+246[style = "filled" ; label = "SALTOL"] 
+247[style = "filled" ; label = ")"] 
+248[style = "filled" ; label = ";"] 
+261[style = "filled" ; label = "sentenciasP"] 
+262[style = "filled" ; label = "sentencia"] 
+249[style = "filled" ; label = "pprint"] 
+250[style = "filled" ; label = "print"] 
+251[style = "filled" ; label = "("] 
+252[style = "filled" ; label = "$t16"] 
+253[style = "filled" ; label = ")"] 
+254[style = "filled" ; label = ";"] 
+259[style = "filled" ; label = "sentenciasP"] 
+260[style = "filled" ; label = "sentencia"] 
+255[style = "filled" ; label = "pexit"] 
+256[style = "filled" ; label = "exit"] 
+257[style = "filled" ; label = ";"] 
+258[style = "filled" ; label = "epsilon"] 
+272[style = "filled" ; label = "epsilon"] 
+277->275;
+275->276;
+276->227;
+227->228;
+227->229;
+227->225;
+225->226;
+226->4;
+4->5;
+4->6;
+4->3;
+3->1;
+3->2;
+4->7;
+225->223;
+223->224;
+224->13;
+13->14;
+13->15;
+13->12;
+12->8;
+12->10;
+10->11;
+10->9;
+13->16;
+223->221;
+221->222;
+222->22;
+22->23;
+22->24;
+22->21;
+21->17;
+21->19;
+19->20;
+19->18;
+22->25;
+221->219;
+219->220;
+220->31;
+31->32;
+31->33;
+31->30;
+30->26;
+30->28;
+28->29;
+28->27;
+31->34;
+219->217;
+217->218;
+218->40;
+40->41;
+40->42;
+40->39;
+39->35;
+39->37;
+37->38;
+37->36;
+40->43;
+217->215;
+215->216;
+216->49;
+49->50;
+49->51;
+49->48;
+48->44;
+48->46;
+46->47;
+46->45;
+49->52;
+215->213;
+213->214;
+214->56;
+56->57;
+56->58;
+56->54;
+54->55;
+54->53;
+56->59;
+213->211;
+211->212;
+212->63;
+63->64;
+63->65;
+63->62;
+62->60;
+62->61;
+63->66;
+211->209;
+209->210;
+210->67;
+67->68;
+67->69;
+67->70;
+67->71;
+67->72;
+209->207;
+207->208;
+208->73;
+73->74;
+73->75;
+73->76;
+73->77;
+73->78;
+73->79;
+207->205;
+205->206;
+206->87;
+87->88;
+87->89;
+87->81;
+81->82;
+81->83;
+81->84;
+81->80;
+81->85;
+81->86;
+87->90;
+205->203;
+203->204;
+204->91;
+91->92;
+91->93;
+91->94;
+91->95;
+91->96;
+203->201;
+201->202;
+202->100;
+100->101;
+100->102;
+100->98;
+98->99;
+98->97;
+100->103;
+100->104;
+100->105;
+100->106;
+201->199;
+199->200;
+200->112;
+112->113;
+112->114;
+112->111;
+111->107;
+111->109;
+109->110;
+109->108;
+112->115;
+199->197;
+197->198;
+198->121;
+121->122;
+121->123;
+121->120;
+120->116;
+120->118;
+118->119;
+118->117;
+121->124;
+197->195;
+195->196;
+196->130;
+130->131;
+130->132;
+130->129;
+129->125;
+129->127;
+127->128;
+127->126;
+130->133;
+195->193;
+193->194;
+194->139;
+139->140;
+139->141;
+139->138;
+138->134;
+138->136;
+136->137;
+136->135;
+139->142;
+193->191;
+191->192;
+192->148;
+148->149;
+148->150;
+148->147;
+147->143;
+147->145;
+145->146;
+145->144;
+148->151;
+191->189;
+189->190;
+190->155;
+155->156;
+155->157;
+155->154;
+154->152;
+154->153;
+155->158;
+189->187;
+187->188;
+188->162;
+162->163;
+162->164;
+162->161;
+161->159;
+161->160;
+162->165;
+187->185;
+185->186;
+186->171;
+171->172;
+171->173;
+171->170;
+170->166;
+170->168;
+168->169;
+168->167;
+171->174;
+185->183;
+183->184;
+184->178;
+178->179;
+178->180;
+178->177;
+177->175;
+177->176;
+178->181;
+183->182;
+275->273;
+273->274;
+274->269;
+269->270;
+269->271;
+269->267;
+267->268;
+268->233;
+233->234;
+233->235;
+233->232;
+232->230;
+232->231;
+233->236;
+267->265;
+265->266;
+266->237;
+237->238;
+237->239;
+237->240;
+237->241;
+237->242;
+265->263;
+263->264;
+264->243;
+243->244;
+243->245;
+243->246;
+243->247;
+243->248;
+263->261;
+261->262;
+262->249;
+249->250;
+249->251;
+249->252;
+249->253;
+249->254;
+261->259;
+259->260;
+260->255;
+255->256;
+255->257;
+259->258;
+273->272;
+
+}
