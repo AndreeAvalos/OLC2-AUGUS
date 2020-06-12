@@ -3,18 +3,18 @@ graph [ratio=fill];node [label="\N", fontsize=15, shape=plaintext];
 graph [bb="0,0,352,154"];
 arset [label=<<TABLE ALIGN="LEFT">
 <TR><TD>IDENTIFICADOR</TD><TD>VALOR</TD><TD>TIPO</TD><TD>AMBIENTE</TD><TD>ETIQUETA</TD><TD>LINEA</TD><TD>COLUMNA</TD></TR>
-<TR><TD>main</TD><TD>None</TD><TD>Tipo_Simbolo.MAIN</TD><TD>global</TD><TD>Tipo_Etiqueta.MAIN</TD><TD>3</TD><TD>1</TD></TR>
-<TR><TD>ret0</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.CONTROL</TD><TD>11</TD><TD>1</TD></TR>
-<TR><TD>ack</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.PROCEDIMIENTO</TD><TD>14</TD><TD>1</TD></TR>
-<TR><TD>ret1</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.PROCEDIMIENTO</TD><TD>23</TD><TD>1</TD></TR>
-<TR><TD>ret2</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.CONTROL</TD><TD>31</TD><TD>1</TD></TR>
-<TR><TD>ret3</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.FUNCION</TD><TD>40</TD><TD>1</TD></TR>
-<TR><TD>$s0</TD><TD>ARREGLO</TD><TD>Tipo_Simbolo.PILA</TD><TD>main</TD><TD>Tipo_Etiqueta.ARREGLONUMERICO</TD><TD>4</TD><TD>2</TD></TR>
-<TR><TD>$sp</TD><TD>-1</TD><TD>Tipo_Simbolo.PUNTERO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>5</TD><TD>2</TD></TR>
-<TR><TD>$a0</TD><TD>0</TD><TD>Tipo_Simbolo.PARAMETRO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>6</TD><TD>2</TD></TR>
-<TR><TD>$a1</TD><TD>29</TD><TD>Tipo_Simbolo.PARAMETRO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>7</TD><TD>2</TD></TR>
-<TR><TD>$t4</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>ack</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>19</TD><TD>2</TD></TR>
-<TR><TD>$v0</TD><TD>29</TD><TD>Tipo_Simbolo.RETORNO</TD><TD>ret3</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>41</TD><TD>2</TD></TR>
+<TR><TD>main</TD><TD>None</TD><TD>Tipo_Simbolo.MAIN</TD><TD>global</TD><TD>Tipo_Etiqueta.MAIN</TD><TD>1</TD><TD>1</TD></TR>
+<TR><TD>ret0</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.CONTROL</TD><TD>14</TD><TD>1</TD></TR>
+<TR><TD>ack</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.PROCEDIMIENTO</TD><TD>18</TD><TD>1</TD></TR>
+<TR><TD>ret1</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.PROCEDIMIENTO</TD><TD>27</TD><TD>1</TD></TR>
+<TR><TD>ret2</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.CONTROL</TD><TD>35</TD><TD>1</TD></TR>
+<TR><TD>ret3</TD><TD>None</TD><TD>Tipo_Simbolo.ETIQUETA</TD><TD>global</TD><TD>Tipo_Etiqueta.FUNCION</TD><TD>44</TD><TD>1</TD></TR>
+<TR><TD>$s0</TD><TD>ARREGLO</TD><TD>Tipo_Simbolo.PILA</TD><TD>main</TD><TD>Tipo_Etiqueta.ARREGLONUMERICO</TD><TD>2</TD><TD>3</TD></TR>
+<TR><TD>$sp</TD><TD>-1</TD><TD>Tipo_Simbolo.PUNTERO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>4</TD><TD>3</TD></TR>
+<TR><TD>$a0</TD><TD>0</TD><TD>Tipo_Simbolo.PARAMETRO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>6</TD><TD>3</TD></TR>
+<TR><TD>$a1</TD><TD>9</TD><TD>Tipo_Simbolo.PARAMETRO</TD><TD>main</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>8</TD><TD>3</TD></TR>
+<TR><TD>$t4</TD><TD>1</TD><TD>Tipo_Simbolo.TEMPORAL</TD><TD>ack</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>24</TD><TD>2</TD></TR>
+<TR><TD>$v0</TD><TD>9</TD><TD>Tipo_Simbolo.RETORNO</TD><TD>ret3</TD><TD>Tipo_Etiqueta.VARIABLE</TD><TD>45</TD><TD>2</TD></TR>
 </TABLE>
 >, ];
 }

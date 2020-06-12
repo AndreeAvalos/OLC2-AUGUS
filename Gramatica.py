@@ -8,9 +8,18 @@ from Recolectar import TokenError
 
 index =0 
 lst_errores = []
+
+
+
 def cmd(commando):
     subprocess.run(commando, shell=True)
 
+class NodoGramatical:
+    def __init__(self, produccion):
+        self.produccion = produccion
+        self.reglas = []
+    def add(self,regla):
+        self.reglas.append(regla)
 
 class Nodo:
     def __init__(self,nodoast,nodog):
@@ -24,6 +33,7 @@ class NodoG:
         self.childs= childs
     def add(self, child):
         self.childs.append(child)
+
 
 def agregarError(tipo,descripcion,line,column):
     global lst_errores
@@ -66,15 +76,15 @@ def graficarErrores():
         cmd("dot -Tpng ELS.dot -o ELS.png")
 
 def construirAST(nodo):
-    #try:
+    try:
         file = open("ASPAscendente.dot", "w")
         file.write("digraph{ \n")
         imprimirNodos(nodo,file)
         graficar(nodo,file)
         file.write("\n}")
-    #except:
-        #print("ERROR")
-    #finally:
+    except:
+        print("ERROR")
+    finally:
         file.close()
         cmd("dot -Tpng ASPAscendente.dot -o ASPAscendente.png")
 
@@ -89,7 +99,38 @@ def graficar(nodo,file):
         for child in nodo.childs:
             file.write(str(nodo.index)+"->"+str(child.index)+";\n")
             graficar(child,file)
-    
+
+lstGrmaticales = [] #lista donde se almacenaran todas las producciones y sus reglas semanticas
+
+def construirReporteGramatical():
+    try:
+        file = open("ReporteGramatical.dot", "w")
+        file.write("digraph tablaErrores{\n")
+        file.write("graph [ratio=fill];node [label=\"\\N\", fontsize=15, shape=plaintext];\n")
+        file.write("graph [bb=\"0,0,352,154\"];\n")
+        file.write("arset [label=<")
+        file.write("<TABLE ALIGN=\"LEFT\">\n")
+        file.write("<TR><TD>Produccion</TD><TD>Reglas Semanticas</TD></TR>\n")
+        for nodo in lstGrmaticales:
+            file.write("<TR>")
+            file.write("<TD>")
+            file.write(nodo.produccion.replace("->",":"))
+            file.write("</TD>")
+            file.write("<TD><TABLE BORDER=\"0\">")
+            for regla in nodo.reglas:
+                file.write("<TR><TD>")
+                file.write(regla)
+                file.write("</TD></TR>")
+            file.write("</TABLE></TD>")
+            file.write("</TR>\n")
+        file.write("</TABLE>")
+        file.write("\n>, ];\n")
+        file.write("}")
+    except:
+        print("ERROR AL ESCRIBIR TABLA")
+    finally:
+        file.close()
+        cmd("dot -Tpng ReporteGramatical.dot -o ReporteGramatical.png")
 
 reservadas = {
     #Tipos para castear
@@ -110,8 +151,6 @@ reservadas = {
 
 tokens = [
     'PYCOMA',
-    'LLAVEIZQ',
-    'LLAVEDER',
     'PARIZQ',
     'PARDER',
     'CORIZQ',
@@ -125,7 +164,6 @@ tokens = [
     'MENORIGUAL',
     'DECIMAL',
     'ENTERO',
-    'CARACTER',
     'CADENA',
     'CADENA2',
     'ID',
@@ -144,14 +182,11 @@ tokens = [
     'SHIFTIZQ',
     'SHIFTDER',
     'DOSPUNTOS',
-    'VARIABLE',
-    'ESCAPE'
+    'VARIABLE'
 ] + list(reservadas.values())
 
 t_PYCOMA = r';'
 t_DOSPUNTOS = r':'
-t_LLAVEIZQ =r'{'
-t_LLAVEDER = r'}'
 t_PARIZQ = r'\('
 t_PARDER = r'\)'
 t_CORIZQ = r'\['
@@ -229,7 +264,7 @@ def t_COMENTARIO(t):
 
 def t_nuevalinea(t):
     r'\n+'
-    t.lexer.lineno += len(t.value)
+    t.lexer.lineno += t.value.count("\n")
     
 def t_error(t):
     #editar para agregar a una tabla
@@ -237,7 +272,6 @@ def t_error(t):
     agregarError('Lexico',"Caracter \'{0}\' ilegal".format(t.value[0]), t.lexer.lineno+1,find_column(t))
     t.lexer.skip(1)
 
-lexer = lex.lex()
 
 def getIndex():
     global index
@@ -246,7 +280,11 @@ def getIndex():
 
 def p_init(p):
     'init : instrucciones'
-    print('init : instrucciones; init = instruccion')
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("initi-> instrucciones")
+    gramatical.add("init=instrucciones")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo2 = NodoG(getIndex(),"init", [])
     for item in p[1].nodo:
         nodo2.add(item)
@@ -254,19 +292,32 @@ def p_init(p):
 
 def p_instrucciones(p):
     ''' instrucciones : instrucciones instruccion '''
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("instrucciones-> intrucciones2 instruccion")
+    gramatical.add("instrucciones2.val.append(instruccion)")
+    gramatical.add("instrucciones.val = instrucciones2.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     p[1].instruccion.append(p[2].instruccion)
     nodo2 = NodoG(getIndex(),"instruccion",[])
     nodo2.add(p[2].nodo)
     p[1].nodo.append(nodo2)
     nodo = NodoG(getIndex(),"instrucciones",p[1].nodo)
     p[0] = Nodo(p[1].instruccion,[nodo])
-    print("instrucciones : instrucciones instruccion; {instrucciones2.append(instruccion); instrucciones = instrucciones2}")
+   
 
         
 def p_instrucciones2(p):
     ' instrucciones : instruccion '
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("instrucciones-> instruccion")
+    gramatical.add("instru = []")
+    gramatical.add("instru.append(instruccion)")
+    gramatical.add("instrucciones.val = instru")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     p[0]= Nodo([p[1].instruccion],[NodoG(getIndex(),"instruccion",[p[1].nodo])])
-    print("instrucciones : instruccion; instrucciones = new lista; instrucciones.append(instruccion)")
+    
 
 
 def p_instruccion(p):
@@ -276,38 +327,67 @@ def p_instruccion(p):
     
 def p_pmain(p):
     'pmain : MAIN DOSPUNTOS sentencias '
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("pmain-> MAIN DOSPUNTOS sentencias")
+    gramatical.add("pmain.val = Main(sentencias.val)")
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("instruccion-> pmain")
+    gramatical.add("instrucion = pmain")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo2 = NodoG(getIndex(),"pmain",[])
     nodo2.add(NodoG(getIndex(),"main", None))
     nodo2.add(NodoG(getIndex(),":", None))
     for item in p[3].nodo:
         nodo2.add(item)
     p[0] = Nodo(Main(p[3].instruccion,p.lineno(1),find_column(p.slice[1])),nodo2) 
-    print("pmain : MAIN DOSPUNTOS sentencias; acciones ")
-    print("instruccion : pmain; instruccion = pmain")
     
 def p_pmain2(p):
     'pmain : MAIN DOSPUNTOS empty '
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("pmain-> MAIN DOSPUNTOS epsilon")
+    gramatical.add("pmain.val = Main(epsilon)")
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("instruccion-> pmain")
+    gramatical.add("instrucion.val = pmain.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo2 = NodoG(getIndex(),"pmain",[])
     nodo2.add(NodoG(getIndex(),"main", None))
     nodo2.add(NodoG(getIndex(),":", None))
     p[0] = Nodo(Main(Vacio(),p.lineno(1),find_column(p.slice[1])),nodo2)
 
+
 def p_petiqueta(p):
     'petiqueta : ID DOSPUNTOS sentencias'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("petiqueta-> ID DOSPUNTOS sentencias")
+    gramatical.add("petiqueta.val = Etiqueta({0},sentencias.val)".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("instruccion-> petiqueta")
+    gramatical.add("instrucion.val = petiqueta.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo2 = NodoG(getIndex(),"petiqueta",[])
     nodo2.add(NodoG(getIndex(),p[1], None))
     nodo2.add(NodoG(getIndex(),":", None))
     for item in p[3].nodo:
         nodo2.add(item)
     p[0] = Nodo(Etiqueta(p[1],p[3].instruccion,p.lineno(1),find_column(p.slice[1])),nodo2)
-    print("petiqueta : "+p[1]+" DOSPUNTOS sentencias; acciones ")
-    print("instruccion : petiqueta; instruccion = petiqueta")
 
 
 def p_petiqueta2(p):
-    'pmain : ID DOSPUNTOS empty '
-    nodo2 = NodoG(getIndex(),"pmain",[])
-    nodo2.add(NodoG(getIndex(),"main", None))
+    'petiqueta : ID DOSPUNTOS empty '
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("petiqueta-> ID DOSPUNTOS epsilon")
+    gramatical.add("petiqueta.val = Etiqueta({0},epsilon)".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("instruccion-> petiqueta")
+    gramatical.add("instrucion.val = petiqueta.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
+    nodo2 = NodoG(getIndex(),"petiqueta",[])
+    nodo2.add(NodoG(getIndex(),p[1], None))
     nodo2.add(NodoG(getIndex(),":", None))
     p[0] = Nodo(Etiqueta(p[1],Vacio(),p.lineno(1),find_column(p.slice[1])),nodo2)
 
@@ -318,20 +398,32 @@ def p_empty(p):
 
 def p_sentencias(p):
     'sentencias    :   sentencias sentencia'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("sentencias-> sentencias1 sentencia")
+    gramatical.add("sentencias1.val.append(sentencia)")
+    gramatical.add("sentencias.val = sentencias1.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     p[1].instruccion.append(p[2].instruccion)
     nodo2 = NodoG(getIndex(),"sentencia",[])
     nodo2.add(p[2].nodo)
     p[1].nodo.append(nodo2)
     nodo = NodoG(getIndex(),"sentencias",p[1].nodo)
     p[0] = Nodo(p[1].instruccion,[nodo])
-    print("sentencias : sentencias sentencia; sentencias2.append(sentencia); sentencias = sentencias2")
 
 def p_sentencias2(p):
     'sentencias    :   sentencia'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("sentencias-> sentencia")
+    gramatical.add("sent = []")
+    gramatical.add("sent.append(sentencia)")
+    gramatical.add("sentencias.val = sent")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     arreglo = []
     arreglo.append(p[1].instruccion)
     p[0]= Nodo(arreglo,[NodoG(getIndex(),"sentencia",[p[1].nodo])])
-    print("sentencias : sentencia; sentencias2 = new lista; sentencias2.append(sentencia)")
+
 
 def p_sentencia(p):
     '''sentencia    : pvariable
@@ -350,6 +442,14 @@ def p_sentencia(p):
 
 def p_array(p):
     'parray :   VARIABLE IGUAL ARRAY PARIZQ PARDER PYCOMA'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("parray-> VARIABLE IGUAL ARRAY PARIZQ PARDER PYCOMA")
+    gramatical.add("parray.val = DeclararArreglo({0})".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> parray")
+    gramatical.add("sentencia.val = parray.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"parray",[])
     nodo.add(NodoG(getIndex(),p[1], None))
     nodo.add(NodoG(getIndex(),"=", None))
@@ -359,6 +459,14 @@ def p_array(p):
 
 def p_pvariable(p):
     'pvariable : VARIABLE IGUAL operacion PYCOMA'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("pvariable-> VARIABLE IGUAL operacion PYCOMA")
+    gramatical.add("pvariable.val = Asignacion({0},operacion.val)".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> pvariable")
+    gramatical.add("sentencia.val = pvariable.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"pvariable",[])
     nodo.add(NodoG(getIndex(),p[1], None))
     nodo.add(NodoG(getIndex(),"=", None))
@@ -366,10 +474,17 @@ def p_pvariable(p):
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(Asignacion(p[1],p[3].instruccion,Tipo_Etiqueta.VARIABLE,p.lineno(1),find_column(p.slice[1])),nodo)
     
-    print('sentencia: pvariable; { sentencia = pvariable}')
 
 def p_arreglo(p):
     'parreglo   :   VARIABLE dimensiones IGUAL operacion PYCOMA'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("parreglo-> VARIABLE dimensiones IGUAL operacion PYCOMA")
+    gramatical.add("pvariable.val = Asignacion({0},operacion.val)".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> parreglo")
+    gramatical.add("sentencia.val = parreglo.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"pvariable",[])
     nodo.add(NodoG(getIndex(),p[1], None))
     for item in p[2].nodo:
@@ -381,27 +496,51 @@ def p_arreglo(p):
 
 def p_dimensiones(p):
     'dimensiones    :   dimensiones dimension'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("dimensiones-> dimensiones1 dimension")
+    gramatical.add("dimensiones1.val.append(dimension)")
+    gramatical.add("dimensiones.val = dimensiones1.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     p[1].instruccion.append(p[2].instruccion)
     nodo2 = NodoG(getIndex(),"dimension",[])
     nodo2.add(p[2].nodo)
     p[1].nodo.append(nodo2)
     nodo = NodoG(getIndex(),"dimensiones",p[1].nodo)
     p[0] = Nodo(p[1].instruccion,[nodo])
-    print("dimensiones : dimensiones dimension; dimensiones.append(dimension);")
 
 def p_dimensiones2(p):
     'dimensiones    :   dimension'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("dimensiones-> dimension")
+    gramatical.add("dime = []")
+    gramatical.add("dime.append(dimension)")
+    gramatical.add("dimensiones.val = dime")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     arreglo = []
     arreglo.append(p[1].instruccion)
     p[0]= Nodo(arreglo,[NodoG(getIndex(),"dimension",[p[1].nodo])])
-    print("dimensiones : dimension; dimensiones = new lista; dimensiones.append(dimension)")
 
 def p_dimension(p):
     'dimension  :   CORIZQ valor CORDER'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("dimension-> CORIZQ valor CORDER")
+    gramatical.add("dimension.val = valor.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     p[0] = p[2]
 
 def p_prefencia(p):
     'preferencia    :  VARIABLE IGUAL ANDBIT VARIABLE PYCOMA '''
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("preferencia-> VARIABLE IGUAL ANDBIT VARIABLE PYCOMA ")
+    gramatical.add("preferencia.val = Referencia({0},OperacionVariable({1}))".format(p[1],p[4]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> preferencia")
+    gramatical.add("sentencia.val = preferencia.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"preferencia",[])
     nodo.add(NodoG(getIndex(),p[1], None))
     nodo.add(NodoG(getIndex(),"=", None))
@@ -409,27 +548,48 @@ def p_prefencia(p):
     nodo.add(NodoG(getIndex(),p[4], None))
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(Referencia(p[1],OperacionVariable(p[4],p.lineno(4),find_column(p.slice[4])),Tipo_Etiqueta.VARIABLE,p.lineno(1),find_column(p.slice[1])),nodo)
-    print('sentencia: preferencia; { sentencia = preferencia}')
 
 def p_pgoto(p):
     'pgoto  :   GOTO ID PYCOMA'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("pgoto-> GOTO ID PYCOMA")
+    gramatical.add("pgoto.val = Goto({0})".format(p[2]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> pgoto")
+    gramatical.add("sentencia.val = pgoto.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"pgoto",[])
     nodo.add(NodoG(getIndex(),"goto", None))
     nodo.add(NodoG(getIndex(),p[2], None))
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(Goto(p[2],p.lineno(1),find_column(p.slice[1])), nodo)
-    print('sentencia: pgoto; { sentencia = pgoto}')
 
 def p_psalir(p):
     'pexit  :   EXIT PYCOMA'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("pexit-> EXIT PYCOMA")
+    gramatical.add("pexit.val = Exit()")
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> pexit")
+    gramatical.add("sentencia.val = pexit.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"pexit",[])
     nodo.add(NodoG(getIndex(),p[1], None))
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(Exit(p.lineno(1),find_column(p.slice[1])), nodo)
-    print('sentencia: pexit; { sentencia = pexit}')
     
 def p_punset(p):
     'punset  :   UNSET PARIZQ VARIABLE PARDER PYCOMA'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("punset-> UNSET PARIZQ VARIABLE PARDER PYCOMA")
+    gramatical.add("punset.val = unset({0})".format(p[3]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> punset")
+    gramatical.add("sentencia.val = punset.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"punset",[])
     nodo.add(NodoG(getIndex(),"unset", None))
     nodo.add(NodoG(getIndex(),"(", None))
@@ -437,10 +597,17 @@ def p_punset(p):
     nodo.add(NodoG(getIndex(),")", None))
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(UnSet(p[3],p.lineno(1),find_column(p.slice[1])), nodo)
-    print('sentencia: punset; { sentencia = punset}')
     
 def p_pif(p):
     'pif    :   IF PARIZQ operacion PARDER GOTO ID PYCOMA '
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("pif-> IF PARIZQ operacion PARDER GOTO ID PYCOMA")
+    gramatical.add("pif.val = If_(operacion.val,goto({0}))".format(p[6]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> pif")
+    gramatical.add("sentencia.val = pif.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"pif",[])
     nodo.add(NodoG(getIndex(),"if", None))
     nodo.add(NodoG(getIndex(),"(", None))
@@ -450,23 +617,19 @@ def p_pif(p):
     nodo.add(NodoG(getIndex(),p[6], None))
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(If_(p[3].instruccion,Goto(p[6],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
-    print('sentencia: pif; { sentencia = pif}')
 
-def p_pprint(p):
-    '''pprint   :   PRINT PARIZQ VARIABLE PARDER PYCOMA
-    '''
-    nodo = NodoG(getIndex(),"pprint",[])
-    nodo.add(NodoG(getIndex(),"print", None))
-    nodo.add(NodoG(getIndex(),"(", None))
 
-    nodo.add(NodoG(getIndex(),p[3], None))
-    nodo.add(NodoG(getIndex(),")", None))
-    nodo.add(NodoG(getIndex(),";", None))
-    p[0] = Nodo(Print_(OperacionCopiaVariable(p[3],p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
 
-    print('sentencia: pprint7; { sentencia = pprint}')
 def p_pprint3(p):
     'pprint :  PRINT PARIZQ VARIABLE dimensiones PARDER PYCOMA'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("pprint-> PRINT PARIZQ VARIABLE dimensiones PARDER PYCOMA")
+    gramatical.add("pprint.val = Print_(OperacionArreglo({0},dimensiones.val))".format(p[3]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> pprint")
+    gramatical.add("sentencia.val = pprint.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"pprint",[])
     nodo.add(NodoG(getIndex(),"print", None))
     nodo.add(NodoG(getIndex(),"(", None))
@@ -482,19 +645,34 @@ def p_pprint3(p):
 
 
 def p_pprint2(p):
-    '''pprint   :   PRINT PARIZQ CADENA2 PARDER PYCOMA
+    '''pprint   :   PRINT PARIZQ valor PARDER PYCOMA
     '''
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("pprint-> PRINT PARIZQ valor PARDER PYCOMA")
+    gramatical.add("pprint.val = Print_(Nueva linea)")
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> pprint")
+    gramatical.add("sentencia.val = pprint.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"pprint",[])
     nodo.add(NodoG(getIndex(),"print", None))
     nodo.add(NodoG(getIndex(),"(", None))
-    nodo.add(NodoG(getIndex(),'SALTOL', None))
+    nodo.add(p[3].nodo)
     nodo.add(NodoG(getIndex(),")", None))
     nodo.add(NodoG(getIndex(),";", None))
-    p[0] = Nodo(Print_("-",p.lineno(1),find_column(p.slice[1])), nodo)
-    print('sentencia: pprint7; { sentencia = pprint}')
+    p[0] = Nodo(Print_(p[3].instruccion, p.lineno(1),find_column(p.slice[1])), nodo)
 
 def p_pread(p):
     'pread  :   VARIABLE IGUAL READ PARIZQ PARDER PYCOMA'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("pread-> VARIABLE IGUAL READ PARIZQ PARDER PYCOMA")
+    gramatical.add("pread.val = Read(Asignacion({0}))".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    gramatical = NodoGramatical("sentencia-> pread")
+    gramatical.add("sentencia.val = pread.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"pread",[])
     nodo.add(NodoG(getIndex(),p[1], None))
     nodo.add(NodoG(getIndex(),"=", None))
@@ -503,7 +681,6 @@ def p_pread(p):
     nodo.add(NodoG(getIndex(),")", None))
     nodo.add(NodoG(getIndex(),";", None))
     p[0] = Nodo(Read(Asignacion(p[1],None,Tipo_Etiqueta.VARIABLE,p.lineno(1),find_column(p.slice[1])),p.lineno(1),find_column(p.slice[1])), nodo)
-    print('sentencia: pread; { sentencia = pread}')
 
 
 def p_operaciones(p):
@@ -518,11 +695,40 @@ def p_operaciones(p):
     nodo.add(NodoG(getIndex(),p[2], None))
     nodo.add(p[3].nodo)
 
-    if p[2] == '+': p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.SUMA,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '-': p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.RESTA,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '*': p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.MULTIPLICACION,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '/': p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.DIVISION,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '%': p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.MODULAR,p.lineno(2),find_column(p.slice[2])),nodo)
+    if p[2] == '+':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor MAS valor")
+        gramatical.add("operacion.val = OperacionNumerica(valor.val,valor.val, +)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.SUMA,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '-':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor MENOS valor")
+        gramatical.add("operacion.val = OperacionNumerica(valor.val,valor.val, -)")
+        lstGrmaticales.append(gramatical)
+        p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.RESTA,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '*':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor MULTIPLICACION valor")
+        gramatical.add("operacion.val = OperacionNumerica(valor.val,valor.val, *)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.MULTIPLICACION,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '/':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor DIVISION valor")
+        gramatical.add("operacion.val = OperacionNumerica(valor.val,valor.val, /)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.DIVISION,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '%':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor MODULAR valor")
+        gramatical.add("operacion.val = OperacionNumerica(valor.val,valor.val, %)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionNumerica(p[1].instruccion,p[3].instruccion,OPERACION_NUMERICA.MODULAR,p.lineno(2),find_column(p.slice[2])),nodo)
 
 def p_operaciones2(p):
     ''' operacion   :   NOT valor
@@ -533,10 +739,27 @@ def p_operaciones2(p):
     nodo.add(NodoG(getIndex(),p[1], None))
     nodo.add(p[2].nodo)
 
-    if p[1] == '!': p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_LOGICA.NOT,p.lineno(1),find_column(p.slice[1])),nodo)
-    elif p[1] == '~': p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_BIT.NOT,p.lineno(1),find_column(p.slice[1])),nodo)
-    elif p[1] == '-': p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_NUMERICA.RESTA,p.lineno(1),find_column(p.slice[1])),nodo)
-    elif p[1] == '&': p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_BIT.APUNTAR,p.lineno(1),find_column(p.slice[1])),nodo)
+    if p[1] == '!':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> NOT valor")
+        gramatical.add("operacion.val = OperacionUnaria(valor.val,NOT)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_LOGICA.NOT,p.lineno(1),find_column(p.slice[1])),nodo)
+    elif p[1] == '~':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> NOTBIT valor")
+        gramatical.add("operacion.val = OperacionUnaria(valor.val,NOTBIT)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_BIT.NOT,p.lineno(1),find_column(p.slice[1])),nodo)
+    elif p[1] == '-':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> MENOS valor")
+        gramatical.add("operacion.val = OperacionUnaria(valor.val,RESTA)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER 
+        p[0] = Nodo(OperacionUnaria(p[2].instruccion,OPERACION_NUMERICA.RESTA,p.lineno(1),find_column(p.slice[1])),nodo)
 
 
 def p_operaciones3(p):
@@ -549,9 +772,27 @@ def p_operaciones3(p):
     nodo.add(NodoG(getIndex(),p[2], None))
     nodo.add(p[3].nodo)
 
-    if p[2] == '&&': p[0] = Nodo(OperacionLogica(p[1].instruccion,p[3].instruccion,OPERACION_LOGICA.AND,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '||': p[0] = Nodo(OperacionLogica(p[1].instruccion,p[3].instruccion,OPERACION_LOGICA.OR,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == 'xor': p[0] = Nodo(OperacionLogica(p[1].instruccion,p[3].instruccion,OPERACION_LOGICA.XOR,p.lineno(2),find_column(p.slice[2])),nodo)
+    if p[2] == '&&':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor AND valor")
+        gramatical.add("operacion.val = OperacionLogica(valor.val,valor.val,AND)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionLogica(p[1].instruccion,p[3].instruccion,OPERACION_LOGICA.AND,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '||':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor OR valor")
+        gramatical.add("operacion.val = OperacionLogica(valor.val,valor.val,OR)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionLogica(p[1].instruccion,p[3].instruccion,OPERACION_LOGICA.OR,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == 'xor':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor XOR valor")
+        gramatical.add("operacion.val = OperacionLogica(valor.val,valor.val,XOR)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionLogica(p[1].instruccion,p[3].instruccion,OPERACION_LOGICA.XOR,p.lineno(2),find_column(p.slice[2])),nodo)
 
 def p_operaciones4(p):
     ''' operacion   :   valor IGUALIGUAL valor
@@ -566,16 +807,57 @@ def p_operaciones4(p):
     nodo.add(NodoG(getIndex(),p[2], None))
     nodo.add(p[3].nodo)
 
-    if p[2] == '==': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.IGUAL,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '!=': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.DIFERENTE,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '>=': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MAYORQUE,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '<=': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MENOR,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '>': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MAYOR,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '<': p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MENOR,p.lineno(2),find_column(p.slice[2])),nodo)
+    if p[2] == '==':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor IGUALIGUAL valor")
+        gramatical.add("operacion.val = OperacionRelacional(valor.val,valor.val,IGUALIGUAL)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.IGUAL,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '!=':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor DIFERENTE valor")
+        gramatical.add("operacion.val = OperacionRelacional(valor.val,valor.val,DIFERENTE)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.DIFERENTE,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '>=':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor MAYORIGUAL valor")
+        gramatical.add("operacion.val = OperacionRelacional(valor.val,valor.val,MAYORIGUAL)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MAYORQUE,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '<=':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor MENORIGUAL valor")
+        gramatical.add("operacion.val = OperacionRelacional(valor.val,valor.val,MENORIGUAL)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MENOR,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '>':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor MAYOR valor")
+        gramatical.add("operacion.val = OperacionRelacional(valor.val,valor.val,MAYOR)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MAYOR,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '<':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor MENOR valor")
+        gramatical.add("operacion.val = OperacionRelacional(valor.val,valor.val,MENOR)")
+        lstGrmaticales.append(gramatical)
+        #Parte para AST y GRAFO DE PARSER
+        p[0] = Nodo(OperacionRelacional(p[1].instruccion,p[3].instruccion,OPERACION_RELACIONAL.MENOR,p.lineno(2),find_column(p.slice[2])),nodo)
 
 
 def p_operaciones5(p):
     'operacion  :   ABS PARIZQ valor PARDER'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("operacion-> ABS PARIZQ valor PARDER")
+    gramatical.add("operacion.val = OperacionUnaria(valor.val,ABSOLUTO)")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"operacion",[])
     nodo.add(NodoG(getIndex(),"abs", None))
     nodo.add(NodoG(getIndex(),"(", None))
@@ -586,6 +868,11 @@ def p_operaciones5(p):
 
 def p_operaciones6(p):
     'operacion  :   ABS PARIZQ MENOS valor PARDER'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("operacion-> ABS PARIZQ MENOS valor PARDER")
+    gramatical.add("operacion.val = OperacionUnaria(valor.val,ABSOLUTO)")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"operacion",[])
     nodo.add(NodoG(getIndex(),"abs", None))
     nodo.add(NodoG(getIndex(),"(", None))
@@ -597,13 +884,24 @@ def p_operaciones6(p):
 
 def p_operacion7(p):
     'operacion  :   VARIABLE dimensiones'
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("operacion-> VARIABLE dimensiones")
+    gramatical.add("operacion.val = OperacionArreglo({0},dimensiones.val)".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"operacion",[])
     nodo.add(NodoG(getIndex(),p[1], None))
     for item in p[2].nodo:
         nodo.add(item)
     p[0]=Nodo(OperacionArreglo(p[1],p[2].instruccion,p.lineno(1),find_column(p.slice[1])),nodo)
+
 def p_operacion(p):
     ' operacion     :   valor '
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("operacion-> valor")
+    gramatical.add("operacion.val = valor.val")
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"operacion",[p[1].nodo])
     
     p[0]=Nodo(p[1].instruccion,nodo)
@@ -613,6 +911,11 @@ def p_operacion8(p):
                     |   PARIZQ FLOAT PARDER valor
                     |   PARIZQ CHAR PARDER valor
     '''
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("operacion-> PARIZQ {0} PARDER valor".format(p[2]))
+    gramatical.add("operacion.val = OperacionCasteo({0},valor.val)".format(p[2]))
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     nodo = NodoG(getIndex(),"operacion",[])
     nodo.add(NodoG(getIndex(),"(",None))
     nodo.add(NodoG(getIndex(),p[2],None))
@@ -631,46 +934,69 @@ def p_operaciones9(p):
     nodo.add(p[1].nodo)
     nodo.add(NodoG(getIndex(),p[2], None))
     nodo.add(p[3].nodo)
-
-    if p[2] == '&': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.AND,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '|': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.OR,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '^': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.XOR,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '<<': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.SHIFTIZQ,p.lineno(2),find_column(p.slice[2])),nodo)
-    elif p[2] == '>>': p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.SHIFTDER,p.lineno(2),find_column(p.slice[2])),nodo)
+    if p[2] == '&':
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor AND valor".format(p[2]))
+        gramatical.add("operacion.val = OperacionBit(valor.val,valor.val,AND)".format(p[2]))
+        lstGrmaticales.append(gramatical)
+        p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.AND,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '|': 
+        p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.OR,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '^': 
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor {0} valor".format(p[2]))
+        gramatical.add("operacion.val = OperacionBit(valor.val,valor.val,{0})".format(p[2]))
+        lstGrmaticales.append(gramatical)
+        p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.XOR,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '<<': 
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor SHIFTIZQ valor")
+        gramatical.add("operacion.val = OperacionBit(valor.val,valor.val,SHIFTIZQ)".format(p[2]))
+        lstGrmaticales.append(gramatical)
+        p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.SHIFTIZQ,p.lineno(2),find_column(p.slice[2])),nodo)
+    elif p[2] == '>>': 
+        #Parte para reporte Gramatical
+        gramatical = NodoGramatical("operacion-> valor SHIFTDER valor")
+        gramatical.add("operacion.val = OperacionBit(valor.val,valor.val,SHIFTDER)".format(p[2]))
+        lstGrmaticales.append(gramatical)
+        p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.SHIFTDER,p.lineno(2),find_column(p.slice[2])),nodo)
 
 
 def p_valor(p):
     '''valor    :   ENTERO
                 |   DECIMAL
     '''
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("operacion-> Entero")
+    gramatical.add("operacion.val = OperacionNumero({0})".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     p[0] = Nodo(OperacionNumero(p[1],p.lineno(1),find_column(p.slice[1])),NodoG(getIndex(),str(p[1]), None))
 
 def p_valor2(p):
     '''valor    :   CADENA
                 |   CADENA2
     '''
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("operacion-> CADENA")
+    gramatical.add("operacion.val = OperacionCadena({0})".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     p[0] = Nodo(OperacionCadena(p[1],p.lineno(1),find_column(p.slice[1])),NodoG(getIndex(),str(p[1]), None))
 
 def p_valor3(p):
     '''valor    :   VARIABLE
     '''
+    #Parte para reporte Gramatical
+    gramatical = NodoGramatical("operacion-> VARIABLE")
+    gramatical.add("operacion.val = OperacionCopiaVariable({0})".format(p[1]))
+    lstGrmaticales.append(gramatical)
+    #Parte para AST y GRAFO DE PARSER
     p[0] = Nodo(OperacionCopiaVariable(p[1],p.lineno(1),find_column(p.slice[1])),NodoG(getIndex(),str(p[1]), None))
-
-def p_petiqueta(p):
-    'petiqueta : ID DOSPUNTOS sentencias'
-    nodo2 = NodoG(getIndex(),"petiqueta",[])
-    nodo2.add(NodoG(getIndex(),p[1], None))
-    nodo2.add(NodoG(getIndex(),":", None))
-    for item in p[3].nodo:
-        nodo2.add(item)
-    p[0] = Nodo(Etiqueta(p[1],p[3].instruccion,p.lineno(1),find_column(p.slice[1])),nodo2)
-    print("petiqueta : "+p[1]+" DOSPUNTOS sentencias; acciones ")
-    print("instruccion : petiqueta; instruccion = petiqueta")
 
 def p_error(p):
     global input
     global parser
-    print(p)
     agregarError("Sintactico","Sintaxis no reconocida \"{0}\"".format(p.value),p.lineno+1, find_column(p))
 
     while True:
@@ -681,16 +1007,21 @@ def p_error(p):
 
     return tok
  
-
-parser = yacc.yacc()
-
+parser = yacc.yacc(write_tables=False)
 input = ""
 def parse(inpu) :
+    global index
+    global parser
     global input
-    global lexer
+    lexer = lex.lex()
     lexer.lineno=0
     input = inpu
-    return parser.parse(inpu)
+    index = 0
+    return parser.parse(inpu, lexer=lexer)
+
+def restart():
+    global parser
+    parser.restart()
 
 def find_column(token):
     line_start = input.rfind('\n', 0, token.lexpos) + 1

@@ -36,18 +36,19 @@ class Ejecutor(threading.Thread):
 
 
     def run(self):
-        temp =  self.area.currentLineColor
-        try:      
+        #temp =  self.area.currentLineColor
+        #try:      
             self.procesar()
-        except:
-            print("ERROR DE EJECUCION")
-        finally:
+        #except:
+            #print("ERROR DE EJECUCION")
+        #finally:
             print("__________________________FIN______________________________")
             self.ts.graficarSimbolos()
             self.graficarErrores()
             self.fullGTS()
             self.stop()
-
+            self._stop = True
+            return
     
 
     def setText(self,in_):
@@ -147,6 +148,8 @@ class Ejecutor(threading.Thread):
                     return exit
                 if exit == Tipo_Salida.DESCARTAR:
                     return exit
+
+                self.fullGTS()
         return Tipo_Salida.SEGUIR
 
     def procesar_etiqueta(self, etiqueta):
@@ -176,7 +179,8 @@ class Ejecutor(threading.Thread):
                     return exit
                 if exit == Tipo_Salida.DESCARTAR:
                     return exit
-        
+
+                self.fullGTS()
         return Tipo_Salida.SEGUIR
     
     def procesar_goto(self,sentencia):
@@ -265,8 +269,13 @@ class Ejecutor(threading.Thread):
                 self.agregarError("No se puede imprimir un arreglo", sentencia.line, sentencia.column)
             elif result!=None:
                 self.consola.append(str(result))
-        else:
-            self.consola.append("")
+        elif isinstance(sentencia.val, OperacionCadena):
+            result = self.procesar_cadena(sentencia.val)
+            if isinstance(result, ArbolCaracteres):
+                if str(result.getText())=="\\n":
+                    self.consola.append("")
+                else:
+                    self.consola.append(str(result.getText()))
         return Tipo_Salida.SEGUIR
     
     def procesar_read(self,sentencia2):
@@ -283,12 +292,12 @@ class Ejecutor(threading.Thread):
             contador = 0 #contador para contar los segundos de tiempo de lida maxima
             self.leido = False
             while contador <100:
-                time.sleep(1)
+                time.sleep(0.4)
                 if self.leido:
                     if re.match(entero,self.entrada):
-                        self.ts.set(id,self.entrada)
+                        self.ts.set(id,int(self.entrada))
                     elif re.match(decimal,self.entrada):
-                        self.ts.set(id,self.entrada)
+                        self.ts.set(id,float(self.entrada))
                     elif re.match(string,self.entrada):
                         'ARREGLAR PARA CONVERTIR EN ARREGLO'
                         arbol = ArbolCaracteres(self.entrada)
@@ -559,6 +568,18 @@ class Ejecutor(threading.Thread):
 
                     self.agregarError("Indices inexistentes",operacion.line,operacion.column)
             elif isinstance(arbol, ArbolCaracteres):
+                direcciones = []
+                for dimension in operacion.dimensiones:
+                    indice = self.procesar_operacion(dimension)
+                    if indice==None:
+                        self.agregarError("indice no valido",dimension.line,dimension.column)
+                        return
+                    texto = indice
+                    if isinstance(indice,ArbolCaracteres):
+                        texto = indice.getText()
+                        numerico=False
+                    
+                    direcciones.append(texto)
                 if len(direcciones)==1:
                     if isinstance(direcciones[0],int):
                         if arbol.valid(direcciones[0]):

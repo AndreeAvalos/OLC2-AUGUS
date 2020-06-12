@@ -2,7 +2,7 @@ from ArbolCaracteres import ArbolCaracteres
 class Arreglo:
     def __init__(self):
         self.diccionario = {}
-    #Direcciones es un arreglo de indices {0:{{Nombre:"Daniel"},{Direccion: "Zona 4"},{Telefono:{0:56457854,1:48457585}}}}
+    #Direcciones es un arreglo de indices {0:{Nombre:"Daniel", Direccion: "Zona 4", Telefono:{0:56457854,1:48457585}}}
     #valor es el valor que se desea guardar
     def add(self,direcciones, valor):
         self.__add3(0,direcciones,valor,self.diccionario)
