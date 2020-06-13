@@ -17,9 +17,9 @@ Contenido:
 * Instrucciones
 
 Ejecucion:
-'''
+```
 python Augus.py
-'''
+```
 
 Colaboradores:
 * Carlos Andree Avalos Soto       201408580
