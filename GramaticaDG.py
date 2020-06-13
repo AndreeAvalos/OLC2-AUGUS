@@ -12,35 +12,6 @@ from Gramatica import NodoG
 def cmd(commando):
     subprocess.run(commando, shell=True)
 
-
-def construirAST(nodo):
-    try:
-        file = open("ASPDescendente.dot", "w")
-        file.write("digraph{ \n")
-        imprimirNodos(nodo,file)
-        graficar(nodo,file)
-        file.write("\n}")
-    except:
-        print("ERROR")
-    finally:
-        file.close()
-        cmd("dot -Tpng ASPDescendente.dot -o ASPDescendente.png")
-
-def imprimirNodos(nodo,file):
-    if nodo!= None:
-        file.write(str(nodo.index)+"[style = \"filled\" ; label = \""+nodo.nombre+"\"] \n")
-        if nodo.childs != None:
-            for child in nodo.childs:
-                imprimirNodos(child, file)
-
-def graficar(nodo,file):
-    if nodo != None:
-        if nodo.childs != None:
-            for child in nodo.childs:
-                file.write(str(nodo.index)+"->"+str(child.index)+";\n")
-                graficar(child,file)
-
-
 reservadas = {
     #Tipos para castear
     'int': 'INTEGER',
@@ -176,9 +147,6 @@ def t_nuevalinea(t):
     t.lexer.lineno += len(t.value)
     
 def t_error(t):
-    #editar para agregar a una tabla
-    #print("Illegal character '%s'" % t.value[0])
-    #agregarError('Lexico',"Caracter \'{0}\' ilegal".format(t.value[0]), t.lexer.lineno+1,find_column(t))
     t.lexer.skip(1)
 
 stack = []

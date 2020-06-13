@@ -466,8 +466,14 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QMenu" name="menuProject">
     <property name="title">
-     <string>Project</string>
+     <string>Reportes</string>
     </property>
+    <addaction name="actionReporte_Ascendente"/>
+    <addaction name="actionReporte_Descendente"/>
+    <addaction name="actionReporte_Tabla"/>
+    <addaction name="actionReporte_Gramatical"/>
+    <addaction name="actionReporte_Lexicos_y_Sintacticos"/>
+    <addaction name="actionReporte_Semanticos"/>
    </widget>
    <widget class="QMenu" name="menuedit">
     <property name="title">
@@ -491,6 +497,36 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionReporte_Ascendente">
+   <property name="text">
+    <string>Reporte Ascendente</string>
+   </property>
+  </action>
+  <action name="actionReporte_Descendente">
+   <property name="text">
+    <string>Reporte Descendente</string>
+   </property>
+  </action>
+  <action name="actionReporte_Tabla">
+   <property name="text">
+    <string>Reporte Tabla</string>
+   </property>
+  </action>
+  <action name="actionReporte_Gramatical">
+   <property name="text">
+    <string>Reporte Gramatical</string>
+   </property>
+  </action>
+  <action name="actionReporte_Lexicos_y_Sintacticos">
+   <property name="text">
+    <string>Reporte Lexicos y Sintacticos</string>
+   </property>
+  </action>
+  <action name="actionReporte_Semanticos">
+   <property name="text">
+    <string>Reporte Semanticos</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

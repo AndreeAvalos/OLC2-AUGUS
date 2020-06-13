@@ -75,62 +75,7 @@ def graficarErrores():
         file.close()
         cmd("dot -Tpng ELS.dot -o ELS.png")
 
-def construirAST(nodo):
-    try:
-        file = open("ASPAscendente.dot", "w")
-        file.write("digraph{ \n")
-        imprimirNodos(nodo,file)
-        graficar(nodo,file)
-        file.write("\n}")
-    except:
-        print("ERROR")
-    finally:
-        file.close()
-        cmd("dot -Tpng ASPAscendente.dot -o ASPAscendente.png")
-
-def imprimirNodos(nodo,file):
-    file.write(str(nodo.index)+"[style = \"filled\" ; label = \""+nodo.nombre+"\"] \n")
-    if nodo.childs != None:
-        for child in nodo.childs:
-            imprimirNodos(child, file)
-
-def graficar(nodo,file):
-    if nodo.childs != None:
-        for child in nodo.childs:
-            file.write(str(nodo.index)+"->"+str(child.index)+";\n")
-            graficar(child,file)
-
 lstGrmaticales = [] #lista donde se almacenaran todas las producciones y sus reglas semanticas
-
-def construirReporteGramatical():
-    try:
-        file = open("ReporteGramatical.dot", "w")
-        file.write("digraph tablaErrores{\n")
-        file.write("graph [ratio=fill];node [label=\"\\N\", fontsize=15, shape=plaintext];\n")
-        file.write("graph [bb=\"0,0,352,154\"];\n")
-        file.write("arset [label=<")
-        file.write("<TABLE ALIGN=\"LEFT\">\n")
-        file.write("<TR><TD>Produccion</TD><TD>Reglas Semanticas</TD></TR>\n")
-        for nodo in lstGrmaticales:
-            file.write("<TR>")
-            file.write("<TD>")
-            file.write(nodo.produccion.replace("->",":"))
-            file.write("</TD>")
-            file.write("<TD><TABLE BORDER=\"0\">")
-            for regla in nodo.reglas:
-                file.write("<TR><TD>")
-                file.write(regla)
-                file.write("</TD></TR>")
-            file.write("</TABLE></TD>")
-            file.write("</TR>\n")
-        file.write("</TABLE>")
-        file.write("\n>, ];\n")
-        file.write("}")
-    except:
-        print("ERROR AL ESCRIBIR TABLA")
-    finally:
-        file.close()
-        cmd("dot -Tpng ReporteGramatical.dot -o ReporteGramatical.png")
 
 reservadas = {
     #Tipos para castear
@@ -936,7 +881,7 @@ def p_operaciones9(p):
     nodo.add(p[3].nodo)
     if p[2] == '&':
         #Parte para reporte Gramatical
-        gramatical = NodoGramatical("operacion-> valor AND valor".format(p[2]))
+        gramatical = NodoGramatical("operacion-> valor AND valor")
         gramatical.add("operacion.val = OperacionBit(valor.val,valor.val,AND)".format(p[2]))
         lstGrmaticales.append(gramatical)
         p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.AND,p.lineno(2),find_column(p.slice[2])),nodo)
