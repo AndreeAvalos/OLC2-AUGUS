@@ -477,7 +477,7 @@ def p_dimension(p):
     p[0] = p[2]
 
 def p_prefencia(p):
-    'preferencia    :  VARIABLE IGUAL ANDBIT VARIABLE PYCOMA '''
+    'preferencia    :  VARIABLE IGUAL ANDBIT VARIABLE PYCOMA '
     #Parte para reporte Gramatical
     gramatical = NodoGramatical("preferencia-> VARIABLE IGUAL ANDBIT VARIABLE PYCOMA ")
     gramatical.add("preferencia.val = Referencia({0},OperacionVariable({1}))".format(p[1],p[4]))

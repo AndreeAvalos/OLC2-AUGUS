@@ -187,6 +187,8 @@ class Ejecutor(threading.Thread):
             simbol = self.ts.get(sentencia.id)
             if simbol.tipo == Tipo_Simbolo.ETIQUETA:
                 ambito = self.ambito
+                self.encontro_if = True
+                self.last = sentencia.id
                 self.actualizarEtiqueta(sentencia.id)
                 existe = self.procesar_etiqueta(simbol)
                 self.ambito = ambito
