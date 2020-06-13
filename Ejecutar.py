@@ -36,12 +36,12 @@ class Ejecutor(threading.Thread):
 
 
     def run(self):
-        #temp =  self.area.currentLineColor
-        #try:      
+        temp =  self.area.currentLineColor
+        try:      
             self.procesar()
-        #except:
-            #print("ERROR DE EJECUCION")
-        #finally:
+        except:
+            print("ERROR DE EJECUCION")
+        finally:
             print("__________________________FIN______________________________")
             self.ts.graficarSimbolos()
             self.graficarErrores()
@@ -149,7 +149,7 @@ class Ejecutor(threading.Thread):
                 if exit == Tipo_Salida.DESCARTAR:
                     return exit
 
-                self.fullGTS()
+                
         return Tipo_Salida.SEGUIR
 
     def procesar_etiqueta(self, etiqueta):
@@ -180,7 +180,6 @@ class Ejecutor(threading.Thread):
                 if exit == Tipo_Salida.DESCARTAR:
                     return exit
 
-                self.fullGTS()
         return Tipo_Salida.SEGUIR
     
     def procesar_goto(self,sentencia):

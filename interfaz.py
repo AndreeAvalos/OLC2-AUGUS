@@ -9,6 +9,8 @@ from Ejecutar import Ejecutor
 from Debuger import Debuger
 import GramaticaDescendente as gramaticaD
 import GramaticaDG
+from Visor import Visor
+from HilosGraficar import *
 #variable global donde se almacerana la instancia, ya se de ejecucion o debug para paserlos los valores de read
 in_console = None
 
@@ -157,6 +159,7 @@ class Interfaz(QMainWindow):
         icon = QtGui.QIcon.fromTheme("new")
         self.ayuda.setIcon(icon)
         self.ayuda.setObjectName("ayuda")
+        self.ayuda.clicked.connect(self.ms_help)
         
         self.editores = QtWidgets.QTabWidget(self.centralwidget)
         self.editores.setGeometry(QtCore.QRect(10, 60, 481, 321))
@@ -239,6 +242,30 @@ class Interfaz(QMainWindow):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.actionReporte_Ascendente = QtWidgets.QAction(MainWindow)
+        self.actionReporte_Ascendente.setObjectName("actionReporte_Ascendente")
+        self.actionReporte_Descendente = QtWidgets.QAction(MainWindow)
+        self.actionReporte_Ascendente.triggered.connect(self.show_APA)
+        self.actionReporte_Descendente.setObjectName("actionReporte_Descendente")
+        self.actionReporte_Descendente.triggered.connect(self.show_APD)
+        self.actionReporte_Tabla = QtWidgets.QAction(MainWindow)
+        self.actionReporte_Tabla.setObjectName("actionReporte_Tabla")
+        self.actionReporte_Tabla.triggered.connect(self.show_TS)
+        self.actionReporte_Gramatical = QtWidgets.QAction(MainWindow)
+        self.actionReporte_Gramatical.triggered.connect(self.show_RG)
+        self.actionReporte_Gramatical.setObjectName("actionReporte_Gramatical")
+        self.actionReporte_Lexicos_y_Sintacticos = QtWidgets.QAction(MainWindow)
+        self.actionReporte_Lexicos_y_Sintacticos.triggered.connect(self.show_ELS)
+        self.actionReporte_Lexicos_y_Sintacticos.setObjectName("actionReporte_Lexicos_y_Sintacticos")
+        self.actionReporte_Semanticos = QtWidgets.QAction(MainWindow)
+        self.actionReporte_Semanticos.setObjectName("actionReporte_Semanticos")
+        self.actionReporte_Semanticos.triggered.connect(self.show_ES)
+        self.menuProject.addAction(self.actionReporte_Ascendente)
+        self.menuProject.addAction(self.actionReporte_Descendente)
+        self.menuProject.addAction(self.actionReporte_Tabla)
+        self.menuProject.addAction(self.actionReporte_Gramatical)
+        self.menuProject.addAction(self.actionReporte_Lexicos_y_Sintacticos)
+        self.menuProject.addAction(self.actionReporte_Semanticos)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuProject.menuAction())
         self.menubar.addAction(self.menuedit.menuAction())
@@ -256,16 +283,41 @@ class Interfaz(QMainWindow):
         else:
             self.etiqueta_analizador.setText("Descendente")
             self.analizador_cambiado = True
-        
+    
+    def ms_help(self):
+        msg = QtWidgets.QMessageBox(self)
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setText("201408580")
+        msg.setInformativeText("Andree Avalos")
+        msg.setWindowTitle("Help")
+        msg.setDetailedText("Proyecto realizado para Compiladores 2 \n https://github.com/AndreeAvalos/OLC2-AUGUS")
+        msg.exec_()
 
     def setStep(self):
-        in_console.step = True
+        try:
+            in_console.step = True
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("ERROR!!!")
+            em.showMessage("No se ha iniciado ningun proceso")
+        
     def setContinuar(self):
-        in_console.continuar = True
-        in_console.step = True
+        try:
+            in_console.continuar = True
+            in_console.step = True
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("ERROR!!!")
+            em.showMessage("No se ha iniciado ningun proceso")
     
     def detenerEjecucion(self):
-        in_console.stop()
+        try:
+            in_console.stop()
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("ERROR!!!")
+            em.showMessage("No se ha iniciado ningun proceso")
+        
     
     def debugear(self):
         self.debug_mode =True
@@ -284,23 +336,25 @@ class Interfaz(QMainWindow):
         ast = None
         analisis_semantico = False
         lst = []
-        #print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
+        print("___________INICIA PROCESO DE ANALISIS LEXICO Y SINTACTICO_______________")
         try:
             if  self.analizador_cambiado:
-                print("AQUI")
                 gramaticaD.lst_errores=[]
                 ast = gramaticaD.parse(codigo)
                 arbolparser = GramaticaDG.parse(codigo)
-                GramaticaDG.construirAST(arbolparser)
+                graficaAST = GraficarArbol(args=(arbolparser, "ASPDescendente"),daemon=True)
                 lst = gramaticaD.lst_errores
             else:
                 gramatica.lst_errores=[]
                 ast2 = gramatica.parse(codigo)
-                gramatica.restart()
-                gramatica.construirAST(ast2.nodo)
-                gramatica.construirReporteGramatical()
-                gramatica.lstGrmaticales = []
                 ast = ast2.instruccion
+                gramatica.restart()
+                graficaAST = GraficarArbol(args=(ast2.nodo, "ASPAscendente"),daemon=True)
+                graficaAST.start()
+                graficaGramatical = GraficarGramatica(args=(gramatica.lstGrmaticales, "ReporteGramatical"),daemon=True)
+                graficaGramatical.start()
+                gramatica.lstGrmaticales = []
+                
                 lst = gramatica.lst_errores
         except:
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
@@ -319,7 +373,7 @@ class Interfaz(QMainWindow):
         else:
             in_console = Ejecutor(args=(ast if (ast!=None) else ast,ts,lst,"",items[0],self.consola,self.GTS),daemon=True)
         if ast!=None:
-            #try:
+            try:
                 print("___________INICIA PROCESO DE ANALISIS SEMANTICO_______________")
                 recolector = Recolectar(ast,ts, lst)
                 print("******FIN CONSTRUCTOR**********")
@@ -328,9 +382,9 @@ class Interfaz(QMainWindow):
                 print("******FIN RECOLECCION*******")
                 print("********** FIN DE CONSTRUCTOR ********")
                 in_console.start()
-            #except:
-                #self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
-                #self.consola.append("REVISAR REPORTE DE ERRORES")
+            except:
+                self.consola.append("/\\/\\/\\/\\/\\ERROR DE EJECUCION/\\/\\/\\/\\")
+                self.consola.append("REVISAR REPORTE DE ERRORES")
         ts.graficarSimbolos() 
 
         
@@ -363,11 +417,11 @@ class Interfaz(QMainWindow):
                 items = tab.children()
                 codigo = items[0].toPlainText()
                 file.write(codigo)
-            except:
-                em = Qt.QErrorMessage(self.main_window)
-                em.showMessage("No fue posible guardar {0}".format(name))
-            finally:
                 file.close()
+            except:
+                em = QtWidgets.QErrorMessage(self.mw)
+                em.showMessage("No fue posible guardar {0}".format(name))
+                
         else:
             self.gc = True
             self.nombre = indextab
@@ -392,11 +446,11 @@ class Interfaz(QMainWindow):
             items = tab.children()
             codigo = items[0].toPlainText()
             file.write(codigo)
-        except:
-            em = Qt.QErrorMessage(self.main_window)
-            em.showMessage("No fue posible guardar {0}".format(name))
-        finally:
             file.close()
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.showMessage("No fue posible guardar {0}".format(name))
+            
         
     
     def abrir_archivo(self):
@@ -418,11 +472,12 @@ class Interfaz(QMainWindow):
             area.setObjectName("area")
             area.setParent(tab)
             self.editores.addTab(tab, name)
-        except:
-            em = Qt.QErrorMessage(self.main_window)
-            em.showMessage("Error al abrir {0}".format(name))
-        finally:
             file.close()
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.showMessage("Error al abrir {0}".format(name))
+            file.close()
+            
 
     def cambiarLineas(self):
         if self.lineas: self.lineas =False
@@ -459,9 +514,47 @@ class Interfaz(QMainWindow):
     def closeTab(self, index):
         tab = self.editores.widget(index)
         name = self.editores.tabText(self.editores.currentIndex())
-        print(name)
         tab.deleteLater()
         self.editores.removeTab(index)
+
+    def show_APA(self):
+        Dialog = QtWidgets.QDialog(self)
+        ui = Visor()
+        ui.setupUi(Dialog,"ASPAscendente.png")
+        Dialog.show()
+
+    def show_APD(self):
+        Dialog = QtWidgets.QDialog(self)
+        ui = Visor()
+        ui.setupUi(Dialog,"ASPDescendente.png")
+        Dialog.show()
+
+
+    def show_TS(self):
+        Dialog = QtWidgets.QDialog(self)
+        ui = Visor()
+        ui.setupUi(Dialog,"tablasimbolos.png")
+        Dialog.show()
+
+    def show_RG(self):
+        Dialog = QtWidgets.QDialog(self)
+        ui = Visor()
+        ui.setupUi(Dialog,"ReporteGramatical.png")
+        Dialog.show()
+
+    def show_ELS(self):
+        Dialog = QtWidgets.QDialog(self)
+        ui = Visor()
+        ui.setupUi(Dialog,"ELS.png")
+        Dialog.show()
+
+    def show_ES(self):
+        Dialog = QtWidgets.QDialog(self)
+        ui = Visor()
+        ui.setupUi(Dialog,"ESemanticos.png")
+        Dialog.show()
+
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -492,10 +585,17 @@ class Interfaz(QMainWindow):
         item = self.GTS.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Valor"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
-        self.menuProject.setTitle(_translate("MainWindow", "Project"))
+        self.menuProject.setTitle(_translate("MainWindow", "Reportes"))
         self.menuedit.setTitle(_translate("MainWindow", "Edit"))
         self.menuProgram.setTitle(_translate("MainWindow", "Program"))
         self.menuHelp.setTitle(_translate("MainWindow", "Help"))
+        self.actionReporte_Ascendente.setText(_translate("MainWindow", "Reporte Ascendente"))
+        self.actionReporte_Descendente.setText(_translate("MainWindow", "Reporte Descendente"))
+        self.actionReporte_Tabla.setText(_translate("MainWindow", "Reporte Tabla"))
+        self.actionReporte_Gramatical.setText(_translate("MainWindow", "Reporte Gramatical"))
+        self.actionReporte_Lexicos_y_Sintacticos.setText(_translate("MainWindow", "Reporte Lexicos y Sintacticos"))
+        self.actionReporte_Semanticos.setText(_translate("MainWindow", "Reporte Semanticos"))
+
 
         format = self.area.document().rootFrame().frameFormat()
         format.setBottomMargin(10)
