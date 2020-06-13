@@ -348,6 +348,7 @@ class Interfaz(QMainWindow):
                 graficaGramatical = GraficarGramatica(args=(gramaticaD.lstGrmaticales, "ReporteGramatical"),daemon=True)
                 graficaGramatical.start()
                 lst = gramaticaD.lst_errores
+                gramaticaD.lstGrmaticales = []
             else:
                 gramatica.lst_errores=[]
                 ast2 = gramatica.parse(codigo)
@@ -358,7 +359,6 @@ class Interfaz(QMainWindow):
                 graficaGramatical = GraficarGramatica(args=(gramatica.lstGrmaticales, "ReporteGramatical"),daemon=True)
                 graficaGramatical.start()
                 gramatica.lstGrmaticales = []
-                
                 lst = gramatica.lst_errores
         except:
             self.consola.append("/\\/\\/\\/\\/\\ERROR DE LEXICO, SINTACTICO/\\/\\/\\/\\")
