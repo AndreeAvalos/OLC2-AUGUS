@@ -147,9 +147,6 @@ def t_nuevalinea(t):
     t.lexer.lineno += len(t.value)
     
 def t_error(t):
-    #editar para agregar a una tabla
-    #print("Illegal character '%s'" % t.value[0])
-    #agregarError('Lexico',"Caracter \'{0}\' ilegal".format(t.value[0]), t.lexer.lineno+1,find_column(t))
     t.lexer.skip(1)
 
 stack = []

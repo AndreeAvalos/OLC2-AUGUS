@@ -881,7 +881,7 @@ def p_operaciones9(p):
     nodo.add(p[3].nodo)
     if p[2] == '&':
         #Parte para reporte Gramatical
-        gramatical = NodoGramatical("operacion-> valor AND valor".format(p[2]))
+        gramatical = NodoGramatical("operacion-> valor AND valor")
         gramatical.add("operacion.val = OperacionBit(valor.val,valor.val,AND)".format(p[2]))
         lstGrmaticales.append(gramatical)
         p[0] = Nodo(OperacionBit(p[1].instruccion,p[3].instruccion,OPERACION_BIT.AND,p.lineno(2),find_column(p.slice[2])),nodo)

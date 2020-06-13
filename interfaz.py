@@ -242,6 +242,7 @@ class Interfaz(QMainWindow):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        #Submenu para reportes
         self.actionReporte_Ascendente = QtWidgets.QAction(MainWindow)
         self.actionReporte_Ascendente.setObjectName("actionReporte_Ascendente")
         self.actionReporte_Descendente = QtWidgets.QAction(MainWindow)
@@ -260,6 +261,7 @@ class Interfaz(QMainWindow):
         self.actionReporte_Semanticos = QtWidgets.QAction(MainWindow)
         self.actionReporte_Semanticos.setObjectName("actionReporte_Semanticos")
         self.actionReporte_Semanticos.triggered.connect(self.show_ES)
+        #termina submenu
         self.menuProject.addAction(self.actionReporte_Ascendente)
         self.menuProject.addAction(self.actionReporte_Descendente)
         self.menuProject.addAction(self.actionReporte_Tabla)
@@ -271,7 +273,6 @@ class Interfaz(QMainWindow):
         self.menubar.addAction(self.menuedit.menuAction())
         self.menubar.addAction(self.menuProgram.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
-
         self.retranslateUi(MainWindow)
         self.editores.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -343,6 +344,9 @@ class Interfaz(QMainWindow):
                 ast = gramaticaD.parse(codigo)
                 arbolparser = GramaticaDG.parse(codigo)
                 graficaAST = GraficarArbol(args=(arbolparser, "ASPDescendente"),daemon=True)
+                graficaAST.start()
+                graficaGramatical = GraficarGramatica(args=(gramaticaD.lstGrmaticales, "ReporteGramatical"),daemon=True)
+                graficaGramatical.start()
                 lst = gramaticaD.lst_errores
             else:
                 gramatica.lst_errores=[]
@@ -518,41 +522,71 @@ class Interfaz(QMainWindow):
         self.editores.removeTab(index)
 
     def show_APA(self):
-        Dialog = QtWidgets.QDialog(self)
-        ui = Visor()
-        ui.setupUi(Dialog,"ASPAscendente.png")
-        Dialog.show()
+        try:
+            Dialog = QtWidgets.QDialog(self)
+            ui = Visor()
+            ui.setupUi(Dialog,"ASPAscendente.png")
+            Dialog.show()
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("ERROR!!!")
+            em.showMessage("No se ha generado ningun reporte")
 
     def show_APD(self):
-        Dialog = QtWidgets.QDialog(self)
-        ui = Visor()
-        ui.setupUi(Dialog,"ASPDescendente.png")
-        Dialog.show()
+        try:
+            Dialog = QtWidgets.QDialog(self)
+            ui = Visor()
+            ui.setupUi(Dialog,"ASPDescendente.png")
+            Dialog.show()
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("ERROR!!!")
+            em.showMessage("No se ha generado ningun reporte")
 
 
     def show_TS(self):
-        Dialog = QtWidgets.QDialog(self)
-        ui = Visor()
-        ui.setupUi(Dialog,"tablasimbolos.png")
-        Dialog.show()
+        try:
+            Dialog = QtWidgets.QDialog(self)
+            ui = Visor()
+            ui.setupUi(Dialog,"tablasimbolos.png")
+            Dialog.show()
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("ERROR!!!")
+            em.showMessage("No se ha generado ningun reporte")
 
     def show_RG(self):
-        Dialog = QtWidgets.QDialog(self)
-        ui = Visor()
-        ui.setupUi(Dialog,"ReporteGramatical.png")
-        Dialog.show()
+        try:
+            Dialog = QtWidgets.QDialog(self)
+            ui = Visor()
+            ui.setupUi(Dialog,"ReporteGramatical.png")
+            Dialog.show()
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("ERROR!!!")
+            em.showMessage("No se ha generado ningun reporte")
 
     def show_ELS(self):
-        Dialog = QtWidgets.QDialog(self)
-        ui = Visor()
-        ui.setupUi(Dialog,"ELS.png")
-        Dialog.show()
+        try:
+            Dialog = QtWidgets.QDialog(self)
+            ui = Visor()
+            ui.setupUi(Dialog,"ELS.png")
+            Dialog.show()
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("ERROR!!!")
+            em.showMessage("No se ha generado ningun reporte")
 
     def show_ES(self):
-        Dialog = QtWidgets.QDialog(self)
-        ui = Visor()
-        ui.setupUi(Dialog,"ESemanticos.png")
-        Dialog.show()
+        try:
+            Dialog = QtWidgets.QDialog(self)
+            ui = Visor()
+            ui.setupUi(Dialog,"ESemanticos.png")
+            Dialog.show()
+        except:
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("ERROR!!!")
+            em.showMessage("No se ha generado ningun reporte")
 
 
 
