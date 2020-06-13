@@ -451,7 +451,7 @@ def p_pprint(p):
     '''
     #Parte para reporte Gramatical
     gramatical = NodoGramatical("pprint-> PRINT PARIZQ VARIABLE dimensiones PARDER PYCOMA")
-    gramatical.add("pprint.val = Print_(OperacionArreglo({0},dimensiones.val))".format(p[3]))
+    gramatical.add("pprint.val = Print_(OperacionArreglo({0},dimensiones.val))".format(p.slice[3].type))
     lstGrmaticales.insert(0,gramatical)
     #Parte para AST
     p[0] = Print_(p[3], p.lineno(1),find_column(p.slice[1]))
@@ -479,7 +479,7 @@ def p_operacion(p):
                     |   MENOS valor
     '''
     #Parte para reporte Gramatical
-    gramatical = NodoGramatical("operacion-> {} valor".format(p.slice[1]))
+    gramatical = NodoGramatical("operacion-> {0} valor".format(p.slice[1].type))
     #Parte para AST
     if p[1] == '!':
         #Parte para reporte Gramatical
@@ -523,7 +523,7 @@ def p_operacion7(p):
     'operacion  :   VARIABLE dimensiones'
     #Parte para reporte Gramatical
     gramatical = NodoGramatical("operacion-> VARIABLE dimensiones")
-    gramatical.add("operacion.val = OperacionArreglo({0},dimensiones.val)".format(p[1]))
+    gramatical.add("operacion.val = OperacionArreglo(dimensiones.val,dimensiones.val)")
     lstGrmaticales.insert(0,gramatical)
     #Parte para AST
     p[0] = OperacionArreglo(p[1],p[2],p.lineno(1),find_column(p.slice[1]))
@@ -534,7 +534,7 @@ def p_operacion8(p):
                     |   PARIZQ CHAR PARDER valor
     '''
     #Parte para reporte Gramatical
-    gramatical = NodoGramatical("operacion-> PARIZQ {0} PARDER valor".format(p.slice[2]))
+    gramatical = NodoGramatical("operacion-> PARIZQ {0} PARDER valor".format(p.slice[2].type))
     gramatical.add("operacion.val = OperacionCasteo({0},valor.val)".format(p[2]))
     lstGrmaticales.insert(0,gramatical)
     #Parte para AST
