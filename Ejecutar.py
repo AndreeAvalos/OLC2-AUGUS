@@ -129,7 +129,6 @@ class Ejecutor(threading.Thread):
             self.funcion = False
             self.procedimiento = False
             for sentencia in main.sentencias:
-            
                 exit = Tipo_Salida.SEGUIR
                 
                 if self.detener:
@@ -277,6 +276,7 @@ class Ejecutor(threading.Thread):
                     self.consola.append("")
                 else:
                     self.consola.append(str(result.getText()))
+        time.sleep(0.2)
         return Tipo_Salida.SEGUIR
     
     def procesar_read(self,sentencia2):
@@ -300,11 +300,11 @@ class Ejecutor(threading.Thread):
                     elif re.match(decimal,self.entrada):
                         self.ts.set(id,float(self.entrada))
                     elif re.match(string,self.entrada):
-                        'ARREGLAR PARA CONVERTIR EN ARREGLO'
                         arbol = ArbolCaracteres(self.entrada)
                         self.ts.set(id,arbol)
                     else:
                         self.agregarError("{0} dato no aceptado".format(self.entrada),sentencia.line, sentencia.column)
+                    time.sleep(0.5)
                     return Tipo_Salida.SEGUIR
                 contador = contador + 1
             self.agregarError("Tiempo de ejecucion agotado",sentencia.line,sentencia.column)

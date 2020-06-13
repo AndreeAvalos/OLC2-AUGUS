@@ -344,7 +344,6 @@ class Debuger(threading.Thread):
                     elif re.match(decimal,self.entrada):
                         self.ts.set(id,float(self.entrada))
                     elif re.match(string,self.entrada):
-                        'ARREGLAR PARA CONVERTIR EN ARREGLO'
                         arbol = ArbolCaracteres(self.entrada)
                         self.ts.set(id,arbol)
                     else:
