@@ -296,9 +296,9 @@ class Interfaz(QMainWindow):
             em.setWindowTitle("Error")
             em.showMessage("Palabra no encontrada")
         else:
-            cursor = self.area.textCursor()
+            cursor = items[0].textCursor()
             cursor.setPosition(x)
-            self.area.setTextCursor(cursor)
+            items[0].setTextCursor(cursor)
     
     def reemplazarPalabra(self):
         word, okPressed = QInputDialog.getText(self.centralwidget, "Search","Palabra:", QLineEdit.Normal, "")
