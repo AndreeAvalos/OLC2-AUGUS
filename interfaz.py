@@ -262,6 +262,14 @@ class Interfaz(QMainWindow):
         self.actionReporte_Semanticos.setObjectName("actionReporte_Semanticos")
         self.actionReporte_Semanticos.triggered.connect(self.show_ES)
         #termina submenu
+        self.actionBuscar = QtWidgets.QAction(MainWindow)
+        self.actionBuscar.setObjectName("actionBuscar")
+        self.actionBuscar.triggered.connect(self.buscarPalabra)
+        self.actionReemplazar = QtWidgets.QAction(MainWindow)
+        self.actionReemplazar.setObjectName("actionReemplazar")
+        self.actionReemplazar.triggered.connect(self.reemplazarPalabra)
+        self.menuFile.addAction(self.actionBuscar)
+        self.menuFile.addAction(self.actionReemplazar)
         self.menuProject.addAction(self.actionReporte_Ascendente)
         self.menuProject.addAction(self.actionReporte_Descendente)
         self.menuProject.addAction(self.actionReporte_Tabla)
@@ -276,6 +284,33 @@ class Interfaz(QMainWindow):
         self.retranslateUi(MainWindow)
         self.editores.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def buscarPalabra(self):
+        word, okPressed = QInputDialog.getText(self.centralwidget, "Search","Palabra:", QLineEdit.Normal, "")
+        tab = self.editores.widget(self.editores.currentIndex())
+        items = tab.children()
+        codigo = items[0].toPlainText()
+        x = codigo.rfind(word)
+        if x == -1: 
+            em = QtWidgets.QErrorMessage(self.mw)
+            em.setWindowTitle("Error")
+            em.showMessage("Palabra no encontrada")
+        else:
+            cursor = self.area.textCursor()
+            cursor.setPosition(x)
+            self.area.setTextCursor(cursor)
+    
+    def reemplazarPalabra(self):
+        word, okPressed = QInputDialog.getText(self.centralwidget, "Search","Palabra:", QLineEdit.Normal, "")
+        word2, okPressed = QInputDialog.getText(self.centralwidget, "Reemplzar","Palabra:", QLineEdit.Normal, "")
+        tab = self.editores.widget(self.editores.currentIndex())
+        items = tab.children()
+        codigo = items[0].toPlainText()
+        codigo2 = codigo.replace(word,word2)
+        items[0].setPlainText(codigo2)
+        
+
+        
 
     def cambiarAnalizador(self):
         if self.analizador_cambiado:
@@ -629,6 +664,8 @@ class Interfaz(QMainWindow):
         self.actionReporte_Gramatical.setText(_translate("MainWindow", "Reporte Gramatical"))
         self.actionReporte_Lexicos_y_Sintacticos.setText(_translate("MainWindow", "Reporte Lexicos y Sintacticos"))
         self.actionReporte_Semanticos.setText(_translate("MainWindow", "Reporte Semanticos"))
+        self.actionBuscar.setText(_translate("MainWindow", "Buscar"))
+        self.actionReemplazar.setText(_translate("MainWindow", "Reemplazar"))
 
 
         format = self.area.document().rootFrame().frameFormat()

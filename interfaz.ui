@@ -463,6 +463,8 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionBuscar"/>
+    <addaction name="actionReemplazar"/>
    </widget>
    <widget class="QMenu" name="menuProject">
     <property name="title">
@@ -525,6 +527,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionReporte_Semanticos">
    <property name="text">
     <string>Reporte Semanticos</string>
+   </property>
+  </action>
+  <action name="actionBuscar">
+   <property name="text">
+    <string>Buscar</string>
+   </property>
+  </action>
+  <action name="actionReemplazar">
+   <property name="text">
+    <string>Reemplazar</string>
    </property>
   </action>
  </widget>
