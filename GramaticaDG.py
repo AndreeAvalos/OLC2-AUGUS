@@ -532,7 +532,7 @@ def parse(inpu) :
     input = inpu
     global index
     index = 0
-    return parser.parse(inpu)
+    return parser.parse(inpu, lexer = lexer)
 
 def find_column(token):
     line_start = input.rfind('\n', 0, token.lexpos) + 1

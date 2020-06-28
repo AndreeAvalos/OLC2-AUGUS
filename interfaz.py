@@ -362,10 +362,10 @@ class Interfaz(QMainWindow):
 
     def ejecutar_analisis(self):
 
-        self.consola.setText("****** Preparando Analisis ******")
-        
+        #self.consola.setText("****** Preparando Analisis ******")
+        self.consola.clear()
         indextab = self.editores.tabText(self.editores.currentIndex())
-        self.consola.setText("Archivo a analizar: "+indextab)
+        ##self.consola.setText("Archivo a analizar: "+indextab)
         tab = self.editores.widget(self.editores.currentIndex())
         items = tab.children()
         codigo = items[0].toPlainText()
@@ -388,7 +388,7 @@ class Interfaz(QMainWindow):
                 gramatica.lst_errores=[]
                 ast2 = gramatica.parse(codigo)
                 ast = ast2.instruccion
-                gramatica.restart()
+                
                 graficaAST = GraficarArbol(args=(ast2.nodo, "ASPAscendente"),daemon=True)
                 graficaAST.start()
                 graficaGramatical = GraficarGramatica(args=(gramatica.lstGrmaticales, "ReporteGramatical"),daemon=True)
@@ -540,6 +540,11 @@ class Interfaz(QMainWindow):
         self.editores.addTab(tab, indextab)
     
     def changeColor(self):
+        salida = self.consola.toPlainText()
+        salida += "SALIDA"
+        self.consola.insertHtml(salida)
+        self.consola.setText("")
+
         p = self.mw.palette()
         if self.cambiado:
             p.setColor(self.mw.backgroundRole(), Qt.white)

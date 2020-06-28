@@ -300,27 +300,29 @@ class Debuger(threading.Thread):
     def procesar_print(self, sentencia):
         if isinstance(sentencia.val, OperacionCopiaVariable):
             result = self.procesar_valor(sentencia.val)
+        
             if isinstance(result, ArbolCaracteres):
-                self.consola.append(str(result.getText()))
+                self.consola.insertHtml(str(result.getText()))
+                #self.consola.append(str(result.getText()))
             elif isinstance(result, Arreglo):
                 self.agregarError("No se puede imprimir un arreglo", sentencia.line, sentencia.column)
             elif result!=None:
-                self.consola.append(str(result))
+                self.consola.insertHtml(str(result))
         elif isinstance(sentencia.val, OperacionArreglo):
             result = self.procesar_opeacionArreglo(sentencia.val)
             if isinstance(result, ArbolCaracteres):
-                self.consola.append(str(result.getText()))
+                self.consola.insertHtml(str(result.getText()))
             elif isinstance(result, Arreglo):
                 self.agregarError("No se puede imprimir un arreglo", sentencia.line, sentencia.column)
             elif result!=None:
-                self.consola.append(str(result))
+                self.consola.insertHtml(str(result))
         elif isinstance(sentencia.val, OperacionCadena):
             result = self.procesar_cadena(sentencia.val)
             if isinstance(result, ArbolCaracteres):
                 if str(result.getText())=="\\n":
                     self.consola.append("")
                 else:
-                    self.consola.append(str(result.getText()))
+                    self.consola.insertHtml(str(result.getText()))
         return Tipo_Salida.SEGUIR
     
     def procesar_read(self,sentencia2):
@@ -528,12 +530,17 @@ class Debuger(threading.Thread):
 
     def procesar_operacionRelacional(self, operacion):
         try:
-            if operacion.operacion == OPERACION_RELACIONAL.IGUAL: return 1 if(self.procesar_valor(operacion.operadorIzq) == self.procesar_valor(operacion.operadorDer)) else 0
-            elif operacion.operacion == OPERACION_RELACIONAL.DIFERENTE: return 1 if(self.procesar_valor(operacion.operadorIzq) != self.procesar_valor(operacion.operadorDer)) else 0
-            elif operacion.operacion == OPERACION_RELACIONAL.MAYORQUE: return 1 if(self.procesar_valor(operacion.operadorIzq) >= self.procesar_valor(operacion.operadorDer)) else 0
-            elif operacion.operacion == OPERACION_RELACIONAL.MENORQUE: return 1 if(self.procesar_valor(operacion.operadorIzq) <= self.procesar_valor(operacion.operadorDer)) else 0
-            elif operacion.operacion == OPERACION_RELACIONAL.MAYOR: return 1 if(self.procesar_valor(operacion.operadorIzq) > self.procesar_valor(operacion.operadorDer)) else 0
-            elif operacion.operacion == OPERACION_RELACIONAL.MENOR: return 1 if(self.procesar_valor(operacion.operadorIzq) < self.procesar_valor(operacion.operadorDer)) else 0
+            op1 = self.procesar_valor(operacion.operadorIzq)
+            op2 = self.procesar_valor(operacion.operadorDer)
+            if isinstance(op1, ArbolCaracteres):op1 = op1.getText()
+            if isinstance(op2, ArbolCaracteres):op2 = op2.getText()
+            
+            if operacion.operacion == OPERACION_RELACIONAL.IGUAL: return 1 if(op1 == op2) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.DIFERENTE: return 1 if(op1 != op2) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.MAYORQUE: return 1 if(op1 >= op2) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.MENORQUE: return 1 if(op1 <= op2) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.MAYOR: return 1 if(op1 > op2) else 0
+            elif operacion.operacion == OPERACION_RELACIONAL.MENOR: return 1 if(op1 < op2) else 0
         except:
             self.agregarError("No es posible la operacion relacional",operacion.line,operacion.column)
 
@@ -659,6 +666,8 @@ class Debuger(threading.Thread):
             else:
                 self.agregarError("No existe variable {0}".format(expresion.id),expresion.line,expresion.column)
                 return None
+        elif isinstance(expresion, OperacionCadena):
+            return self.procesar_cadena(expresion)
             
         return None
 
